@@ -1,8 +1,10 @@
 package processing;
 
 import data.Vehicle;
+import commands.Command;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class BufferedDataBase {
     private ArrayDeque<Vehicle> data = new ArrayDeque<>();
@@ -10,15 +12,40 @@ public class BufferedDataBase {
     public BufferedDataBase() {
     }
 
-    public boolean help(String argument) {
-        //...
+    public boolean help(String[] arguments) {
+        if (arguments.length > 1) {
+            System.out.println("Wrong amount of arguments");
+            System.out.println("Print 'help' and press Enter to " +
+                    "see a list of commands");
+
+            //Console.printWarning("Wrong amount of arguments")
+            return false;
+        }
+        /*
+
+        try {
+            Console.print(argument)
+        }
+        catch (){
+        }
+         */
+        System.out.println(arguments[0]);////////////////////
+        return true;
+    }
+
+    public boolean info(String[] arguments) {
+
+        /*
+        try {
+            Console.print()
+        }
+         */
+
+
+        return true;
     }
 
     /*
-    public boolean info(String argument) {
-        //...
-    }
-
     public boolean show(String argument) {
 
     }
@@ -46,11 +73,14 @@ public class BufferedDataBase {
     public boolean executeScript(String argument) {
 
     }
+    */
 
-    public boolean exit(String argument) {
-
+    public boolean exit(String[] arguments) {
+        System.exit(0);
+        return true;
     }
 
+    /*
     public boolean removeGreater(String argument) {
 
     }
