@@ -27,8 +27,10 @@ public abstract class AbstractCommand {
         return name.hashCode() + description.hashCode(); //////////
     }
 
+    /*
     @Override
     public boolean equals() {
         //...
     }
+    */
 }

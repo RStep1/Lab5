@@ -11,9 +11,17 @@ public class Vehicle {
     private FuelType fuelType; //Поле не может быть null
 
 
-    public Vehicle(
-
-            public Vehicle() {
+    public Vehicle(long id, String name, Coordinates coordinates,
+                   java.time.ZonedDateTime creationDate, int enginePower,
+                   long distanceTravelled, VehicleType type, FuelType fuelType) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = creationDate;
+        this.enginePower = enginePower;
+        this.distanceTravelled = distanceTravelled;
+        this.type = type;
+        this.fuelType = fuelType;
     }
 
     public long getId() {

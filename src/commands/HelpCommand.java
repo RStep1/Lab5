@@ -9,8 +9,10 @@ public class HelpCommand extends AbstractCommand implements Command {
         this.dataBase = dataBase;
     }
 
+
+
     @Override
-    public boolean execute(String argument) {
-        return dataBase.help(argument);
+    public boolean execute(String[] arguments) {
+        return dataBase.help(arguments);
     }
 }
