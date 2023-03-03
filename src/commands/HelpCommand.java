@@ -1,18 +1,30 @@
 package commands;
 import processing.BufferedDataBase;
 
-public class HelpCommand extends AbstractCommand implements Command {
-    BufferedDataBase dataBase;
-
+public class HelpCommand implements Command {
+    private BufferedDataBase dataBase;
+    private static final String NAME = "help";
+    private static final String DESCRIPTION =
+            "выводит справку по доступным командам";
     public HelpCommand(BufferedDataBase dataBase) {
-        super("help", "выводит справку по доступным командам");
         this.dataBase = dataBase;
     }
-
-
 
     @Override
     public boolean execute(String[] arguments) {
         return dataBase.help(arguments);
+    }
+
+    public String getName() {
+        return NAME;
+    }
+
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public String toString() {
+        return NAME + ": " + DESCRIPTION;
     }
 }
