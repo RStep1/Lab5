@@ -5,6 +5,7 @@ import exceptions.WrongAmountOfArgumentsException;
 
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 
 public class BufferedDataBase {
     private ArrayDeque<Vehicle> data = new ArrayDeque<>();
@@ -15,7 +16,8 @@ public class BufferedDataBase {
     public boolean help(String[] arguments) {
         try {
             if (arguments.length > 1)
-                throw new WrongAmountOfArgumentsException("Wrong amount of arguments");
+                throw new WrongAmountOfArgumentsException("Wrong amount of arguments: ",
+                        arguments.length - 1, 0);
             Console.println(arguments[0]);
             return true;
         } catch (WrongAmountOfArgumentsException e) {
@@ -68,8 +70,17 @@ public class BufferedDataBase {
     */
 
     public boolean exit(String[] arguments) {
-        System.exit(0);
-        return true;
+        try {
+            if (arguments.length != 1)
+                throw new WrongAmountOfArgumentsException("Wrong amount of arguments",
+                        arguments.length - 1, 0);
+            System.exit(0);
+            return true;
+        } catch (WrongAmountOfArgumentsException e) {
+            Console.println(e.getMessage());
+            Console.printHelpMessage();
+        }
+        return false;
     }
 
     /*
