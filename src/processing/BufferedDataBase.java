@@ -1,6 +1,7 @@
 package processing;
 
 import data.Vehicle;
+import exceptions.WrongAmountOfArgumentsException;
 
 
 import java.util.ArrayDeque;
@@ -12,24 +13,16 @@ public class BufferedDataBase {
     }
 
     public boolean help(String[] arguments) {
-        if (arguments.length > 1) {
-            System.out.println("Wrong amount of arguments");
-            System.out.println("Print 'help' and press Enter to " +
-                    "see a list of commands");
-
-            //Console.printWarning("Wrong amount of arguments")
-            return false;
-        }
-        /*
-
         try {
-            Console.print(argument)
+            if (arguments.length > 1)
+                throw new WrongAmountOfArgumentsException("Wrong amount of arguments");
+            Console.println(arguments[0]);
+            return true;
+        } catch (WrongAmountOfArgumentsException e) {
+            Console.println(e.getMessage());
+            Console.printHelpMessage();
         }
-        catch (){
-        }
-         */
-        System.out.println(arguments[0]);////////////////////
-        return true;
+        return false;
     }
 
     public boolean info(String[] arguments) {

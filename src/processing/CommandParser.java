@@ -1,6 +1,6 @@
 package processing;
 
-
+import commands.*;
 
 public class CommandParser {
     private CommandInvoker invoker;
@@ -9,16 +9,13 @@ public class CommandParser {
         this.invoker = invoker;
     }
 
-
     public void commandProcessing(String nextLine) {
         String nextSplitedLine[] = nextLine.trim().split("\\s+");
         String[] arguments = new String[nextSplitedLine.length];
-
         for (int i = 1; i < nextSplitedLine.length; i++) {
             arguments[i] = nextSplitedLine[i];
         }
         String nextCommand = nextSplitedLine[0];
-
 
         switch (nextCommand) {
             case "help" -> {

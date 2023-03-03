@@ -3,6 +3,7 @@ package processing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 
@@ -13,7 +14,7 @@ public class Console {
         this.invoker = invoker;
     }
 
-    public void interactiveMode() throws IOException {
+    public void interactiveMode() {
         //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         CommandParser parser = new CommandParser(invoker);
         Scanner in = new Scanner(System.in);
@@ -23,5 +24,14 @@ public class Console {
             parser.commandProcessing(nextLine);
 
         }
+    }
+
+    public static void printHelpMessage() {
+        System.out.println("Print 'help' and press Enter to " +
+                "see a list of commands");
+    }
+
+    public static void println(String message) {
+        System.out.println(message);
     }
 }
