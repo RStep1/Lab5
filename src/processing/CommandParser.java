@@ -2,6 +2,7 @@ package processing;
 
 import commands.*;
 
+
 public class CommandParser {
     private CommandInvoker invoker;
 
@@ -29,7 +30,10 @@ public class CommandParser {
             //case "insert" -> invoker.insert(arguments);
             //case "update" -> invoker.update(arguments);
             case "clear" -> invoker.clear(arguments);
-
+            default -> {
+                Console.println(nextLine + ": No such command");
+                Console.printHelpMessage();
+            }
         }
     }
 
