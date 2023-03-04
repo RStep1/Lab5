@@ -15,11 +15,11 @@ public class HelpCommand implements Command {
         return dataBase.help(arguments);
     }
 
-    public String getName() {
+    public static String getName() {
         return NAME;
     }
 
-    public String getDescription() {
+    public static String getDescription() {
         return DESCRIPTION;
     }
 

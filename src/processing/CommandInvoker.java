@@ -1,6 +1,8 @@
 package processing;
 
 import commands.Command;
+import commands.HelpCommand;
+
 import java.util.ArrayList;
 
 public class CommandInvoker {
@@ -20,13 +22,14 @@ public class CommandInvoker {
     private Command removeAllByEnginePowerCommand;
     private Command countByFuelTypeCommand;
     private Command filterLessThanFuelTypeCommand;
-    //запихнуть это в все в array
 
     private ArrayList<Command> commandList = new ArrayList<>();
 
+    private Command lastCommand;
+
     public CommandInvoker(Command helpCommand, Command infoCommand, Command exitCommand/*, Command showCommand,
                           Command insertCommand, Command updateCommand, Command removeKeyCommand,
-                          Command clearCommand, Command saveCommand, Command executeScriptCommand,
+                          */,Command clearCommand/*, Command saveCommand, Command executeScriptCommand,
                           Command exitCommand, Command removeGreaterCommand, Command removeLowerCommand,
                           Command removeGreaterKeyCommand, Command removeAllByEnginePowerCommand,
                           Command countByFuelTypeCommand, Command filterLessThanFuelTypeCommand*/) {
@@ -34,6 +37,7 @@ public class CommandInvoker {
         this.infoCommand = infoCommand;
 
         this.exitCommand = exitCommand;
+        this.clearCommand = clearCommand;
         /*
         this.infoCommand = infoCommand;
         this.showCommand = showCommand;
@@ -59,7 +63,9 @@ public class CommandInvoker {
         commandList.add(insertCommand);
         commandList.add(updateCommand);
         commandList.add(removeKeyCommand);
+        */
         commandList.add(clearCommand);
+        /*
         commandList.add(saveCommand);
         commandList.add(executeScriptCommand);
         */
@@ -111,11 +117,12 @@ public class CommandInvoker {
     public boolean removeKey(String argument) {
         return removeKeyCommand.execute(argument);
     }
+    */
 
-    public boolean clear(String argument) {
-        return clearCommand.execute(argument);
+    public boolean clear(String[] arguments) {
+        return clearCommand.execute(arguments);
     }
-
+    /*
     public boolean save(String argument) {
         return saveCommand.execute(argument);
     }
