@@ -3,22 +3,20 @@ package processing;
 import data.Vehicle;
 import exceptions.WrongAmountOfArgumentsException;
 
-
-import java.util.ArrayDeque;
-import java.util.Arrays;
+import java.util.Hashtable;
 
 public class BufferedDataBase {
-    private ArrayDeque<Vehicle> data = new ArrayDeque<>();
+    private Hashtable<Integer, Vehicle> data = new Hashtable<Integer, Vehicle>();
 
     public BufferedDataBase() {
     }
 
-    public boolean help(String[] arguments) {
+    private boolean checkNumberOfArguments(String[] arguments,
+                                  int expectedNumberOfArguments) {
         try {
-            if (arguments.length > 1)
+            if (arguments.length != expectedNumberOfArguments + 1)
                 throw new WrongAmountOfArgumentsException("Wrong amount of arguments: ",
-                        arguments.length - 1, 0);
-            Console.println(arguments[0]);
+                        arguments.length - 1, expectedNumberOfArguments);
             return true;
         } catch (WrongAmountOfArgumentsException e) {
             Console.println(e.getMessage());
@@ -27,14 +25,15 @@ public class BufferedDataBase {
         return false;
     }
 
-    public boolean info(String[] arguments) {
-
-        /*
-        try {
-            Console.print()
+    public boolean help(String[] arguments) {
+        if (checkNumberOfArguments(arguments, 0)) {
+            Console.println(arguments[0]);
+            return true;
         }
-         */
+        return false;
+    }
 
+    public boolean info(String[] arguments) {
 
         return true;
     }
@@ -55,11 +54,16 @@ public class BufferedDataBase {
     public boolean removeKey(String argument) {
 
     }
+    */
 
-    public boolean clear(String argument) {
-
+    public boolean clear(String[] arguments) {
+        if (checkNumberOfArguments(arguments, 0)) {
+            data.clear();
+            return true;
+        }
+        return false;
     }
-
+    /*
     public boolean save(String argument) {
 
     }
@@ -70,15 +74,9 @@ public class BufferedDataBase {
     */
 
     public boolean exit(String[] arguments) {
-        try {
-            if (arguments.length != 1)
-                throw new WrongAmountOfArgumentsException("Wrong amount of arguments",
-                        arguments.length - 1, 0);
+        if (checkNumberOfArguments(arguments, 0)) {
             System.exit(0);
             return true;
-        } catch (WrongAmountOfArgumentsException e) {
-            Console.println(e.getMessage());
-            Console.printHelpMessage();
         }
         return false;
     }
