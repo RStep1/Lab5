@@ -3,6 +3,7 @@ package processing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.sql.SQLOutput;
 import java.util.Scanner;
 
@@ -27,11 +28,13 @@ public class Console {
     }
 
     public static void printHelpMessage() {
-        System.out.println("Print 'help' and press Enter to " +
+        PrintStream printStream = new PrintStream(System.out);
+        printStream.println("Print 'help' and press Enter to " +
                 "see a list of commands");
     }
 
     public static void println(String message) {
-        System.out.println(message);
+        PrintStream printStream = new PrintStream(System.out);
+        printStream.println(message);
     }
 }
