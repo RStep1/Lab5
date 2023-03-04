@@ -27,18 +27,13 @@ public class CommandInvoker {
 
     private Command lastCommand;
 
-    public CommandInvoker(Command helpCommand, Command infoCommand, Command exitCommand/*, Command showCommand,
+    public CommandInvoker(Command helpCommand, Command infoCommand, Command showCommand,
                           Command insertCommand, Command updateCommand, Command removeKeyCommand,
-                          */,Command clearCommand/*, Command saveCommand, Command executeScriptCommand,
+                          Command clearCommand, Command saveCommand, Command executeScriptCommand,
                           Command exitCommand, Command removeGreaterCommand, Command removeLowerCommand,
                           Command removeGreaterKeyCommand, Command removeAllByEnginePowerCommand,
-                          Command countByFuelTypeCommand, Command filterLessThanFuelTypeCommand*/) {
+                          Command countByFuelTypeCommand, Command filterLessThanFuelTypeCommand) {
         this.helpCommand = helpCommand;
-        this.infoCommand = infoCommand;
-
-        this.exitCommand = exitCommand;
-        this.clearCommand = clearCommand;
-        /*
         this.infoCommand = infoCommand;
         this.showCommand = showCommand;
         this.insertCommand = insertCommand;
@@ -54,31 +49,23 @@ public class CommandInvoker {
         this.removeAllByEnginePowerCommand = removeAllByEnginePowerCommand;
         this.countByFuelTypeCommand = countByFuelTypeCommand;
         this.filterLessThanFuelTypeCommand = filterLessThanFuelTypeCommand;
-        */
 
         commandList.add(helpCommand);
         commandList.add(infoCommand);
-        /*
         commandList.add(showCommand);
         commandList.add(insertCommand);
         commandList.add(updateCommand);
         commandList.add(removeKeyCommand);
-        */
         commandList.add(clearCommand);
-        /*
         commandList.add(saveCommand);
         commandList.add(executeScriptCommand);
-        */
         commandList.add(exitCommand);
-        /*
         commandList.add(removeGreaterCommand);
         commandList.add(removeLowerCommand);
         commandList.add(removeGreaterKeyCommand);
         commandList.add(removeAllByEnginePowerCommand);
         commandList.add(countByFuelTypeCommand);
         commandList.add(filterLessThanFuelTypeCommand);
-
-         */
     }
 
     public ArrayList<Command> getCommandList(){
@@ -101,65 +88,58 @@ public class CommandInvoker {
         return infoCommand.execute(arguments);
     }
 
-    /*
     public boolean show(String[] arguments) {
         return showCommand.execute(arguments);
     }
 
-    public boolean insert(String argument) {
-        return insertCommand.execute(argument);
+    public boolean insert(String[] arguments) {
+        return insertCommand.execute(arguments);
     }
 
-    public boolean update(String argument) {
-        return updateCommand.execute(argument);
+    public boolean update(String[] arguments) {
+        return updateCommand.execute(arguments);
     }
 
-    public boolean removeKey(String argument) {
-        return removeKeyCommand.execute(argument);
+    public boolean removeKey(String[] arguments) {
+        return removeKeyCommand.execute(arguments);
     }
-    */
-
     public boolean clear(String[] arguments) {
         return clearCommand.execute(arguments);
     }
-    /*
-    public boolean save(String argument) {
-        return saveCommand.execute(argument);
+
+    public boolean save(String[] arguments) {
+        return saveCommand.execute(arguments);
     }
 
-    public boolean executeScript(String argument) {
-        return executeScriptCommand.execute(argument);
+    public boolean executeScript(String[] arguments) {
+        return executeScriptCommand.execute(arguments);
     }
-    */
 
     public boolean exit(String[] arguments) {
         return exitCommand.execute(arguments);
     }
-    /*
-    public boolean removeGreater(String argument) {
-        return removeGreaterCommand.execute(argument);
+
+    public boolean removeGreater(String[] arguments) {
+        return removeGreaterCommand.execute(arguments);
     }
 
-    public boolean removeLower(String argument) {
-        return removeLowerCommand.execute(argument);
+    public boolean removeLower(String[] arguments) {
+        return removeLowerCommand.execute(arguments);
     }
 
-    public boolean removeGreaterKey(String argument) {
-        return removeGreaterKeyCommand.execute(argument);
+    public boolean removeGreaterKey(String[] arguments) {
+        return removeGreaterKeyCommand.execute(arguments);
     }
 
-    public boolean removeAllByEnginePower(String argument) {
-        return removeAllByEnginePowerCommand.execute(argument);
+    public boolean removeAllByEnginePower(String[] arguments) {
+        return removeAllByEnginePowerCommand.execute(arguments);
     }
 
-    public boolean countByFuelType(String argument) {
-        return countByFuelTypeCommand.execute(argument);
+    public boolean countByFuelType(String[] arguments) {
+        return countByFuelTypeCommand.execute(arguments);
     }
 
-    public boolean filterLessThanFuelType(String argument) {
-        return filterLessThanFuelTypeCommand.execute(argument);
+    public boolean filterLessThanFuelType(String[] arguments) {
+        return filterLessThanFuelTypeCommand.execute(arguments);
     }
-
-     */
-
 }

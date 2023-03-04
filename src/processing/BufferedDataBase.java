@@ -8,7 +8,7 @@ import java.util.Hashtable;
 import commands.*;
 
 public class BufferedDataBase {
-    private Hashtable<Integer, Vehicle> data = new Hashtable<Integer, Vehicle>();
+    private Hashtable<Integer, Vehicle> data = new Hashtable<>();
     private LocalDateTime lastInitTime;
     private LocalDateTime lastSaveTime;
 
@@ -45,26 +45,33 @@ public class BufferedDataBase {
             return false;
         }
 
+        Console.println("Information about collection:");
+        Console.println("Type of collection: " + getCollectionType() +
+                "\nInitialization date: " + lastInitTime +
+                "\nLast " + lastSaveTime +
+                "\nNumber of elements: " + getCollectionSize());
         return true;
     }
 
-    /*
-    public boolean show(String argument) {
+    public boolean show(String[] arguments) {
 
+        return true;
     }
 
-    public boolean insert(String argument) {
+    public boolean insert(String[] arguments) {
 
+        return true;
     }
 
-    public boolean update(String argument) {
+    public boolean update(String[] arguments) {
 
+        return true;
     }
 
-    public boolean removeKey(String argument) {
+    public boolean removeKey(String[] arguments) {
 
+        return true;
     }
-    */
 
     public boolean clear(String[] arguments) {
         if (!checkNumberOfArguments(arguments,
@@ -74,51 +81,57 @@ public class BufferedDataBase {
         data.clear();
         return true;
     }
-    /*
-    public boolean save(String argument) {
 
+    public boolean save(String[] arguments) {
+
+        return true;
     }
 
-    public boolean executeScript(String argument) {
+    public boolean executeScript(String[] arguments) {
 
+        return true;
     }
-    */
+
 
     public boolean exit(String[] arguments) {
-        if (checkNumberOfArguments(arguments,
+        if (!checkNumberOfArguments(arguments,
                 ExitCommand.getName(), 0)) {
-            System.exit(0);
-            return true;
+            return false;
         }
-        return false;
+        System.exit(0);
+        return true;
     }
 
-    /*
-    public boolean removeGreater(String argument) {
+    public boolean removeGreater(String[] arguments) {
 
+        return true;
     }
 
-    public boolean removeLower(String argument) {
+    public boolean removeLower(String[] arguments) {
 
+        return true;
     }
 
-    public boolean removeGreaterKey(String argument) {
+    public boolean removeGreaterKey(String[] arguments) {
 
+        return true;
     }
 
-    public boolean removeAllByEnginePower(String argument) {
+    public boolean removeAllByEnginePower(String[] arguments) {
 
+        return true;
     }
 
-    public boolean countByFuelType(String argument) {
+    public boolean countByFuelType(String[] arguments) {
 
+        return true;
     }
 
-    public boolean filterLessThanFuelType(String argument) {
+    public boolean filterLessThanFuelType(String[] arguments) {
 
+        return true;
     }
 
-     */
     public String getCollectionType() {
         return data.getClass().getName();
     }
