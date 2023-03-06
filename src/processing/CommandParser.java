@@ -17,12 +17,13 @@ public class CommandParser {
             arguments[i - 1] = nextSplitedLine[i];
         }
         String nextCommand = nextSplitedLine[0];
-
+        boolean exitStatus;
         switch (nextCommand) {
             case "help" -> {
                 arguments[nextSplitedLine.length - 1] =
                         invoker.getCommandsDescription();
-                invoker.help(arguments);
+                exitStatus = invoker.help(arguments);
+
             }
             case "info" -> invoker.info(arguments);
             case "show" -> invoker.show(arguments);

@@ -1,11 +1,9 @@
 package processing;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.sql.SQLOutput;
+import java.io.*;
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 
 public class Console {
@@ -39,4 +37,5 @@ public class Console {
         PrintStream printStream = new PrintStream(System.out);
         printStream.println(message);
     }
+
 }

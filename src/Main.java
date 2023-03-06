@@ -2,9 +2,10 @@ import processing.BufferedDataBase;
 import processing.CommandInvoker;
 import processing.Console;
 import commands.*;
+import processing.FileHandler;
 
 
-
+import java.io.File;
 import java.io.IOException;
 
 
@@ -25,6 +26,5 @@ public class Main {
 
         Console console = new Console(invoker);
         console.interactiveMode();
-
     }
 }
