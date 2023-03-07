@@ -9,12 +9,10 @@ import java.io.IOException;
 import java.io.File;
 
 public class FileHandler {
-
-    //private static final String DIRECTORY = System.getProperty("user.home");
-    private static final String ERR_FILE_NAME = "src/files/errors.txt";
+    private static final String USER_ERR_FILE_NAME = "src/files/user_errors.txt";
     private static final String OUT_FILE_NAME = "src/files/output.txt";
-    private static final String ERR_FILE_ABSOLUTE_PATH =
-            new File(ERR_FILE_NAME).getAbsolutePath();
+    private static final String USER_ERR_FILE_ABSOLUTE_PATH =
+            new File(USER_ERR_FILE_NAME).getAbsolutePath();
     private static final String OUT_FILE_ABSOLUTE_PATH =
             new File(OUT_FILE_NAME).getAbsolutePath();
     //сделать проверку на существование файлов
@@ -28,8 +26,8 @@ public class FileHandler {
         writeToFile(out, OUT_FILE_ABSOLUTE_PATH);
     }
 
-    public static void writeErrors(String errors) {
-        writeToFile(errors, ERR_FILE_ABSOLUTE_PATH);
+    public static void writeUserErrors(String errors) {
+        writeToFile(errors, USER_ERR_FILE_ABSOLUTE_PATH);
     }
 
     private static void writeToFile(String information, String filePath) {
@@ -46,8 +44,8 @@ public class FileHandler {
         return readFile(OUT_FILE_ABSOLUTE_PATH);
     }
 
-    public static String readErrFile() {
-        return readFile(ERR_FILE_ABSOLUTE_PATH);
+    public static String readUserErrFile() {
+        return readFile(USER_ERR_FILE_ABSOLUTE_PATH);
     }
 
     private static String readFile(String absolutePath) {
@@ -67,8 +65,8 @@ public class FileHandler {
         clearFile(OUT_FILE_ABSOLUTE_PATH);
     }
 
-    public static void clearErrFile() {
-        clearFile(ERR_FILE_ABSOLUTE_PATH);
+    public static void clearUserErrFile() {
+        clearFile(USER_ERR_FILE_ABSOLUTE_PATH);
     }
 
     private static void clearFile(String filePath) {

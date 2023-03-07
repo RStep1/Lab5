@@ -103,6 +103,7 @@ public class CommandInvoker {
     public boolean removeKey(String[] arguments) {
         return removeKeyCommand.execute(arguments);
     }
+
     public boolean clear(String[] arguments) {
         return clearCommand.execute(arguments);
     }

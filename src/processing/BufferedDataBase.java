@@ -24,8 +24,10 @@ public class BufferedDataBase {
                         commandName, arguments.length - 1, expectedNumberOfArguments);
             return true;
         } catch (WrongAmountOfArgumentsException e) {
-            Console.println(e.getMessage());
-            Console.printHelpMessage();
+            //Console.println(e.getMessage());
+            FileHandler.writeUserErrors(e.getMessage());
+            //Console.printHelpMessage();
+            //сделать вывод help message в конце, если файл не пустой
         }
         return false;
     }
@@ -35,7 +37,8 @@ public class BufferedDataBase {
                 HelpCommand.getName(), 0)) {
             return false;
         }
-        Console.println(arguments[0]);
+        //Console.println(arguments[0]);
+        FileHandler.writeOutputInfo(arguments[0]);
         return true;
     }
 
@@ -45,8 +48,16 @@ public class BufferedDataBase {
             return false;
         }
 
-        Console.println("Information about collection:");
+        /*Console.println("Information about collection:");
         Console.println("Type of collection: " + getCollectionType() +
+                "\nInitialization date: " + lastInitTime +
+                "\nLast " + lastSaveTime +
+                "\nNumber of elements: " + getCollectionSize());
+
+         */
+        FileHandler.writeOutputInfo("Command " + InfoCommand.getName() + ":");
+        FileHandler.writeOutputInfo("Information about collection:");
+        FileHandler.writeOutputInfo("Type of collection: " + getCollectionType() +
                 "\nInitialization date: " + lastInitTime +
                 "\nLast " + lastSaveTime +
                 "\nNumber of elements: " + getCollectionSize());
@@ -78,7 +89,13 @@ public class BufferedDataBase {
                 ClearCommand.getName(), 0)) {
             return false;
         }
-        data.clear();
+        FileHandler.writeOutputInfo("Command " + ClearCommand.getName() + ":");
+        if (getCollectionSize() == 0) {
+            FileHandler.writeOutputInfo("Collection is already empty");
+        } else {
+            data.clear();
+            FileHandler.writeOutputInfo("Collection successfully cleared");
+        }
         return true;
     }
 
@@ -98,7 +115,9 @@ public class BufferedDataBase {
                 ExitCommand.getName(), 0)) {
             return false;
         }
-        System.exit(0);
+        FileHandler.writeOutputInfo("Command " + ExitCommand.getName() +
+                ":");
+        System.exit(0);///////////////////
         return true;
     }
 
