@@ -3,6 +3,7 @@ package processing;
 import data.Vehicle;
 import exceptions.WrongAmountOfArgumentsException;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Hashtable;
 import commands.*;
@@ -15,47 +16,32 @@ public class BufferedDataBase {
     public BufferedDataBase() {
     }
 
-    private boolean checkNumberOfArguments(String[] arguments,
-                                  String commandName,
-                                  int expectedNumberOfArguments) {
+    private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments) {
         try {
             if (arguments.length != expectedNumberOfArguments + 1)
                 throw new WrongAmountOfArgumentsException("Wrong amount of arguments: ",
-                        commandName, arguments.length - 1, expectedNumberOfArguments);
+                        arguments.length - 1, expectedNumberOfArguments);
             return true;
         } catch (WrongAmountOfArgumentsException e) {
-            //Console.println(e.getMessage());
             FileHandler.writeUserErrors(e.getMessage());
-            //Console.printHelpMessage();
-            //сделать вывод help message в конце, если файл не пустой
         }
         return false;
     }
 
     public boolean help(String[] arguments) {
-        if (!checkNumberOfArguments(arguments,
-                HelpCommand.getName(), 0)) {
+        FileHandler.writeOutputInfo("Command " + HelpCommand.getName() + ":");
+        if (!checkNumberOfArguments(arguments, 0)) {
             return false;
         }
-        //Console.println(arguments[0]);
         FileHandler.writeOutputInfo(arguments[0]);
         return true;
     }
 
     public boolean info(String[] arguments) {
-        if (!checkNumberOfArguments(arguments,
-                InfoCommand.getName(), 0)) {
+        FileHandler.writeOutputInfo("Command " + InfoCommand.getName() + ":");
+        if (!checkNumberOfArguments(arguments, 0)) {
             return false;
         }
-
-        /*Console.println("Information about collection:");
-        Console.println("Type of collection: " + getCollectionType() +
-                "\nInitialization date: " + lastInitTime +
-                "\nLast " + lastSaveTime +
-                "\nNumber of elements: " + getCollectionSize());
-
-         */
-        FileHandler.writeOutputInfo("Command " + InfoCommand.getName() + ":");
         FileHandler.writeOutputInfo("Information about collection:");
         FileHandler.writeOutputInfo("Type of collection: " + getCollectionType() +
                 "\nInitialization date: " + lastInitTime +
@@ -85,11 +71,10 @@ public class BufferedDataBase {
     }
 
     public boolean clear(String[] arguments) {
-        if (!checkNumberOfArguments(arguments,
-                ClearCommand.getName(), 0)) {
+        FileHandler.writeOutputInfo("Command " + ClearCommand.getName() + ":");
+        if (!checkNumberOfArguments(arguments, 0)) {
             return false;
         }
-        FileHandler.writeOutputInfo("Command " + ClearCommand.getName() + ":");
         if (getCollectionSize() == 0) {
             FileHandler.writeOutputInfo("Collection is already empty");
         } else {
@@ -111,12 +96,18 @@ public class BufferedDataBase {
 
 
     public boolean exit(String[] arguments) {
-        if (!checkNumberOfArguments(arguments,
-                ExitCommand.getName(), 0)) {
+        FileHandler.writeOutputInfo("Command " + ExitCommand.getName() + ":");
+        if (!checkNumberOfArguments(arguments, 0)) {
             return false;
         }
-        FileHandler.writeOutputInfo("Command " + ExitCommand.getName() +
-                ":");
+        FileHandler.writeOutputInfo("Program completed");
+        Console.printOutputFile();
+        if (!FileHandler.readUserErrFile().isEmpty()) { // for scripts
+            FileHandler.writeUserErrors(Console.getHelpMessage());
+            Console.printUserErrorsFile();
+        }
+        FileHandler.clearOutFile();
+        FileHandler.clearUserErrFile();
         System.exit(0);///////////////////
         return true;
     }

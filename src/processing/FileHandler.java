@@ -9,25 +9,28 @@ import java.io.IOException;
 import java.io.File;
 
 public class FileHandler {
-    private static final String USER_ERR_FILE_NAME = "src/files/user_errors.txt";
-    private static final String OUT_FILE_NAME = "src/files/output.txt";
-    private static final String USER_ERR_FILE_ABSOLUTE_PATH =
-            new File(USER_ERR_FILE_NAME).getAbsolutePath();
-    private static final String OUT_FILE_ABSOLUTE_PATH =
-            new File(OUT_FILE_NAME).getAbsolutePath();
+    private static final String OUTPUT_FILE_PATH = "src/files/output.txt";
+    private static final String USER_ERRORS_FILE_PATH = "src/files/user_errors.txt";
+    private static final String SYSTEM_ERRORS_FILE_PATH = "src/files/system_errors.txt";
+    private static final String OUTPUT_FILE_ABSOLUTE_PATH =
+            new File(OUTPUT_FILE_PATH).getAbsolutePath();
+    private static final String USER_ERRORS_FILE_ABSOLUTE_PATH =
+            new File(USER_ERRORS_FILE_PATH).getAbsolutePath();
+    private static final String SYSTEM_ERRORS_FILE_ABSOLUTE_PATH =
+            new File(SYSTEM_ERRORS_FILE_PATH).getAbsolutePath();
     //сделать проверку на существование файлов
-
+    //дать потокам числовую характеристику
 
     public FileHandler() {
 
     }
 
     public static void writeOutputInfo(String out) {
-        writeToFile(out, OUT_FILE_ABSOLUTE_PATH);
+        writeToFile(out, OUTPUT_FILE_ABSOLUTE_PATH);
     }
 
     public static void writeUserErrors(String errors) {
-        writeToFile(errors, USER_ERR_FILE_ABSOLUTE_PATH);
+        writeToFile(errors, USER_ERRORS_FILE_ABSOLUTE_PATH);
     }
 
     private static void writeToFile(String information, String filePath) {
@@ -41,11 +44,11 @@ public class FileHandler {
     }
 
     public static String readOutFile() {
-        return readFile(OUT_FILE_ABSOLUTE_PATH);
+        return readFile(OUTPUT_FILE_ABSOLUTE_PATH);
     }
 
     public static String readUserErrFile() {
-        return readFile(USER_ERR_FILE_ABSOLUTE_PATH);
+        return readFile(USER_ERRORS_FILE_ABSOLUTE_PATH);
     }
 
     private static String readFile(String absolutePath) {
@@ -62,11 +65,11 @@ public class FileHandler {
     }
 
     public static void clearOutFile() {
-        clearFile(OUT_FILE_ABSOLUTE_PATH);
+        clearFile(OUTPUT_FILE_ABSOLUTE_PATH);
     }
 
     public static void clearUserErrFile() {
-        clearFile(USER_ERR_FILE_ABSOLUTE_PATH);
+        clearFile(USER_ERRORS_FILE_ABSOLUTE_PATH);
     }
 
     private static void clearFile(String filePath) {

@@ -52,9 +52,8 @@ public class CommandParser {
         boolean exitStatus = commandSelection(nextLine, nextCommand,
                                             arguments,
                                             nextSplitedLine.length);
-        if (exitStatus) {
-            Console.printOutputFile();
-        } else {
+        Console.printOutputFile();
+        if (!exitStatus) {
             FileHandler.writeUserErrors(Console.getHelpMessage());
             Console.printUserErrorsFile();
         }
