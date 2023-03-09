@@ -1,17 +1,27 @@
 package processing;
 
 
+import data.Vehicle;
+
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.ArrayList;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonParseException;
 
 public class FileHandler {
-    private static final String OUTPUT_FILE_PATH = "src/files/output.txt";
-    private static final String USER_ERRORS_FILE_PATH = "src/files/user_errors.txt";
-    private static final String SYSTEM_ERRORS_FILE_PATH = "src/files/system_errors.txt";
+    private static final String OUTPUT_FILE_PATH = "src/main/java/files/output.txt";
+    private static final String USER_ERRORS_FILE_PATH = "src/main/java/files/user_errors.txt";
+    private static final String SYSTEM_ERRORS_FILE_PATH = "src/main/java/files/system_errors.txt";
     private static final String OUTPUT_FILE_ABSOLUTE_PATH =
             new File(OUTPUT_FILE_PATH).getAbsolutePath();
     private static final String USER_ERRORS_FILE_ABSOLUTE_PATH =
@@ -78,5 +88,24 @@ public class FileHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void writeCurrentCommand(String commandName) {
+        writeOutputInfo("Command " + commandName + ":");
+    }
+
+    public static Hashtable<Long, Vehicle> loadDataBase(String json) {
+        Gson gson = new Gson();
+        ArrayList<Vehicle> vehicleArrayList = gson.fromJson(json, new TypeToken<List<Vehicle>>(){}.getType());
+        Hashtable<Long, Vehicle> vehicleHashtable = new Hashtable<>();
+        for (Vehicle vehicle : vehicleArrayList) {
+            vehicleHashtable.put(vehicle.getId(), vehicle);
+        }
+        return new Hashtable<Long, Vehicle>();
+    }
+
+    public static boolean saveDataBase() {
+
+        return true;
     }
 }

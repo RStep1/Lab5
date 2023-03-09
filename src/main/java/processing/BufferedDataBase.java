@@ -14,13 +14,16 @@ public class BufferedDataBase {
     private LocalDateTime lastSaveTime;
 
     public BufferedDataBase() {
+        data = FileHandler.loadDataBase();
     }
 
-    private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments) {
+    private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
         try {
-            if (arguments.length != expectedNumberOfArguments + 1)
+            if (arguments.length != expectedNumberOfArguments + 1) {
+                FileHandler.writeCurrentCommand(commandName);
                 throw new WrongAmountOfArgumentsException("Wrong amount of arguments: ",
                         arguments.length - 1, expectedNumberOfArguments);
+            }
             return true;
         } catch (WrongAmountOfArgumentsException e) {
             FileHandler.writeUserErrors(e.getMessage());
@@ -29,19 +32,19 @@ public class BufferedDataBase {
     }
 
     public boolean help(String[] arguments) {
-        FileHandler.writeOutputInfo("Command " + HelpCommand.getName() + ":");
-        if (!checkNumberOfArguments(arguments, 0)) {
+        if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName())) {
             return false;
         }
+        FileHandler.writeCurrentCommand(HelpCommand.getName());
         FileHandler.writeOutputInfo(arguments[0]);
         return true;
     }
 
     public boolean info(String[] arguments) {
-        FileHandler.writeOutputInfo("Command " + InfoCommand.getName() + ":");
-        if (!checkNumberOfArguments(arguments, 0)) {
+        if (!checkNumberOfArguments(arguments, 0, InfoCommand.getName())) {
             return false;
         }
+        FileHandler.writeCurrentCommand(InfoCommand.getName());
         FileHandler.writeOutputInfo("Information about collection:");
         FileHandler.writeOutputInfo("Type of collection: " + getCollectionType() +
                 "\nInitialization date: " + lastInitTime +
@@ -71,10 +74,10 @@ public class BufferedDataBase {
     }
 
     public boolean clear(String[] arguments) {
-        FileHandler.writeOutputInfo("Command " + ClearCommand.getName() + ":");
-        if (!checkNumberOfArguments(arguments, 0)) {
+        if (!checkNumberOfArguments(arguments, 0, ClearCommand.getName())) {
             return false;
         }
+        FileHandler.writeCurrentCommand(ClearCommand.getName());
         if (getCollectionSize() == 0) {
             FileHandler.writeOutputInfo("Collection is already empty");
         } else {
@@ -96,11 +99,11 @@ public class BufferedDataBase {
 
 
     public boolean exit(String[] arguments) {
-        FileHandler.writeOutputInfo("Command " + ExitCommand.getName() + ":");
-        if (!checkNumberOfArguments(arguments, 0)) {
+        if (!checkNumberOfArguments(arguments, 0, ExitCommand.getName())) {
             return false;
         }
-        FileHandler.writeOutputInfo("Program completed");
+        FileHandler.writeCurrentCommand(ExitCommand.getName());
+        FileHandler.writeOutputInfo("Program successfully completed");
         Console.printOutputFile();
         if (!FileHandler.readUserErrFile().isEmpty()) { // for scripts
             FileHandler.writeUserErrors(Console.getHelpMessage());

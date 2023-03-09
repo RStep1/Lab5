@@ -1,7 +1,6 @@
 package processing;
 
 import commands.Command;
-import commands.HelpCommand;
 
 import java.util.ArrayList;
 
