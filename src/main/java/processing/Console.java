@@ -12,6 +12,8 @@ public class Console {
     }
 
     public void interactiveMode() {
+        FileHandler.clearOutFile();
+        FileHandler.clearUserErrFile();
         CommandParser parser = new CommandParser(invoker);
         Scanner in = new Scanner(System.in);
         while (true) {

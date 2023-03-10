@@ -5,16 +5,18 @@ import exceptions.WrongAmountOfArgumentsException;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import commands.*;
 
 public class BufferedDataBase {
-    private Hashtable<Integer, Vehicle> data = new Hashtable<>();
+    private Hashtable<Long, Vehicle> data;
     private LocalDateTime lastInitTime;
     private LocalDateTime lastSaveTime;
 
     public BufferedDataBase() {
         data = FileHandler.loadDataBase();
+        lastInitTime = data.isEmpty() && lastInitTime == null ? null : LocalDateTime.now();
     }
 
     private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
@@ -54,7 +56,19 @@ public class BufferedDataBase {
     }
 
     public boolean show(String[] arguments) {
-
+        if (!checkNumberOfArguments(arguments, 0, ShowCommand.getName())) {
+            return false;
+        }
+        FileHandler.writeCurrentCommand(ShowCommand.getName());
+        if (data.isEmpty()) {
+           FileHandler.writeOutputInfo("Collection is empty");
+           return true;
+        }
+        Enumeration<Long> keys = data.keys();
+        while (keys.hasMoreElements()) {
+            Long key = keys.nextElement();
+            FileHandler.writeOutputInfo(data.get(key) + "");
+        }
         return true;
     }
 
@@ -78,7 +92,7 @@ public class BufferedDataBase {
             return false;
         }
         FileHandler.writeCurrentCommand(ClearCommand.getName());
-        if (getCollectionSize() == 0) {
+        if (data.isEmpty()) {
             FileHandler.writeOutputInfo("Collection is already empty");
         } else {
             data.clear();
@@ -88,7 +102,13 @@ public class BufferedDataBase {
     }
 
     public boolean save(String[] arguments) {
-
+        if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName())) {
+            return false;
+        }
+        FileHandler.writeCurrentCommand(ClearCommand.getName());
+        FileHandler.saveDataBase(data);
+        FileHandler.writeOutputInfo("Collection successfully saved");
+        lastSaveTime = LocalDateTime.now();
         return true;
     }
 

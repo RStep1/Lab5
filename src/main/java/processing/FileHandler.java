@@ -9,30 +9,31 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
-import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.ArrayList;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.JsonParseException;
 
 public class FileHandler {
-    private static final String OUTPUT_FILE_PATH = "src/main/java/files/output.txt";
-    private static final String USER_ERRORS_FILE_PATH = "src/main/java/files/user_errors.txt";
-    private static final String SYSTEM_ERRORS_FILE_PATH = "src/main/java/files/system_errors.txt";
+    private static final String OUTPUT_FILE_PATH = "files/output.txt";
+    private static final String USER_ERRORS_FILE_PATH = "files/user_errors.txt";
+    private static final String SYSTEM_ERRORS_FILE_PATH = "files/system_errors.txt";
+    private static final String JSON_FILE_PATH = "files/data_base.json";
     private static final String OUTPUT_FILE_ABSOLUTE_PATH =
             new File(OUTPUT_FILE_PATH).getAbsolutePath();
     private static final String USER_ERRORS_FILE_ABSOLUTE_PATH =
             new File(USER_ERRORS_FILE_PATH).getAbsolutePath();
     private static final String SYSTEM_ERRORS_FILE_ABSOLUTE_PATH =
             new File(SYSTEM_ERRORS_FILE_PATH).getAbsolutePath();
+    private static final String JSON_FILE_ABSOLUTE_PATH =
+            new File(JSON_FILE_PATH).getAbsolutePath();
+
     //сделать проверку на существование файлов
     //дать потокам числовую характеристику
 
     public FileHandler() {
 
+    }
+
+    public static void writeJsonFile(String json) {
+        writeToFile(json, JSON_FILE_ABSOLUTE_PATH);
     }
 
     public static void writeOutputInfo(String out) {
@@ -53,6 +54,9 @@ public class FileHandler {
         }
     }
 
+    public static String readJsonFile() {
+        return readFile(JSON_FILE_ABSOLUTE_PATH);
+    }
     public static String readOutFile() {
         return readFile(OUTPUT_FILE_ABSOLUTE_PATH);
     }
@@ -72,6 +76,10 @@ public class FileHandler {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static void clearJsonFile() {
+        clearFile(JSON_FILE_ABSOLUTE_PATH);
     }
 
     public static void clearOutFile() {
@@ -94,18 +102,23 @@ public class FileHandler {
         writeOutputInfo("Command " + commandName + ":");
     }
 
-    public static Hashtable<Long, Vehicle> loadDataBase(String json) {
-        Gson gson = new Gson();
-        ArrayList<Vehicle> vehicleArrayList = gson.fromJson(json, new TypeToken<List<Vehicle>>(){}.getType());
-        Hashtable<Long, Vehicle> vehicleHashtable = new Hashtable<>();
-        for (Vehicle vehicle : vehicleArrayList) {
-            vehicleHashtable.put(vehicle.getId(), vehicle);
+    public static Hashtable<Long, Vehicle> loadDataBase() {
+        String json = readJsonFile();
+        System.out.println(json);////////////
+        JsonReader jsonReader = new JsonReader(json);
+        Hashtable<Long, Vehicle> vehicleHashtable = jsonReader.readDataBase();
+        if (vehicleHashtable == null) {
+            return new Hashtable<>();
         }
-        return new Hashtable<Long, Vehicle>();
+        return vehicleHashtable;
     }
 
-    public static boolean saveDataBase() {
-
+    public static boolean saveDataBase(Hashtable<Long, Vehicle> dataBase) {
+        JsonWriter jsonWriter = new JsonWriter(dataBase);
+        String json = jsonWriter.writeDataBase();
+        System.out.println(json);/////////
+        clearJsonFile();
+        writeJsonFile(json);
         return true;
     }
 }

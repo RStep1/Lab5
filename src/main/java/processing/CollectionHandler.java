@@ -9,5 +9,6 @@ public class CollectionHandler {
 
     public int generateId() {
 
+        return 1;
     }
 }
