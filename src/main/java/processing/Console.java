@@ -40,6 +40,11 @@ public class Console {
         printStream.println(message);
     }
 
+    public static void print(String message) {
+        PrintStream printStream = new PrintStream(System.out);
+        printStream.print(message);
+    }
+
     public static void printOutputFile() {
         println(FileHandler.readOutFile());
     }

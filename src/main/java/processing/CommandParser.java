@@ -1,6 +1,8 @@
 package processing;
 
 
+import java.util.Arrays;
+
 public class CommandParser {
     private CommandInvoker invoker;
 
@@ -8,10 +10,7 @@ public class CommandParser {
         this.invoker = invoker;
     }
 
-    private boolean commandSelection(String nextLine,
-                                     String nextCommand,
-                                     String[] arguments,
-                                     int splitedLineLength) {
+    private boolean commandSelection(String nextLine, String nextCommand, String[] arguments, int splitedLineLength) {
         boolean exitStatus;
         switch (nextCommand) {
             case "help" -> {
@@ -43,15 +42,15 @@ public class CommandParser {
     }
 
     public void commandProcessing(String nextLine) {
+        if (nextLine.trim() == "")
+            return;
         String nextSplitedLine[] = nextLine.trim().split("\\s+");
         String[] arguments = new String[nextSplitedLine.length];
         for (int i = 1; i < nextSplitedLine.length; i++) {
             arguments[i - 1] = nextSplitedLine[i];
         }
         String nextCommand = nextSplitedLine[0];
-        boolean exitStatus = commandSelection(nextLine, nextCommand,
-                                            arguments,
-                                            nextSplitedLine.length);
+        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, nextSplitedLine.length);
         Console.printOutputFile();
         if (!exitStatus) {
             FileHandler.writeUserErrors(Console.getHelpMessage());

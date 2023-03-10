@@ -13,6 +13,7 @@ public class BufferedDataBase {
     private Hashtable<Long, Vehicle> data;
     private LocalDateTime lastInitTime;
     private LocalDateTime lastSaveTime;
+    private FileHandler fileHandler;
 
     public BufferedDataBase() {
         data = FileHandler.loadDataBase();
