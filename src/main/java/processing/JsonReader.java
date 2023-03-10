@@ -16,7 +16,6 @@ public class JsonReader {
 
     public Hashtable<Long, Vehicle> readDataBase() {
         Gson gson = new Gson();
-        ArrayList<Vehicle> vehicleArrayList = gson.fromJson(json, new TypeToken<List<Vehicle>>(){}.getType());
         Hashtable<Long, Vehicle> vehicleHashtable
                 = gson.fromJson(json, new TypeToken<Hashtable<Long, Vehicle>>(){}.getType());
         return vehicleHashtable;
