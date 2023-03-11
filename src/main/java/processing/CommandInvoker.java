@@ -65,18 +65,24 @@ public class CommandInvoker {
         commandList.add(removeAllByEnginePowerCommand);
         commandList.add(countByFuelTypeCommand);
         commandList.add(filterLessThanFuelTypeCommand);
+
+        setReferenceFile();
     }
 
     public ArrayList<Command> getCommandList(){
         return commandList;
     }
 
-    public String getCommandsDescription() {
+    private String getCommandDescription() {
         String reference = "";
         for (Command command : commandList) {
             reference += command + "\n";
         }
         return reference;
+    }
+
+    private void setReferenceFile() {
+        FileHandler.writeReferenceFile(getCommandDescription());
     }
 
     public boolean help(String[] arguments) {

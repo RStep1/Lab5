@@ -22,10 +22,10 @@ public class BufferedDataBase {
 
     private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
         try {
-            if (arguments.length != expectedNumberOfArguments + 1) {
+            if (arguments.length != expectedNumberOfArguments) {
                 FileHandler.writeCurrentCommand(commandName);
                 throw new WrongAmountOfArgumentsException("Wrong amount of arguments: ",
-                        arguments.length - 1, expectedNumberOfArguments);
+                        arguments.length, expectedNumberOfArguments);
             }
             return true;
         } catch (WrongAmountOfArgumentsException e) {
@@ -35,31 +35,28 @@ public class BufferedDataBase {
     }
 
     public boolean help(String[] arguments) {
-        if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName())) {
+        if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName()))
             return false;
-        }
         FileHandler.writeCurrentCommand(HelpCommand.getName());
-        FileHandler.writeOutputInfo(arguments[0]);
+        FileHandler.writeOutputInfo(FileHandler.readReferenceFile());
         return true;
     }
 
     public boolean info(String[] arguments) {
-        if (!checkNumberOfArguments(arguments, 0, InfoCommand.getName())) {
+        if (!checkNumberOfArguments(arguments, 0, InfoCommand.getName()))
             return false;
-        }
         FileHandler.writeCurrentCommand(InfoCommand.getName());
         FileHandler.writeOutputInfo("Information about collection:");
         FileHandler.writeOutputInfo("Type of collection: " + getCollectionType() +
                 "\nInitialization date: " + lastInitTime +
-                "\nLast " + lastSaveTime +
+                "\nLast save time: " + lastSaveTime +
                 "\nNumber of elements: " + getCollectionSize());
         return true;
     }
 
     public boolean show(String[] arguments) {
-        if (!checkNumberOfArguments(arguments, 0, ShowCommand.getName())) {
+        if (!checkNumberOfArguments(arguments, 0, ShowCommand.getName()))
             return false;
-        }
         FileHandler.writeCurrentCommand(ShowCommand.getName());
         if (data.isEmpty()) {
            FileHandler.writeOutputInfo("Collection is empty");
@@ -74,7 +71,16 @@ public class BufferedDataBase {
     }
 
     public boolean insert(String[] arguments) {
-
+        System.out.println(arguments.length);
+        if (!checkNumberOfArguments(arguments, 1, InfoCommand.getName()))
+            return false;
+//        Long id = Long.parseLong(arguments[0]);
+        CollectionHandler collectionHandler = new CollectionHandler(data);
+        if (!collectionHandler.checkId(arguments[0]))
+            return false;
+//        Console.insertMode(id);
+        FileHandler.writeCurrentCommand(InsertCommand.getName());
+        FileHandler.writeOutputInfo("Element was successfully added");
         return true;
     }
 
@@ -89,9 +95,8 @@ public class BufferedDataBase {
     }
 
     public boolean clear(String[] arguments) {
-        if (!checkNumberOfArguments(arguments, 0, ClearCommand.getName())) {
+        if (!checkNumberOfArguments(arguments, 0, ClearCommand.getName()))
             return false;
-        }
         FileHandler.writeCurrentCommand(ClearCommand.getName());
         if (data.isEmpty()) {
             FileHandler.writeOutputInfo("Collection is already empty");
@@ -103,9 +108,8 @@ public class BufferedDataBase {
     }
 
     public boolean save(String[] arguments) {
-        if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName())) {
+        if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName()))
             return false;
-        }
         FileHandler.writeCurrentCommand(ClearCommand.getName());
         FileHandler.saveDataBase(data);
         FileHandler.writeOutputInfo("Collection successfully saved");
@@ -120,9 +124,8 @@ public class BufferedDataBase {
 
 
     public boolean exit(String[] arguments) {
-        if (!checkNumberOfArguments(arguments, 0, ExitCommand.getName())) {
+        if (!checkNumberOfArguments(arguments, 0, ExitCommand.getName()))
             return false;
-        }
         FileHandler.writeCurrentCommand(ExitCommand.getName());
         FileHandler.writeOutputInfo("Program successfully completed");
         Console.printOutputFile();

@@ -14,8 +14,7 @@ public class CommandParser {
         boolean exitStatus;
         switch (nextCommand) {
             case "help" -> {
-                arguments[splitedLineLength - 1] =
-                        invoker.getCommandsDescription();
+//                arguments[splitedLineLength - 1] = invoker.getCommandsDescription();
                 exitStatus = invoker.help(arguments);
             }
             case "info" -> exitStatus = invoker.info(arguments);
@@ -34,7 +33,7 @@ public class CommandParser {
             case "count_by_fuel_type" -> exitStatus = invoker.countByFuelType(arguments);
             case "filter_less_than_fuel_type" -> exitStatus = invoker.filterLessThanFuelType(arguments);
             default -> {
-                FileHandler.writeUserErrors(nextLine + ": No such command");
+                FileHandler.writeUserErrors(nextLine.trim() + ": No such command");
                 exitStatus = false;
             }
         }
@@ -45,12 +44,12 @@ public class CommandParser {
         if (nextLine.trim() == "")
             return;
         String nextSplitedLine[] = nextLine.trim().split("\\s+");
-        String[] arguments = new String[nextSplitedLine.length];
-        for (int i = 1; i < nextSplitedLine.length; i++) {
+        String[] arguments = new String[nextSplitedLine.length - 1];
+        for (int i = 1; i < nextSplitedLine.length - 1; i++) {
             arguments[i - 1] = nextSplitedLine[i];
         }
         String nextCommand = nextSplitedLine[0];
-        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, nextSplitedLine.length);
+        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, nextSplitedLine.length - 1);
         Console.printOutputFile();
         if (!exitStatus) {
             FileHandler.writeUserErrors(Console.getHelpMessage());

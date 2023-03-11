@@ -16,6 +16,7 @@ public class FileHandler {
     private static final String USER_ERRORS_FILE_PATH = "files/user_errors.txt";
     private static final String SYSTEM_ERRORS_FILE_PATH = "files/system_errors.txt";
     private static final String JSON_FILE_PATH = "files/data_base.json";
+    private static final String REFERENCE_FILE_PATH = "files/reference.txt";
     private static final String OUTPUT_FILE_ABSOLUTE_PATH =
             new File(OUTPUT_FILE_PATH).getAbsolutePath();
     private static final String USER_ERRORS_FILE_ABSOLUTE_PATH =
@@ -24,12 +25,18 @@ public class FileHandler {
             new File(SYSTEM_ERRORS_FILE_PATH).getAbsolutePath();
     private static final String JSON_FILE_ABSOLUTE_PATH =
             new File(JSON_FILE_PATH).getAbsolutePath();
+    private static final String REFERENCE_FILE_ABSOLUTE_PATH =
+            new File(REFERENCE_FILE_PATH).getAbsolutePath();
 
     //сделать проверку на существование файлов
     //дать потокам числовую характеристику
 
     public FileHandler() {
 
+    }
+    public static void writeReferenceFile(String info) {
+        clearReferenceFile();
+        writeToFile(info, REFERENCE_FILE_ABSOLUTE_PATH);
     }
 
     public static void writeJsonFile(String json) {
@@ -65,6 +72,10 @@ public class FileHandler {
         return readFile(USER_ERRORS_FILE_ABSOLUTE_PATH);
     }
 
+    public static String readReferenceFile() {
+        return readFile(REFERENCE_FILE_ABSOLUTE_PATH);
+    }
+
     private static String readFile(String absolutePath) {
         String result = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(absolutePath))) {
@@ -76,6 +87,10 @@ public class FileHandler {
             e.printStackTrace();
         }
         return result;
+    }
+
+    private static void clearReferenceFile() {
+        clearFile(REFERENCE_FILE_ABSOLUTE_PATH);
     }
 
     public static void clearJsonFile() {

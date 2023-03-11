@@ -24,6 +24,10 @@ public class Console {
         }
     }
 
+    public void insertMode(Long id) {
+
+    }
+
     public static void printHelpMessage() {
         PrintStream printStream = new PrintStream(System.out);
         printStream.println("Type 'help' and press Enter to " +
