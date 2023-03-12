@@ -71,14 +71,15 @@ public class BufferedDataBase {
     }
 
     public boolean insert(String[] arguments) {
-        System.out.println(arguments.length);
+        CollectionHandler collectionHandler = new CollectionHandler(data);
+        if (arguments.length == 0) {
+
+        }
         if (!checkNumberOfArguments(arguments, 1, InfoCommand.getName()))
             return false;
-//        Long id = Long.parseLong(arguments[0]);
-        CollectionHandler collectionHandler = new CollectionHandler(data);
-        if (!collectionHandler.checkId(arguments[0]))
-            return false;
-//        Console.insertMode(id);
+
+//        Long key = Long.getLong(arguments[0]);
+//        Console.insertMode(key);
         FileHandler.writeCurrentCommand(InsertCommand.getName());
         FileHandler.writeOutputInfo("Element was successfully added");
         return true;

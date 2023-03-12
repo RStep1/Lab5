@@ -11,39 +11,51 @@ import java.util.regex.Pattern;
 
 public class CollectionHandler {
     private final Hashtable<Long, Vehicle> dataBase;
-    private static final int NUMBER_OF_ID_DIGITS = 6;
+    private static final int NUMBER_OF_ID_DIGITS = 10;
 
     public CollectionHandler(Hashtable<Long, Vehicle> dataBase) {
         this.dataBase = dataBase;
     }
 
     public boolean checkId(String strId) {
-        //только цифры, > 0, 6-и значное число
         String correctId = String.format("\\d{%s}", NUMBER_OF_ID_DIGITS);
-        Pattern pattern = Pattern.compile(correctId);
-//        Matcher matcher = pattern.matcher(strId);
+        String incorrectLengthId = "\\d+";
+        String nonPositiveId = String.format("-\\d{$s}", NUMBER_OF_ID_DIGITS);
+        Pattern correctIdPattern = Pattern.compile(correctId);
+        Pattern incorrectLengthIdPattern = Pattern.compile(incorrectLengthId);
+        Pattern nonPositiveIdPattern = Pattern.compile(nonPositiveId);
 
-        //incorrect length
-        //incorrect symbols
-        //negative
-
-        if (pattern.matcher(strId).matches()) {
-
+        if (correctIdPattern.matcher(strId).matches()) {
+            if (!dataBase.containsKey(Long.parseLong(strId)))
+                return true;
+            FileHandler.writeUserErrors("Object with this id already exist");
+            return false;
         }
-
-        Long newId = new Long(1);
-        Enumeration<Long> ids = dataBase.keys();
-        while (ids.hasMoreElements()) {
-            Long id = ids.nextElement();
-            if (!newId.equals(id))
-                return false;
+        if (incorrectLengthIdPattern.matcher(strId).matches()) {
+            FileHandler.writeUserErrors("### incorrect length of id ###");
+            return false;
         }
-        return true;
+        if (nonPositiveIdPattern.matcher(strId).matches()) {
+            FileHandler.writeUserErrors("###non-positive id###");
+            return false;
+        }
+        FileHandler.writeUserErrors("###id contains not numeric value###");
+        return false;
     }
 
-    public int generateId() {
-        Random random = new Random();
-        random.nextLong();
-        return 1;
+    public static boolean hasElementWithId(String id) {
+
+        return false;
+    }
+
+
+    public static String generateId() {
+        StringBuilder newId = new StringBuilder(NUMBER_OF_ID_DIGITS);
+        do {
+            for (int i = 0; i < NUMBER_OF_ID_DIGITS; i++) {
+                newId.append((long) (Math.random() * 10));
+            }
+        } while (hasElementWithId(newId.toString()));
+        return newId.toString();
     }
 }

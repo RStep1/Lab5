@@ -1,10 +1,7 @@
 package run;
 
-import processing.BufferedDataBase;
-import processing.CommandInvoker;
-import processing.Console;
+import processing.*;
 import commands.*;
-import processing.FileHandler;
 
 
 import java.io.File;
@@ -25,7 +22,6 @@ public class Main {
                 new RemoveAllByEnginePowerCommand(bufferedDataBase),
                 new CountByFuelTypeCommand(bufferedDataBase),
                 new FilterLessThanFuelTypeCommand(bufferedDataBase));
-
         Console console = new Console(invoker);
         console.interactiveMode();
     }

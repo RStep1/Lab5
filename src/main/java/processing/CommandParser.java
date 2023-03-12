@@ -14,7 +14,6 @@ public class CommandParser {
         boolean exitStatus;
         switch (nextCommand) {
             case "help" -> {
-//                arguments[splitedLineLength - 1] = invoker.getCommandsDescription();
                 exitStatus = invoker.help(arguments);
             }
             case "info" -> exitStatus = invoker.info(arguments);

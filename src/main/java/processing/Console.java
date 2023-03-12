@@ -24,7 +24,7 @@ public class Console {
         }
     }
 
-    public void insertMode(Long id) {
+    public void insertMode(Long key) {
 
     }
 
