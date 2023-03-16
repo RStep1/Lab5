@@ -1,6 +1,7 @@
 package commands;
 
 import processing.BufferedDataBase;
+import processing.ExecuteMode;
 
 public class RemoveGreaterKeyCommand implements Command {
     private BufferedDataBase bufferedDataBase;
@@ -13,7 +14,7 @@ public class RemoveGreaterKeyCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments) {
+    public boolean execute(String[] arguments, ExecuteMode executeMode) {
         return bufferedDataBase.removeGreaterKey(arguments);
     }
 

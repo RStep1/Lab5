@@ -1,6 +1,7 @@
 package commands;
 
 import processing.BufferedDataBase;
+import processing.ExecuteMode;
 
 public class ClearCommand implements Command {
     private BufferedDataBase bufferedDataBase;
@@ -11,7 +12,7 @@ public class ClearCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments) {
+    public boolean execute(String[] arguments, ExecuteMode executeMode) {
         return bufferedDataBase.clear(arguments);
     }
 

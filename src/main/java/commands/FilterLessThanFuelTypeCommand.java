@@ -1,6 +1,7 @@
 package commands;
 
 import processing.BufferedDataBase;
+import processing.ExecuteMode;
 
 public class FilterLessThanFuelTypeCommand implements Command {
     private BufferedDataBase bufferedDataBase;
@@ -14,7 +15,7 @@ public class FilterLessThanFuelTypeCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments) {
+    public boolean execute(String[] arguments, ExecuteMode executeMode) {
         return bufferedDataBase.filterLessThanFuelType(arguments);
     }
 

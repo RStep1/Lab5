@@ -1,6 +1,7 @@
 package commands;
 
 import processing.BufferedDataBase;
+import processing.ExecuteMode;
 
 public class RemoveGreaterCommand implements Command {
     private BufferedDataBase bufferedDataBase;
@@ -12,7 +13,7 @@ public class RemoveGreaterCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments) {
+    public boolean execute(String[] arguments, ExecuteMode executeMode) {
         return bufferedDataBase.removeGreater(arguments);
     }
 

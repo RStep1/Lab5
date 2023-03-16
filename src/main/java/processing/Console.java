@@ -6,9 +6,11 @@ import java.util.Scanner;
 
 public class Console {
     private CommandInvoker invoker;
+    private CollectionHandler collectionHandler;
 
-    public Console(CommandInvoker invoker) {
+    public Console(CommandInvoker invoker, CollectionHandler collectionHandler) {
         this.invoker = invoker;
+        this.collectionHandler = collectionHandler;
     }
 
     public void interactiveMode() {

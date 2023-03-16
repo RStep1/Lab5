@@ -85,67 +85,67 @@ public class CommandInvoker {
         FileHandler.writeReferenceFile(getCommandDescription());
     }
 
-    public boolean help(String[] arguments) {
-        return helpCommand.execute(arguments);
+    public boolean help(String[] arguments, ExecuteMode executeMode) {
+        return helpCommand.execute(arguments, executeMode);
     }
 
-    public boolean info(String[] arguments) {
-        return infoCommand.execute(arguments);
+    public boolean info(String[] arguments, ExecuteMode executeMode) {
+        return infoCommand.execute(arguments, executeMode);
     }
 
-    public boolean show(String[] arguments) {
-        return showCommand.execute(arguments);
+    public boolean show(String[] arguments, ExecuteMode executeMode) {
+        return showCommand.execute(arguments, executeMode);
     }
 
-    public boolean insert(String[] arguments) {
-        return insertCommand.execute(arguments);
+    public boolean insert(String[] arguments, ExecuteMode executeMode) {
+        return insertCommand.execute(arguments, executeMode);
     }
 
-    public boolean update(String[] arguments) {
-        return updateCommand.execute(arguments);
+    public boolean update(String[] arguments, ExecuteMode executeMode) {
+        return updateCommand.execute(arguments, executeMode);
     }
 
-    public boolean removeKey(String[] arguments) {
-        return removeKeyCommand.execute(arguments);
+    public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
+        return removeKeyCommand.execute(arguments, executeMode);
     }
 
-    public boolean clear(String[] arguments) {
-        return clearCommand.execute(arguments);
+    public boolean clear(String[] arguments, ExecuteMode executeMode) {
+        return clearCommand.execute(arguments, executeMode);
     }
 
-    public boolean save(String[] arguments) {
-        return saveCommand.execute(arguments);
+    public boolean save(String[] arguments, ExecuteMode executeMode) {
+        return saveCommand.execute(arguments, executeMode);
     }
 
-    public boolean executeScript(String[] arguments) {
-        return executeScriptCommand.execute(arguments);
+    public boolean executeScript(String[] arguments, ExecuteMode executeMode) {
+        return executeScriptCommand.execute(arguments, executeMode);
     }
 
-    public boolean exit(String[] arguments) {
-        return exitCommand.execute(arguments);
+    public boolean exit(String[] arguments, ExecuteMode executeMode) {
+        return exitCommand.execute(arguments, executeMode);
     }
 
-    public boolean removeGreater(String[] arguments) {
-        return removeGreaterCommand.execute(arguments);
+    public boolean removeGreater(String[] arguments, ExecuteMode executeMode) {
+        return removeGreaterCommand.execute(arguments, executeMode);
     }
 
-    public boolean removeLower(String[] arguments) {
-        return removeLowerCommand.execute(arguments);
+    public boolean removeLower(String[] arguments, ExecuteMode executeMode) {
+        return removeLowerCommand.execute(arguments, executeMode);
     }
 
-    public boolean removeGreaterKey(String[] arguments) {
-        return removeGreaterKeyCommand.execute(arguments);
+    public boolean removeGreaterKey(String[] arguments, ExecuteMode executeMode) {
+        return removeGreaterKeyCommand.execute(arguments, executeMode);
     }
 
-    public boolean removeAllByEnginePower(String[] arguments) {
-        return removeAllByEnginePowerCommand.execute(arguments);
+    public boolean removeAllByEnginePower(String[] arguments, ExecuteMode executeMode) {
+        return removeAllByEnginePowerCommand.execute(arguments, executeMode);
     }
 
-    public boolean countByFuelType(String[] arguments) {
-        return countByFuelTypeCommand.execute(arguments);
+    public boolean countByFuelType(String[] arguments, ExecuteMode executeMode) {
+        return countByFuelTypeCommand.execute(arguments, executeMode);
     }
 
-    public boolean filterLessThanFuelType(String[] arguments) {
-        return filterLessThanFuelTypeCommand.execute(arguments);
+    public boolean filterLessThanFuelType(String[] arguments, ExecuteMode executeMode) {
+        return filterLessThanFuelTypeCommand.execute(arguments, executeMode);
     }
 }

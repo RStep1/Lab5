@@ -1,5 +1,6 @@
 package commands;
 import processing.BufferedDataBase;
+import processing.ExecuteMode;
 
 public class HelpCommand implements Command {
     private BufferedDataBase dataBase;
@@ -11,7 +12,7 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments) {
+    public boolean execute(String[] arguments, ExecuteMode executeMode) {
         return dataBase.help(arguments);
     }
 

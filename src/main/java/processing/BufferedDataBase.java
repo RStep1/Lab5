@@ -34,7 +34,7 @@ public class BufferedDataBase {
         return false;
     }
 
-    public boolean help(String[] arguments) {
+    public boolean help(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(HelpCommand.getName());
@@ -42,7 +42,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean info(String[] arguments) {
+    public boolean info(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, InfoCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(InfoCommand.getName());
@@ -54,7 +54,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean show(String[] arguments) {
+    public boolean show(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ShowCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ShowCommand.getName());
@@ -70,32 +70,32 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean insert(String[] arguments) {
+    public boolean insert(String[] arguments, ExecuteMode executeMode) {
+        if (!checkNumberOfArguments(arguments, 1, InfoCommand.getName())) {
+            return false;
+        }
         CollectionHandler collectionHandler = new CollectionHandler(data);
-        if (arguments.length == 0) {
+        Long key = Long.getLong(arguments[0]);
+        if (!collectionHandler.checkKey(key)) {
 
         }
-        if (!checkNumberOfArguments(arguments, 1, InfoCommand.getName()))
-            return false;
-
-//        Long key = Long.getLong(arguments[0]);
 //        Console.insertMode(key);
         FileHandler.writeCurrentCommand(InsertCommand.getName());
         FileHandler.writeOutputInfo("Element was successfully added");
         return true;
     }
 
-    public boolean update(String[] arguments) {
+    public boolean update(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }
 
-    public boolean removeKey(String[] arguments) {
+    public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }
 
-    public boolean clear(String[] arguments) {
+    public boolean clear(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ClearCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ClearCommand.getName());
@@ -108,7 +108,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean save(String[] arguments) {
+    public boolean save(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ClearCommand.getName());
@@ -118,13 +118,13 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean executeScript(String[] arguments) {
+    public boolean executeScript(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }
 
 
-    public boolean exit(String[] arguments) {
+    public boolean exit(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ExitCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ExitCommand.getName());
@@ -140,32 +140,32 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean removeGreater(String[] arguments) {
+    public boolean removeGreater(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }
 
-    public boolean removeLower(String[] arguments) {
+    public boolean removeLower(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }
 
-    public boolean removeGreaterKey(String[] arguments) {
+    public boolean removeGreaterKey(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }
 
-    public boolean removeAllByEnginePower(String[] arguments) {
+    public boolean removeAllByEnginePower(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }
 
-    public boolean countByFuelType(String[] arguments) {
+    public boolean countByFuelType(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }
 
-    public boolean filterLessThanFuelType(String[] arguments) {
+    public boolean filterLessThanFuelType(String[] arguments, ExecuteMode executeMode) {
 
         return true;
     }

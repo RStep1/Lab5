@@ -1,6 +1,7 @@
 package commands;
 
 import processing.BufferedDataBase;
+import processing.ExecuteMode;
 
 public class InsertCommand implements Command {
     private BufferedDataBase bufferedDataBase;
@@ -12,7 +13,7 @@ public class InsertCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments) {
+    public boolean execute(String[] arguments, ExecuteMode executeMode) {
         return bufferedDataBase.insert(arguments);
     }
 
