@@ -6,6 +6,7 @@ import data.Vehicle;
 import data.VehicleType;
 
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 
@@ -14,6 +15,8 @@ public class Console {
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RESET = "\u001B[0m";
+    public static final String zonedDatePattern = "dd/MM/yyy - HH:mm:ss z";
+    public static final DateTimeFormatter zonedDateFormatter = DateTimeFormatter.ofPattern(zonedDatePattern);
 
     public Console(CommandInvoker invoker) {
         this.invoker = invoker;
@@ -84,7 +87,10 @@ public class Console {
         long distanceTravelled = Long.parseLong(newDistanceTravelled);
         VehicleType type = VehicleType.CAR;/////
         FuelType fuelType = FuelType.ALCOHOL;/////
-        Vehicle vehicle = new Vehicle(id, newName, coordinates, creationDate.toString(),
+
+
+        String stringCreationDate = creationDate.format(zonedDateFormatter);
+        Vehicle vehicle = new Vehicle(id, newName, coordinates, stringCreationDate,
                 enginePower, distanceTravelled, type, fuelType);
         return vehicle;
     }

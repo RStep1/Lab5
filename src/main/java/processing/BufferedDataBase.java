@@ -6,6 +6,7 @@ import exceptions.WrongAmountOfArgumentsException;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -15,6 +16,8 @@ public class BufferedDataBase {
     private Hashtable<Long, Vehicle> data;
     private LocalDateTime lastInitTime;
     private LocalDateTime lastSaveTime;
+    private static final String datePattern = "dd/MM/yyy - HH:mm:ss";
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
 
     public BufferedDataBase() {
         data = FileHandler.loadDataBase();
@@ -50,11 +53,16 @@ public class BufferedDataBase {
     public boolean info(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, InfoCommand.getName()))
             return false;
+        String stringLastInitTime = (lastInitTime == null ?
+                "there have been no initializations in this session yet" : lastInitTime.format(dateFormatter));
+        String stringLastSaveTime = (lastSaveTime == null ?
+                "there hasn't been a save here yet" : lastSaveTime.format(dateFormatter));
+        System.out.println(stringLastInitTime);
         FileHandler.writeCurrentCommand(InfoCommand.getName());
         FileHandler.writeOutputInfo("Information about collection:");
         FileHandler.writeOutputInfo("Type of collection:  " + getCollectionType() +
-                                  "\nInitialization date: " + lastInitTime +
-                                  "\nLast save time:      " + lastSaveTime +
+                                  "\nInitialization date: " + stringLastInitTime +
+                                  "\nLast save time:      " + stringLastSaveTime +
                                   "\nNumber of elements:  " + getCollectionSize());
         return true;
     }

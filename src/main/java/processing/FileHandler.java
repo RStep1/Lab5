@@ -120,7 +120,6 @@ public class FileHandler {
 
     public static Hashtable<Long, Vehicle> loadDataBase() {
         String json = readJsonFile();
-//        System.out.println(json);////////////
         JsonReader jsonReader = new JsonReader(json);
         Hashtable<Long, Vehicle> vehicleHashtable = jsonReader.readDataBase();
         if (vehicleHashtable == null) {
@@ -132,7 +131,6 @@ public class FileHandler {
     public static boolean saveDataBase(Hashtable<Long, Vehicle> dataBase) {
         JsonWriter jsonWriter = new JsonWriter(dataBase);
         String json = jsonWriter.writeDataBase();
-//        System.out.println(json);/////////
         clearJsonFile();
         writeJsonFile(json);
         return true;
