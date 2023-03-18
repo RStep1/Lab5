@@ -14,7 +14,7 @@ public class RemoveLowerCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.removeLower(arguments);
+        return bufferedDataBase.removeLower(arguments, executeMode);
     }
 
     public static String getName() {

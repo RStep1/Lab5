@@ -14,7 +14,7 @@ public class RemoveKeyCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.removeKey(arguments);
+        return bufferedDataBase.removeKey(arguments, executeMode);
     }
 
     public static String getName() {

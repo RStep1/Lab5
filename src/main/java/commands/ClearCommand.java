@@ -13,7 +13,7 @@ public class ClearCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.clear(arguments);
+        return bufferedDataBase.clear(arguments, executeMode);
     }
 
     public static String getName() {

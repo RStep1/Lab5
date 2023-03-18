@@ -14,7 +14,7 @@ public class SaveCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.save(arguments);
+        return bufferedDataBase.save(arguments, executeMode);
     }
 
     public static String getName() {

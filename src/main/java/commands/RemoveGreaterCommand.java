@@ -14,7 +14,7 @@ public class RemoveGreaterCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.removeGreater(arguments);
+        return bufferedDataBase.removeGreater(arguments, executeMode);
     }
 
     public static String getName() {

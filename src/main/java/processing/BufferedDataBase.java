@@ -5,6 +5,8 @@ import exceptions.WrongAmountOfArgumentsException;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import commands.*;
@@ -13,11 +15,14 @@ public class BufferedDataBase {
     private Hashtable<Long, Vehicle> data;
     private LocalDateTime lastInitTime;
     private LocalDateTime lastSaveTime;
-    private FileHandler fileHandler;
 
     public BufferedDataBase() {
         data = FileHandler.loadDataBase();
         lastInitTime = data.isEmpty() && lastInitTime == null ? null : LocalDateTime.now();
+    }
+
+    public Hashtable<Long, Vehicle> getData() {
+        return data;
     }
 
     private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
@@ -47,10 +52,10 @@ public class BufferedDataBase {
             return false;
         FileHandler.writeCurrentCommand(InfoCommand.getName());
         FileHandler.writeOutputInfo("Information about collection:");
-        FileHandler.writeOutputInfo("Type of collection: " + getCollectionType() +
-                "\nInitialization date: " + lastInitTime +
-                "\nLast save time: " + lastSaveTime +
-                "\nNumber of elements: " + getCollectionSize());
+        FileHandler.writeOutputInfo("Type of collection:  " + getCollectionType() +
+                                  "\nInitialization date: " + lastInitTime +
+                                  "\nLast save time:      " + lastSaveTime +
+                                  "\nNumber of elements:  " + getCollectionSize());
         return true;
     }
 
@@ -65,21 +70,29 @@ public class BufferedDataBase {
         Enumeration<Long> keys = data.keys();
         while (keys.hasMoreElements()) {
             Long key = keys.nextElement();
-            FileHandler.writeOutputInfo(data.get(key) + "");
+            FileHandler.writeOutputInfo("key:                " + key +
+                    "\n" + data.get(key) + "");
         }
         return true;
     }
 
     public boolean insert(String[] arguments, ExecuteMode executeMode) {
-        if (!checkNumberOfArguments(arguments, 1, InfoCommand.getName())) {
+        if (arguments.length == 0) {
+            FileHandler.writeUserErrors("Key value cannot be null");
             return false;
         }
-        CollectionHandler collectionHandler = new CollectionHandler(data);
-        Long key = Long.getLong(arguments[0]);
-        if (!collectionHandler.checkKey(key)) {
-
+        if (!checkNumberOfArguments(arguments, 1, InsertCommand.getName())) {
+            return false;
         }
-//        Console.insertMode(key);
+        CollectionHandler collectionHandler = new CollectionHandler(data, executeMode);
+        if (!collectionHandler.checkKey(arguments[0])) {
+            return false;
+        }
+        Long key = Long.parseLong(arguments[0]);
+        long id = collectionHandler.generateId();
+        java.time.ZonedDateTime creationDate = ZonedDateTime.now();
+        Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
+        data.put(key, vehicle);
         FileHandler.writeCurrentCommand(InsertCommand.getName());
         FileHandler.writeOutputInfo("Element was successfully added");
         return true;
@@ -111,7 +124,7 @@ public class BufferedDataBase {
     public boolean save(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName()))
             return false;
-        FileHandler.writeCurrentCommand(ClearCommand.getName());
+        FileHandler.writeCurrentCommand(SaveCommand.getName());
         FileHandler.saveDataBase(data);
         FileHandler.writeOutputInfo("Collection successfully saved");
         lastSaveTime = LocalDateTime.now();

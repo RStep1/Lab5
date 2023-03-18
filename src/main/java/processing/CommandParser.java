@@ -10,27 +10,27 @@ public class CommandParser {
         this.invoker = invoker;
     }
 
-    private boolean commandSelection(String nextLine, String nextCommand, String[] arguments, int splitedLineLength) {
+    private boolean commandSelection(String nextLine, String nextCommand, String[] arguments, int splitedLineLength, ExecuteMode executeMode) {
         boolean exitStatus;
         switch (nextCommand) {
             case "help" -> {
-                exitStatus = invoker.help(arguments);
+                exitStatus = invoker.help(arguments, executeMode);
             }
-            case "info" -> exitStatus = invoker.info(arguments);
-            case "show" -> exitStatus = invoker.show(arguments);
-            case "insert" -> exitStatus = invoker.insert(arguments);
-            case "update" -> exitStatus = invoker.update(arguments);
-            case "remove_key" -> exitStatus = invoker.removeKey(arguments);
-            case "clear" -> exitStatus = invoker.clear(arguments);
-            case "save" -> exitStatus = invoker.save(arguments);
-            case "execute_script" -> exitStatus = invoker.executeScript(arguments);
-            case "exit" -> exitStatus = invoker.exit(arguments);
-            case "remove_greater" -> exitStatus = invoker.removeGreater(arguments);
-            case "remove_lower" -> exitStatus = invoker.removeLower(arguments);
-            case "remove_greater_key" -> exitStatus = invoker.removeGreaterKey(arguments);
-            case "remove_all_by_engine_type" -> exitStatus = invoker.removeAllByEnginePower(arguments);
-            case "count_by_fuel_type" -> exitStatus = invoker.countByFuelType(arguments);
-            case "filter_less_than_fuel_type" -> exitStatus = invoker.filterLessThanFuelType(arguments);
+            case "info" -> exitStatus = invoker.info(arguments, executeMode);
+            case "show" -> exitStatus = invoker.show(arguments, executeMode);
+            case "insert" -> exitStatus = invoker.insert(arguments, executeMode);
+            case "update" -> exitStatus = invoker.update(arguments, executeMode);
+            case "remove_key" -> exitStatus = invoker.removeKey(arguments, executeMode);
+            case "clear" -> exitStatus = invoker.clear(arguments, executeMode);
+            case "save" -> exitStatus = invoker.save(arguments, executeMode);
+            case "execute_script" -> exitStatus = invoker.executeScript(arguments, ExecuteMode.SCRIPT_MODE);
+            case "exit" -> exitStatus = invoker.exit(arguments, executeMode);
+            case "remove_greater" -> exitStatus = invoker.removeGreater(arguments, executeMode);
+            case "remove_lower" -> exitStatus = invoker.removeLower(arguments, executeMode);
+            case "remove_greater_key" -> exitStatus = invoker.removeGreaterKey(arguments, executeMode);
+            case "remove_all_by_engine_type" -> exitStatus = invoker.removeAllByEnginePower(arguments, executeMode);
+            case "count_by_fuel_type" -> exitStatus = invoker.countByFuelType(arguments, executeMode);
+            case "filter_less_than_fuel_type" -> exitStatus = invoker.filterLessThanFuelType(arguments, executeMode);
             default -> {
                 FileHandler.writeUserErrors(nextLine.trim() + ": No such command");
                 exitStatus = false;
@@ -39,16 +39,16 @@ public class CommandParser {
         return exitStatus;
     }
 
-    public void commandProcessing(String nextLine) {
+    public void commandProcessing(String nextLine, ExecuteMode executeMode) {
         if (nextLine.trim() == "")
             return;
         String nextSplitedLine[] = nextLine.trim().split("\\s+");
         String[] arguments = new String[nextSplitedLine.length - 1];
-        for (int i = 1; i < nextSplitedLine.length - 1; i++) {
+        for (int i = 1; i < nextSplitedLine.length; i++) {
             arguments[i - 1] = nextSplitedLine[i];
         }
         String nextCommand = nextSplitedLine[0];
-        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, nextSplitedLine.length - 1);
+        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, nextSplitedLine.length - 1, executeMode);
         Console.printOutputFile();
         if (!exitStatus) {
             FileHandler.writeUserErrors(Console.getHelpMessage());

@@ -13,7 +13,7 @@ public class ExitCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return dataBase.exit(arguments);
+        return dataBase.exit(arguments, executeMode);
     }
 
     public static String getName() {

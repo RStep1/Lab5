@@ -16,7 +16,7 @@ public class FilterLessThanFuelTypeCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.filterLessThanFuelType(arguments);
+        return bufferedDataBase.filterLessThanFuelType(arguments, executeMode);
     }
 
     public static String getName() {

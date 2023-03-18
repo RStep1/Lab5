@@ -15,7 +15,7 @@ public class UpdateCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.update(arguments);
+        return bufferedDataBase.update(arguments, executeMode);
     }
 
     public static String getName() {

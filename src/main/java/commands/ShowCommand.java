@@ -15,7 +15,7 @@ public class ShowCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.show(arguments);
+        return bufferedDataBase.show(arguments, executeMode);
     }
 
     public static String getName() {

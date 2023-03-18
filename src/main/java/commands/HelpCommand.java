@@ -13,7 +13,7 @@ public class HelpCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return dataBase.help(arguments);
+        return dataBase.help(arguments, executeMode);
     }
 
     public static String getName() {

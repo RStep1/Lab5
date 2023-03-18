@@ -15,7 +15,7 @@ public class RemoveAllByEnginePowerCommand implements Command {
 
     @Override
     public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.removeAllByEnginePower(arguments);
+        return bufferedDataBase.removeAllByEnginePower(arguments, executeMode);
     }
 
     public static String getName() {
