@@ -33,12 +33,12 @@ public class Main {
 //        Console.printUserErrorsFile();
 //        FileHandler.clearUserErrFile();
 
-        System.out.println(collectionHandler.checkId("3223576638"));
-        System.out.println(collectionHandler.checkId("445"));
-        System.out.println(collectionHandler.checkId("2345234523452345"));
-        System.out.println(collectionHandler.checkId("-23452"));
-        System.out.println(collectionHandler.checkId("~`"));
-        Console.printUserErrorsFile();
+//        System.out.println(collectionHandler.checkId("3223576638"));
+//        System.out.println(collectionHandler.checkId("445"));
+//        System.out.println(collectionHandler.checkId("2345234523452345"));
+//        System.out.println(collectionHandler.checkId("-23452"));
+//        System.out.println(collectionHandler.checkId("~`"));
+//        Console.printUserErrorsFile();
         Console console = new Console(invoker);
         console.interactiveMode();
     }

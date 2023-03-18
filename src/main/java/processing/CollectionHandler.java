@@ -19,13 +19,13 @@ public class CollectionHandler {
     }
 
     private boolean hasNonNumericCharacters(String value, String valueName) {
-        String nonDigitValue = "\\D+";
+        String nonDigitValue = "-?\\d+";
         Pattern nonDigitValuePattern = Pattern.compile(nonDigitValue);
         if (nonDigitValuePattern.matcher(value).matches()) {
-            FileHandler.writeUserErrors(String.format("%s must be a number", valueName));
-            return true;
+            return false;
         }
-        return false;
+        FileHandler.writeUserErrors(String.format("%s must be a number", valueName));
+        return true;
     }
     private boolean isNegativeValue(String value, String valueName) {
         String nonPositiveValue = "-\\d+";
@@ -45,6 +45,16 @@ public class CollectionHandler {
         }
         return false;
     }
+    private boolean isDoubleValue(String value, String valueName) {
+        String doubleValue = "([-+]?\\d*[.,]?\\d*)";
+        Pattern doubleValuePattern = Pattern.compile(doubleValue);
+        if (doubleValuePattern.matcher(value).matches())
+            return true;
+        FileHandler.writeUserErrors(String.format("%s coordinate must be of type double", valueName));
+        Console.printUserErrorsFile();
+        FileHandler.clearUserErrFile();
+        return false;
+    }
 
     public boolean checkKey(String key) {
         if (hasNonNumericCharacters(key, "Key"))
@@ -57,7 +67,7 @@ public class CollectionHandler {
             FileHandler.writeUserErrors(String.format("key is too long, max length - %s", MAX_KEY_LENGTH));
             return false;
         }
-        if (dataBase.containsKey(key)) {
+        if (dataBase.containsKey(Long.parseLong(key))) {
             FileHandler.writeUserErrors("element with the same key already exists");
             return false;
         }
@@ -118,7 +128,8 @@ public class CollectionHandler {
         return true;
     }
     public boolean checkX(String newX) {
-        //проверка регулярками
+        if (!isDoubleValue(newX, "X"))
+            return false;
         float x = Float.parseFloat(newX);
         if (x > 341) {
             FileHandler.writeUserErrors("");
@@ -129,7 +140,8 @@ public class CollectionHandler {
         return true;
     }
     public boolean checkY(String newY) {
-        //проверка регулярками
+        if (!isDoubleValue(newY, "Y"))
+            return false;
         double y = Double.parseDouble(newY);
         if (y <= -272) {
             FileHandler.writeUserErrors("");
