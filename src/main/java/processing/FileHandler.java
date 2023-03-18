@@ -28,6 +28,7 @@ public class FileHandler {
     private static final String REFERENCE_FILE_ABSOLUTE_PATH =
             new File(REFERENCE_FILE_PATH).getAbsolutePath();
 
+
     //сделать проверку на существование файлов
     //дать потокам числовую характеристику
 

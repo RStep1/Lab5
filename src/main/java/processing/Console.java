@@ -11,6 +11,9 @@ import java.util.Scanner;
 
 public class Console {
     private CommandInvoker invoker;
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
     public Console(CommandInvoker invoker) {
         this.invoker = invoker;
@@ -93,8 +96,7 @@ public class Console {
     }
 
     public static String getHelpMessage() {
-        return "Type 'help' and press Enter to " +
-                "see a list of commands";
+        return "Type 'help' and press Enter to see a list of commands";
     }
 
     public static void println(String message) {
@@ -108,10 +110,10 @@ public class Console {
     }
 
     public static void printOutputFile() {
-        print(FileHandler.readOutFile());
+        print(ANSI_GREEN + FileHandler.readOutFile() + ANSI_RESET);
     }
 
     public static void printUserErrorsFile() {
-        print(FileHandler.readUserErrFile());
+        print(ANSI_RED + FileHandler.readUserErrFile() + ANSI_RESET);
     }
 }
