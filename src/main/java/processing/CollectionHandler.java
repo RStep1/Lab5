@@ -2,6 +2,8 @@ package processing;
 
 import data.Vehicle;
 
+
+import java.text.NumberFormat;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.regex.Pattern;
@@ -45,14 +47,20 @@ public class CollectionHandler {
         }
         return false;
     }
-    private boolean isDoubleValue(String value, String valueName) {
-        String doubleValue = "([-+]?\\d*[.,]?\\d*)";
-        Pattern doubleValuePattern = Pattern.compile(doubleValue);
-        if (doubleValuePattern.matcher(value).matches())
+
+    private boolean checkTypeValue(ValueType valueType, String value, String valueName) {
+        Pattern valuePattern = Pattern.compile("");
+        if (valueType == ValueType.DOUBLE || valueType == ValueType.FLOAT)
+            valuePattern = Pattern.compile("([-+]?\\d*[.,]?\\d*)");
+        if (valueType == ValueType.LONG || valueType == ValueType.INTEGER)
+            valuePattern = Pattern.compile("[-+]?\\d+");
+        if (valuePattern.matcher(value).matches())
             return true;
-        FileHandler.writeUserErrors(String.format("%s coordinate must be of type double or integer", valueName));
-        Console.printUserErrorsFile();
-        FileHandler.clearUserErrFile();
+        FileHandler.writeUserErrors(String.format("%s must be of type %s", valueName, valueType.getName()));
+        if (executeMode == ExecuteMode.COMMAND_MODE) {
+            Console.printUserErrorsFile();
+            FileHandler.clearUserErrFile();
+        }
         return false;
     }
 
@@ -109,6 +117,7 @@ public class CollectionHandler {
         do {
 //            newId.replace(0, NUMBER_OF_ID_DIGITS, "");
             newId = new StringBuilder(ID_LENGTH);
+//            newId.append((int) (Math.random() * 9 + 1));
             for (int i = 0; i < ID_LENGTH; i++) {
                 newId.append((long) (Math.random() * 10));
             }
@@ -117,7 +126,6 @@ public class CollectionHandler {
     }
 
     public boolean checkName(String name) {
-        //Поле не может быть null, Строка не может быть пустой
         if (name == null || name == "") {
             FileHandler.writeUserErrors("Name cannot be null");
 
@@ -128,11 +136,11 @@ public class CollectionHandler {
         return true;
     }
     public boolean checkX(String newX) {
-        if (!isDoubleValue(newX, "X"))
+        if (!checkTypeValue(ValueType.FLOAT, newX, "X coordinate"))
             return false;
         float x = Float.parseFloat(newX);
         if (x > 341f) {
-            FileHandler.writeUserErrors("Max x value: 341");
+            FileHandler.writeUserErrors("Max X value: 341");
             Console.printUserErrorsFile();
             FileHandler.clearUserErrFile();
             return false;
@@ -140,7 +148,7 @@ public class CollectionHandler {
         return true;
     }
     public boolean checkY(String newY) {
-        if (!isDoubleValue(newY, "Y"))
+        if (!checkTypeValue(ValueType.DOUBLE, newY, "Y coordinate"))
             return false;
         double y = Double.parseDouble(newY);
         if (y <= -272d) {
@@ -153,12 +161,12 @@ public class CollectionHandler {
     }
 
     public boolean checkEnginePower(String newEnginePower) {
-        //Значение поля должно быть больше 0
-        //проверка регулярками
-
+//        need to check overflow
+        if (!checkTypeValue(ValueType.INTEGER, newEnginePower, "Engine power"))
+            return false;
         int enginePower = Integer.parseInt(newEnginePower);
         if (enginePower <= 0) {
-            FileHandler.writeUserErrors("");
+            FileHandler.writeUserErrors("Engine power must be greater than 0");
             Console.printUserErrorsFile();
             FileHandler.clearUserErrFile();
             return false;
@@ -166,10 +174,12 @@ public class CollectionHandler {
         return true;
     }
     public boolean checkDistanceTravelled(String newDistanceTravelled) {
-        //Значение поля должно быть больше 0
+//        need to check overflow
+        if (!checkTypeValue(ValueType.LONG, newDistanceTravelled, "Distance travelled"))
+            return false;
         long distanceTravelled = Long.parseLong(newDistanceTravelled);
         if (distanceTravelled <= 0) {
-            FileHandler.writeUserErrors("");
+            FileHandler.writeUserErrors("Distance travelled must be greater than 0");
             Console.printUserErrorsFile();
             FileHandler.clearUserErrFile();
             return false;
@@ -204,5 +214,4 @@ public class CollectionHandler {
         //проверка существования значения в enum
         return true;
     }
-
 }

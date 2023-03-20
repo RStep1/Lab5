@@ -40,7 +40,30 @@ public class Main {
 //        System.out.println(collectionHandler.checkId("-23452"));
 //        System.out.println(collectionHandler.checkId("~`"));
 //        Console.printUserErrorsFile();
+
+//        System.out.println(Math.getExponent(0.02));
+//        System.out.println("double:");
+//        System.out.println(Double.MAX_VALUE);
+//        System.out.println(Double.MAX_EXPONENT);
+//
+//        System.out.println("float:");
+//        System.out.println(Float.MAX_VALUE);
+//        System.out.println(Float.MAX_EXPONENT);
+//
+//        System.out.println("int:");
+//        System.out.println(Integer.MAX_VALUE);
+//        System.out.println(Integer.MIN_VALUE);
+//
+//        System.out.println("long:");
+//        System.out.println(Long.MAX_VALUE);
+//        System.out.println(Long.MIN_VALUE);
+//        Scanner scanner = new Scanner(System.in);
+//        String sd = scanner.nextLine();
+//        double d = Double.parseDouble(sd);
+//        System.out.println(d);
+
         Console console = new Console(invoker);
         console.interactiveMode();
+
     }
 }
