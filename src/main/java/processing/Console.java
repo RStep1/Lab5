@@ -35,6 +35,10 @@ public class Console {
         }
     }
 
+    private static String doubleValueCorrection(String value) {
+        return value.replaceAll(",", ".").replaceAll("\\+", "");
+    }
+
     public static Vehicle insertMode(long id, java.time.ZonedDateTime creationDate, CollectionHandler collectionHandler) {
         Scanner in = new Scanner(System.in);
         PrintStream printStream = new PrintStream(System.out);
@@ -47,11 +51,13 @@ public class Console {
         do {
             printStream.print("Enter X coordinate: ");
             newX = in.nextLine().trim();
+            newX = doubleValueCorrection(newX);
         } while (!collectionHandler.checkX(newX));
 
         do {
             printStream.print("Enter Y coordinate: ");
             newY = in.nextLine().trim();
+            newY = doubleValueCorrection(newY);
         } while (!collectionHandler.checkY(newY));
 
         do {

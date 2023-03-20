@@ -50,7 +50,7 @@ public class CollectionHandler {
         Pattern doubleValuePattern = Pattern.compile(doubleValue);
         if (doubleValuePattern.matcher(value).matches())
             return true;
-        FileHandler.writeUserErrors(String.format("%s coordinate must be of type double", valueName));
+        FileHandler.writeUserErrors(String.format("%s coordinate must be of type double or integer", valueName));
         Console.printUserErrorsFile();
         FileHandler.clearUserErrFile();
         return false;
@@ -131,8 +131,8 @@ public class CollectionHandler {
         if (!isDoubleValue(newX, "X"))
             return false;
         float x = Float.parseFloat(newX);
-        if (x > 341) {
-            FileHandler.writeUserErrors("");
+        if (x > 341f) {
+            FileHandler.writeUserErrors("Max x value: 341");
             Console.printUserErrorsFile();
             FileHandler.clearUserErrFile();
             return false;
@@ -143,8 +143,8 @@ public class CollectionHandler {
         if (!isDoubleValue(newY, "Y"))
             return false;
         double y = Double.parseDouble(newY);
-        if (y <= -272) {
-            FileHandler.writeUserErrors("");
+        if (y <= -272d) {
+            FileHandler.writeUserErrors("Y must be grater than -272");
             Console.printUserErrorsFile();
             FileHandler.clearUserErrFile();
             return false;
