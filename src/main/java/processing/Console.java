@@ -104,7 +104,7 @@ public class Console {
                 printStream.println(vehicleType.getSerialNumber() + " - " + vehicleType);
             }
             printStream.print("Enter vehicle type (numeric value or full name): ");
-            newType = in.nextLine().trim();
+            newType = in.nextLine().trim().toUpperCase();
         } while (!collectionHandler.checkVehicleType(newType));
 
         do {
@@ -117,7 +117,7 @@ public class Console {
                 printStream.println(fuelType.getSerialNumber() + " - " + fuelType);
             }
             printStream.print("Enter fuel type (numeric value or full name): ");
-            newFuelType = in.nextLine().trim();
+            newFuelType = in.nextLine().trim().toUpperCase();
         } while (!collectionHandler.checkFuelType(newFuelType));
 
 

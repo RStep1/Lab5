@@ -1,5 +1,6 @@
 package run;
 
+import data.VehicleType;
 import org.codehaus.jackson.map.util.ISO8601Utils;
 import processing.*;
 import commands.*;
@@ -71,7 +72,7 @@ public class Main {
 //        System.out.println(truncatedDouble);
 //304985675693456345096730945693945967937
 //29803672037569820000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
+        
         Console console = new Console(invoker);
         console.interactiveMode();
     }

@@ -51,6 +51,7 @@ public class Vehicle {
         return fuelType;
     }
 
+    @Override
     public String toString() {
         return String.format("id:                 %s" +
                              "\nname:               %s" +

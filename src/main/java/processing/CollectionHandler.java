@@ -1,7 +1,9 @@
 package processing;
 
 import data.Coordinates;
+import data.FuelType;
 import data.Vehicle;
+import data.VehicleType;
 import org.codehaus.jackson.sym.NameN;
 
 
@@ -140,7 +142,7 @@ public class CollectionHandler {
         if (!checkTypeValue(ValueType.FLOAT, newX, "X coordinate"))
             return false;
         float x = Float.parseFloat(newX);
-        try { ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        try {
             float truncatedX = BigDecimal.valueOf(x).setScale(Coordinates.getAccuracy(),
                     RoundingMode.HALF_UP).floatValue();
             if (Float.compare(truncatedX, 341f) == 1) { // truncatedX > 341
@@ -202,27 +204,45 @@ public class CollectionHandler {
         return true;
     }
     public boolean checkVehicleType(String newVehicleType) {
-        //Поле не может быть null
-        //проверка регулярками
-
         if (newVehicleType.equals("")) {
             FileHandler.writeUserErrors("Vehicle type cannot be null");
             return false;
         }
-        int vehicleType = Integer.parseInt(newVehicleType);
-        //выбор значения из enum
+        try {
+            VehicleType.valueOf(newVehicleType);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            try {
+                int serialNumber = Integer.parseInt(newVehicleType);
+                if (serialNumber < 1 || serialNumber > VehicleType.values().length) {
+                    FileHandler.writeUserErrors("No such vehicle type number exits");
+                    return false;
+                }
+            } catch (NumberFormatException numberFormatException) {
+                FileHandler.writeUserErrors("This vehicle type does not exist");
+                return false;
+            }
+        }
         return true;
     }
     public boolean checkFuelType(String newFuelType) {
-        //Поле не может быть null
-        //проверка регулярками
-
         if (newFuelType.equals("")) {
             FileHandler.writeUserErrors("Fuel type cannot be null");
             return false;
         }
-        int fuelType = Integer.parseInt(newFuelType);
-        //проверка существования значения в enum
+        try {
+            FuelType.valueOf(newFuelType);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            try {
+                int serialNumber = Integer.parseInt(newFuelType);
+                if (serialNumber < 1 || serialNumber > FuelType.values().length) {
+                    FileHandler.writeUserErrors("No such fuel type number exits");
+                    return false;
+                }
+            } catch (NumberFormatException numberFormatException) {
+                FileHandler.writeUserErrors("This fuel type does not exist");
+                return false;
+            }
+        }
         return true;
     }
 }

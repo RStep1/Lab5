@@ -21,6 +21,7 @@ public class Coordinates {
         return accuracy;
     }
 
+    @Override
     public String toString() {
         return String.format("(%." + accuracy + "f; %." + accuracy + "f)", x, y);
     }
