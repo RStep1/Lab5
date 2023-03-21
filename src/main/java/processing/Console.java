@@ -6,6 +6,8 @@ import data.Vehicle;
 import data.VehicleType;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
@@ -35,7 +37,7 @@ public class Console {
         }
     }
 
-    private static String doubleValueCorrection(String value) {
+    private static String valueCorrection(String value) {
         return value.replaceAll(",", ".").replaceAll("\\+", "");
     }
 
@@ -44,57 +46,109 @@ public class Console {
         PrintStream printStream = new PrintStream(System.out);
         String newName, newX, newY, newEnginePower, newDistanceTravelled, newType, newFuelType;
         do {
+            if (collectionHandler.getExecuteMode() == ExecuteMode.COMMAND_MODE) {
+                Console.printUserErrorsFile();
+                FileHandler.clearUserErrFile();
+            }
             printStream.print("Enter name: ");
             newName = in.nextLine().trim();
         } while (!collectionHandler.checkName(newName));
 
         do {
+            if (collectionHandler.getExecuteMode() == ExecuteMode.COMMAND_MODE) {
+                Console.printUserErrorsFile();
+                FileHandler.clearUserErrFile();
+            }
             printStream.print("Enter X coordinate: ");
             newX = in.nextLine().trim();
-            newX = doubleValueCorrection(newX);
+            newX = valueCorrection(newX);
         } while (!collectionHandler.checkX(newX));
 
         do {
+            if (collectionHandler.getExecuteMode() == ExecuteMode.COMMAND_MODE) {
+                Console.printUserErrorsFile();
+                FileHandler.clearUserErrFile();
+            }
             printStream.print("Enter Y coordinate: ");
             newY = in.nextLine().trim();
-            newY = doubleValueCorrection(newY);
+            newY = valueCorrection(newY);
         } while (!collectionHandler.checkY(newY));
 
         do {
+            if (collectionHandler.getExecuteMode() == ExecuteMode.COMMAND_MODE) {
+                Console.printUserErrorsFile();
+                FileHandler.clearUserErrFile();
+            }
             printStream.print("Enter engine power: ");
             newEnginePower = in.nextLine().trim();
+            newEnginePower = valueCorrection(newEnginePower);
         } while (!collectionHandler.checkEnginePower(newEnginePower));
 
         do {
+            if (collectionHandler.getExecuteMode() == ExecuteMode.COMMAND_MODE) {
+                Console.printUserErrorsFile();
+                FileHandler.clearUserErrFile();
+            }
             printStream.print("Enter distance travelled: ");
             newDistanceTravelled = in.nextLine().trim();
+            newDistanceTravelled = valueCorrection(newDistanceTravelled);
         } while (!collectionHandler.checkDistanceTravelled(newDistanceTravelled));
 
         do {
-            printStream.println("vehicle types:");
+            if (collectionHandler.getExecuteMode() == ExecuteMode.COMMAND_MODE) {
+                Console.printUserErrorsFile();
+                FileHandler.clearUserErrFile();
+            }
+            printStream.println("Vehicle types:");
             for (VehicleType vehicleType : VehicleType.values()) {
                 printStream.println(vehicleType.getSerialNumber() + " - " + vehicleType);
             }
-            printStream.print("Enter vehicle type: ");
+            printStream.print("Enter vehicle type (numeric value or full name): ");
             newType = in.nextLine().trim();
         } while (!collectionHandler.checkVehicleType(newType));
 
         do {
+            if (collectionHandler.getExecuteMode() == ExecuteMode.COMMAND_MODE) {
+                Console.printUserErrorsFile();
+                FileHandler.clearUserErrFile();
+            }
             printStream.println("fuel types:");
             for (FuelType fuelType : FuelType.values()) {
                 printStream.println(fuelType.getSerialNumber() + " - " + fuelType);
             }
-            printStream.print("Enter fuel type: ");
+            printStream.print("Enter fuel type (numeric value or full name): ");
             newFuelType = in.nextLine().trim();
         } while (!collectionHandler.checkFuelType(newFuelType));
 
-        Coordinates coordinates = new Coordinates(Float.parseFloat(newX), Double.parseDouble(newY));
+
+        float x = Float.parseFloat(newX);
+        double y = Double.parseDouble(newY);
+        float truncatedX = BigDecimal.valueOf(x).setScale(Coordinates.getAccuracy(),
+                RoundingMode.HALF_UP).floatValue();
+        double truncatedY = BigDecimal.valueOf(y).setScale(Coordinates.getAccuracy(),
+                RoundingMode.HALF_UP).doubleValue();
+        Coordinates coordinates = new Coordinates(truncatedX, truncatedY);
+
         int enginePower = Integer.parseInt(newEnginePower);
         long distanceTravelled = Long.parseLong(newDistanceTravelled);
-        VehicleType type = VehicleType.CAR;/////
-        FuelType fuelType = FuelType.ALCOHOL;/////
-
-
+        VehicleType type = VehicleType.CAR;
+        FuelType fuelType = FuelType.ALCOHOL;
+        try {
+            int serialNumber = Integer.parseInt(newType);
+            for (VehicleType vehicleType : VehicleType.values())
+                if (vehicleType.getSerialNumber() == serialNumber)
+                    type = vehicleType;
+        } catch (NumberFormatException e) {
+            type = VehicleType.valueOf(newType);
+        }
+        try {
+            int serialNumber = Integer.parseInt(newFuelType);
+            for (FuelType fuelType1 : FuelType.values())
+                if (fuelType1.getSerialNumber() == serialNumber)
+                    fuelType = fuelType1;
+        } catch (NumberFormatException e) {
+            fuelType = FuelType.valueOf(newFuelType);
+        }
         String stringCreationDate = creationDate.format(zonedDateFormatter);
         Vehicle vehicle = new Vehicle(id, newName, coordinates, stringCreationDate,
                 enginePower, distanceTravelled, type, fuelType);

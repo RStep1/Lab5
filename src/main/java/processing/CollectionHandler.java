@@ -1,8 +1,12 @@
 package processing;
 
+import data.Coordinates;
 import data.Vehicle;
+import org.codehaus.jackson.sym.NameN;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -18,6 +22,10 @@ public class CollectionHandler {
     public CollectionHandler(Hashtable<Long, Vehicle> dataBase, ExecuteMode executeMode) {
         this.dataBase = dataBase;
         this.executeMode = executeMode;
+    }
+
+    public ExecuteMode getExecuteMode() {
+        return executeMode;
     }
 
     private boolean hasNonNumericCharacters(String value, String valueName) {
@@ -57,10 +65,6 @@ public class CollectionHandler {
         if (valuePattern.matcher(value).matches())
             return true;
         FileHandler.writeUserErrors(String.format("%s must be of type %s", valueName, valueType.getName()));
-        if (executeMode == ExecuteMode.COMMAND_MODE) {
-            Console.printUserErrorsFile();
-            FileHandler.clearUserErrFile();
-        }
         return false;
     }
 
@@ -126,11 +130,8 @@ public class CollectionHandler {
     }
 
     public boolean checkName(String name) {
-        if (name == null || name == "") {
+        if (name == null || name.equals("")) {
             FileHandler.writeUserErrors("Name cannot be null");
-
-            Console.printUserErrorsFile();
-            FileHandler.clearUserErrFile();
             return false;
         }
         return true;
@@ -139,10 +140,15 @@ public class CollectionHandler {
         if (!checkTypeValue(ValueType.FLOAT, newX, "X coordinate"))
             return false;
         float x = Float.parseFloat(newX);
-        if (x > 341f) {
-            FileHandler.writeUserErrors("Max X value: 341");
-            Console.printUserErrorsFile();
-            FileHandler.clearUserErrFile();
+        try { ////////////////////////////////////////////////////////////////////////////////////////////////////////
+            float truncatedX = BigDecimal.valueOf(x).setScale(Coordinates.getAccuracy(),
+                    RoundingMode.HALF_UP).floatValue();
+            if (Float.compare(truncatedX, 341f) == 1) { // truncatedX > 341
+                FileHandler.writeUserErrors("Max X value: 341");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            FileHandler.writeUserErrors("Float value overflowed");
             return false;
         }
         return true;
@@ -151,37 +157,46 @@ public class CollectionHandler {
         if (!checkTypeValue(ValueType.DOUBLE, newY, "Y coordinate"))
             return false;
         double y = Double.parseDouble(newY);
-        if (y <= -272d) {
-            FileHandler.writeUserErrors("Y must be grater than -272");
-            Console.printUserErrorsFile();
-            FileHandler.clearUserErrFile();
+        try {
+            double truncatedY = BigDecimal.valueOf(y).setScale(Coordinates.getAccuracy(),
+                    RoundingMode.HALF_UP).doubleValue();
+            if (Double.compare(truncatedY, -272d) != 1) { // truncatedY <= 272
+                FileHandler.writeUserErrors("Y must be grater than -272");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            FileHandler.writeUserErrors("Double value overflowed");
             return false;
         }
         return true;
     }
 
     public boolean checkEnginePower(String newEnginePower) {
-//        need to check overflow
         if (!checkTypeValue(ValueType.INTEGER, newEnginePower, "Engine power"))
             return false;
-        int enginePower = Integer.parseInt(newEnginePower);
-        if (enginePower <= 0) {
-            FileHandler.writeUserErrors("Engine power must be greater than 0");
-            Console.printUserErrorsFile();
-            FileHandler.clearUserErrFile();
+        try {
+            int enginePower = Integer.parseInt(newEnginePower);
+            if (enginePower <= 0) {
+                FileHandler.writeUserErrors("Engine power must be greater than 0");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            FileHandler.writeUserErrors("Integer value overflowed");
             return false;
         }
         return true;
     }
     public boolean checkDistanceTravelled(String newDistanceTravelled) {
-//        need to check overflow
         if (!checkTypeValue(ValueType.LONG, newDistanceTravelled, "Distance travelled"))
             return false;
-        long distanceTravelled = Long.parseLong(newDistanceTravelled);
-        if (distanceTravelled <= 0) {
-            FileHandler.writeUserErrors("Distance travelled must be greater than 0");
-            Console.printUserErrorsFile();
-            FileHandler.clearUserErrFile();
+        try {
+            long distanceTravelled = Long.parseLong(newDistanceTravelled);
+            if (distanceTravelled <= 0) {
+                FileHandler.writeUserErrors("Distance travelled must be greater than 0");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            FileHandler.writeUserErrors("Long value overflowed");
             return false;
         }
         return true;
@@ -190,10 +205,8 @@ public class CollectionHandler {
         //Поле не может быть null
         //проверка регулярками
 
-        if (newVehicleType == "") {
-            FileHandler.writeUserErrors("");
-            Console.printUserErrorsFile();
-            FileHandler.clearUserErrFile();
+        if (newVehicleType.equals("")) {
+            FileHandler.writeUserErrors("Vehicle type cannot be null");
             return false;
         }
         int vehicleType = Integer.parseInt(newVehicleType);
@@ -204,10 +217,8 @@ public class CollectionHandler {
         //Поле не может быть null
         //проверка регулярками
 
-        if (newFuelType == "") {
-            FileHandler.writeUserErrors("");
-            Console.printUserErrorsFile();
-            FileHandler.clearUserErrFile();
+        if (newFuelType.equals("")) {
+            FileHandler.writeUserErrors("Fuel type cannot be null");
             return false;
         }
         int fuelType = Integer.parseInt(newFuelType);

@@ -7,6 +7,8 @@ import commands.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.ZonedDateTime;
 import java.util.Hashtable;
 import java.util.Scanner;
@@ -62,8 +64,15 @@ public class Main {
 //        double d = Double.parseDouble(sd);
 //        System.out.println(d);
 
+
+//        Double x = Double.parseDouble("345.000001");
+//        Double truncatedDouble = BigDecimal.valueOf(x).setScale(6, RoundingMode.HALF_UP).doubleValue();
+//
+//        System.out.println(truncatedDouble);
+//304985675693456345096730945693945967937
+//29803672037569820000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
         Console console = new Console(invoker);
         console.interactiveMode();
-
     }
 }

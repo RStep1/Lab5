@@ -32,7 +32,7 @@ public class CommandParser {
             case "count_by_fuel_type" -> exitStatus = invoker.countByFuelType(arguments, executeMode);
             case "filter_less_than_fuel_type" -> exitStatus = invoker.filterLessThanFuelType(arguments, executeMode);
             default -> {
-                FileHandler.writeUserErrors(nextLine.trim() + ": No such command");
+                FileHandler.writeUserErrors(String.format("'%s': No such command", nextLine.trim()));
                 exitStatus = false;
             }
         }
@@ -40,7 +40,7 @@ public class CommandParser {
     }
 
     public void commandProcessing(String nextLine, ExecuteMode executeMode) {
-        if (nextLine.trim() == "")
+        if (nextLine.trim().equals(""))
             return;
         String nextSplitedLine[] = nextLine.trim().split("\\s+");
         String[] arguments = new String[nextSplitedLine.length - 1];
