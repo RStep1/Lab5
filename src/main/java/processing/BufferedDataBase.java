@@ -1,5 +1,6 @@
 package processing;
 
+import data.Coordinates;
 import data.Vehicle;
 import exceptions.WrongAmountOfArgumentsException;
 
@@ -7,9 +8,8 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
+
 import commands.*;
 
 public class BufferedDataBase {
@@ -75,14 +75,45 @@ public class BufferedDataBase {
            FileHandler.writeOutputInfo("Collection is empty");
            return true;
         }
-        Enumeration<Long> keys = data.keys();
-        while (keys.hasMoreElements()) {
-            Long key = keys.nextElement();
+
+        TreeMap<Long, Vehicle> treeMapData = new TreeMap<>(data);
+        Set<Long> keys = treeMapData.keySet();
+        Iterator<Long> iterator = keys.iterator();
+        while (iterator.hasNext()) {
+            Long key = iterator.next();
             FileHandler.writeOutputInfo("key:                " + key +
-                    "\n" + data.get(key) + "");
+                    "\n" + treeMapData.get(key) + "");
         }
+
+
+//        Map<Long, Vehicle> vehicleMap = data;
+//        vehicleMap = sortByValues(vehicleMap);
+//        Enumeration<Long> keys = data.keys();
+//        while (keys.hasMoreElements()) {
+//            Long key = keys.nextElement();
+//            FileHandler.writeOutputInfo("key:                " + key +
+//                    "\n" + data.get(key) + "");
+//        }
+
+
+
         return true;
     }
+//    public static void sortValue(Hashtable<?, Vehicle> t){
+//        ArrayList<Map.Entry<?, Vehicle>> l = new ArrayList(t.entrySet());
+//        Collections.sort(l, (o1, o2) -> {
+//            Comparator<Vehicle> COMPARE_BY_VEHICLE = Comparator.comparing(Vehicle::getName)
+////                    .thenComparing(Vehicle::getCoordinates)
+//                    .thenComparing(Vehicle::getCreationDate)
+//                    .thenComparing(Vehicle::getEnginePower)
+//                    .thenComparing(Vehicle::getDistanceTravelled)
+//                    .thenComparing(Vehicle::getType)
+//                    .thenComparing(Vehicle::getFuelType);
+//            return COMPARE_BY_VEHICLE.compare(o1.getValue(), o2.getValue());
+//        });
+//
+//        System.out.println(l);
+//    }
 
     public boolean insert(String[] arguments, ExecuteMode executeMode) {
         if (arguments.length == 0) {
@@ -198,6 +229,20 @@ public class BufferedDataBase {
     public int getCollectionSize() {
         return data.size();
     }
+    public static <K extends Comparable,V extends Comparable> Map<K,V> sortByValues(Map<K,V> map){
+        List<Map.Entry<K,V>> entries = new LinkedList<Map.Entry<K,V>>(map.entrySet());
 
+        Collections.sort(entries, Comparator.comparing(Map.Entry::getValue));
+
+        //LinkedHashMap will keep the keys in the order they are inserted
+        //which is currently sorted on natural ordering
+        Map<K,V> sortedMap = new LinkedHashMap<K,V>();
+
+        for(Map.Entry<K,V> entry: entries){
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
 
 }
