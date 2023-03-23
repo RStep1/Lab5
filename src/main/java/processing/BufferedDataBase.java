@@ -42,6 +42,18 @@ public class BufferedDataBase {
         return false;
     }
 
+    private boolean checkCommandWithKey(String[] arguments, String commandName) {
+        if (arguments.length == 0) {
+            FileHandler.writeUserErrors("Key value cannot be null");
+            return false;
+        }
+        if (!checkNumberOfArguments(arguments, 1, commandName))
+            return false;
+        if (!identifierHandler.checkKey(arguments[0]))
+            return false;
+        return true;
+    }
+
     public boolean help(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName()))
             return false;
@@ -128,13 +140,7 @@ public class BufferedDataBase {
     }
 
     public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
-        if (arguments.length == 0) {
-            FileHandler.writeUserErrors("Key value cannot be null");
-            return false;
-        }
-        if (!checkNumberOfArguments(arguments, 1, RemoveKeyCommand.getName()))
-            return false;
-        if (!identifierHandler.checkKey(arguments[0]))
+        if (!checkCommandWithKey(arguments, RemoveKeyCommand.getName()))
             return false;
         if (!identifierHandler.hasElementWithKey(arguments[0], false))
             return false;
@@ -201,7 +207,26 @@ public class BufferedDataBase {
     }
 
     public boolean removeGreaterKey(String[] arguments, ExecuteMode executeMode) {
-
+        if (!checkCommandWithKey(arguments, RemoveGreaterKeyCommand.getName()))
+            return false;
+        long userKey = Long.parseLong(arguments[0]);
+        Enumeration<Long> keys = dataBase.keys();
+        int countOfRemovedKeys = 0;
+        while (keys.hasMoreElements()) {
+            long nextKey = keys.nextElement();
+            if (nextKey > userKey) {
+                dataBase.remove(nextKey);
+                countOfRemovedKeys++;
+            }
+        }
+        FileHandler.writeCurrentCommand(RemoveGreaterKeyCommand.getName());
+        String message = "";
+        if (countOfRemovedKeys == 0) {
+            message = "No matching keys to remove element";
+        } else {
+            message = String.format("%s elements was successfully removed", countOfRemovedKeys);
+        }
+        FileHandler.writeOutputInfo(message);
         return true;
     }
 
