@@ -1,24 +1,16 @@
 package run;
 
-import data.VehicleType;
-import org.codehaus.jackson.map.util.ISO8601Utils;
 import processing.*;
 import commands.*;
 
 
-import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.ZonedDateTime;
-import java.util.Hashtable;
-import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedDataBase bufferedDataBase = new BufferedDataBase();
-        CollectionHandler collectionHandler = new CollectionHandler(bufferedDataBase.getData(), ExecuteMode.COMMAND_MODE);
+        CollectionHandler collectionHandler = new CollectionHandler(bufferedDataBase.getDataBase(), ExecuteMode.COMMAND_MODE);
         CommandInvoker invoker = new CommandInvoker(new HelpCommand(bufferedDataBase),
                 new InfoCommand(bufferedDataBase), new ShowCommand(bufferedDataBase),
                 new InsertCommand(bufferedDataBase), new UpdateCommand(bufferedDataBase),
@@ -72,7 +64,6 @@ public class Main {
 //        System.out.println(truncatedDouble);
 //304985675693456345096730945693945967937
 //29803672037569820000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-        
         Console console = new Console(invoker);
         console.interactiveMode();
     }

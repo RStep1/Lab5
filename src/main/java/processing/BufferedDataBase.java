@@ -1,10 +1,9 @@
 package processing;
 
-import data.Coordinates;
 import data.Vehicle;
+import exceptions.NoSuchIdException;
 import exceptions.WrongAmountOfArgumentsException;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,19 +12,19 @@ import java.util.*;
 import commands.*;
 
 public class BufferedDataBase {
-    private Hashtable<Long, Vehicle> data;
+    private Hashtable<Long, Vehicle> dataBase;
     private LocalDateTime lastInitTime;
     private LocalDateTime lastSaveTime;
     private static final String datePattern = "dd/MM/yyy - HH:mm:ss";
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
 
     public BufferedDataBase() {
-        data = FileHandler.loadDataBase();
-        lastInitTime = data.isEmpty() && lastInitTime == null ? null : LocalDateTime.now();
+        dataBase = FileHandler.loadDataBase();
+        lastInitTime = dataBase.isEmpty() && lastInitTime == null ? null : LocalDateTime.now();
     }
 
-    public Hashtable<Long, Vehicle> getData() {
-        return data;
+    public Hashtable<Long, Vehicle> getDataBase() {
+        return dataBase;
     }
 
     private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
@@ -71,12 +70,11 @@ public class BufferedDataBase {
         if (!checkNumberOfArguments(arguments, 0, ShowCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ShowCommand.getName());
-        if (data.isEmpty()) {
+        if (dataBase.isEmpty()) {
            FileHandler.writeOutputInfo("Collection is empty");
            return true;
         }
-
-        TreeMap<Long, Vehicle> treeMapData = new TreeMap<>(data);
+        TreeMap<Long, Vehicle> treeMapData = new TreeMap<>(dataBase);
         Set<Long> keys = treeMapData.keySet();
         Iterator<Long> iterator = keys.iterator();
         while (iterator.hasNext()) {
@@ -84,62 +82,65 @@ public class BufferedDataBase {
             FileHandler.writeOutputInfo("key:                " + key +
                     "\n" + treeMapData.get(key) + "");
         }
-
-
-//        Map<Long, Vehicle> vehicleMap = data;
-//        vehicleMap = sortByValues(vehicleMap);
-//        Enumeration<Long> keys = data.keys();
-//        while (keys.hasMoreElements()) {
-//            Long key = keys.nextElement();
-//            FileHandler.writeOutputInfo("key:                " + key +
-//                    "\n" + data.get(key) + "");
-//        }
-
-
-
         return true;
     }
-//    public static void sortValue(Hashtable<?, Vehicle> t){
-//        ArrayList<Map.Entry<?, Vehicle>> l = new ArrayList(t.entrySet());
-//        Collections.sort(l, (o1, o2) -> {
-//            Comparator<Vehicle> COMPARE_BY_VEHICLE = Comparator.comparing(Vehicle::getName)
-////                    .thenComparing(Vehicle::getCoordinates)
-//                    .thenComparing(Vehicle::getCreationDate)
-//                    .thenComparing(Vehicle::getEnginePower)
-//                    .thenComparing(Vehicle::getDistanceTravelled)
-//                    .thenComparing(Vehicle::getType)
-//                    .thenComparing(Vehicle::getFuelType);
-//            return COMPARE_BY_VEHICLE.compare(o1.getValue(), o2.getValue());
-//        });
-//
-//        System.out.println(l);
-//    }
 
     public boolean insert(String[] arguments, ExecuteMode executeMode) {
-        if (arguments.length == 0) {
-            FileHandler.writeUserErrors("Key value cannot be null");
-            return false;
-        }
-        if (!checkNumberOfArguments(arguments, 1, InsertCommand.getName())) {
-            return false;
-        }
-        CollectionHandler collectionHandler = new CollectionHandler(data, executeMode);
-        if (!collectionHandler.checkKey(arguments[0])) {
-            return false;
-        }
-        Long key = Long.parseLong(arguments[0]);
-        long id = collectionHandler.generateId();
-        java.time.ZonedDateTime creationDate = ZonedDateTime.now();
-        Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
-        data.put(key, vehicle);
-        FileHandler.writeCurrentCommand(InsertCommand.getName());
-        FileHandler.writeOutputInfo("Element was successfully added");
-        return true;
+        return addElementBy(arguments, executeMode, AddMode.INSERT_MODE, InsertCommand.getName());
     }
 
     public boolean update(String[] arguments, ExecuteMode executeMode) {
+        return addElementBy(arguments, executeMode, AddMode.UPDATE_MODE, UpdateCommand.getName());
+    }
 
+    private boolean addElementBy(String[] arguments, ExecuteMode executeMode, AddMode addMode, String commandName) {
+        if (arguments.length == 0) {
+            FileHandler.writeUserErrors(String.format("%s value cannot be null", addMode.getValueName()));
+            return false;
+        }
+        if (!checkNumberOfArguments(arguments, 1, commandName))
+            return false;
+        CollectionHandler collectionHandler = new CollectionHandler(dataBase, executeMode);
+        java.time.ZonedDateTime creationDate = ZonedDateTime.now();
+        long key = 0;
+        long id = 0;
+        switch (addMode) {
+            case INSERT_MODE -> {
+                if (!collectionHandler.checkKey(arguments[0]))
+                    return false;
+                key = Long.parseLong(arguments[0]);
+                id = collectionHandler.generateId();
+            }
+            case UPDATE_MODE -> {
+                if (!collectionHandler.checkId(arguments[0]))
+                    return false;
+                id = Long.parseLong(arguments[0]);
+                key = getKeyById(id);
+            }
+            default -> FileHandler.writeSystemErrors("No suitable add mode file");
+        }
+        Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
+        dataBase.put(key, vehicle);
+        FileHandler.writeCurrentCommand(commandName);
+        FileHandler.writeOutputInfo("Element was successfully " + addMode.getResultMessage());
         return true;
+    }
+
+    private long getKeyById(long id) {
+        long key = -1;
+        Enumeration<Long> keys = dataBase.keys();
+        while (keys.hasMoreElements()) {
+            Long nextKey = keys.nextElement();
+            if (id == dataBase.get(nextKey).getId()) {
+                key = nextKey;
+            }
+        }
+        if (key == -1) {
+            RuntimeException e = new NoSuchIdException(id);
+            FileHandler.writeSystemErrors(e.getMessage());
+            throw e;
+        }
+        return key;
     }
 
     public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
@@ -151,10 +152,10 @@ public class BufferedDataBase {
         if (!checkNumberOfArguments(arguments, 0, ClearCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ClearCommand.getName());
-        if (data.isEmpty()) {
+        if (dataBase.isEmpty()) {
             FileHandler.writeOutputInfo("Collection is already empty");
         } else {
-            data.clear();
+            dataBase.clear();
             FileHandler.writeOutputInfo("Collection successfully cleared");
         }
         return true;
@@ -164,7 +165,7 @@ public class BufferedDataBase {
         if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(SaveCommand.getName());
-        FileHandler.saveDataBase(data);
+        FileHandler.saveDataBase(dataBase);
         FileHandler.writeOutputInfo("Collection successfully saved");
         lastSaveTime = LocalDateTime.now();
         return true;
@@ -223,26 +224,10 @@ public class BufferedDataBase {
     }
 
     public String getCollectionType() {
-        return data.getClass().getName();
+        return dataBase.getClass().getName();
     }
 
     public int getCollectionSize() {
-        return data.size();
+        return dataBase.size();
     }
-    public static <K extends Comparable,V extends Comparable> Map<K,V> sortByValues(Map<K,V> map){
-        List<Map.Entry<K,V>> entries = new LinkedList<Map.Entry<K,V>>(map.entrySet());
-
-        Collections.sort(entries, Comparator.comparing(Map.Entry::getValue));
-
-        //LinkedHashMap will keep the keys in the order they are inserted
-        //which is currently sorted on natural ordering
-        Map<K,V> sortedMap = new LinkedHashMap<K,V>();
-
-        for(Map.Entry<K,V> entry: entries){
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return sortedMap;
-    }
-
 }

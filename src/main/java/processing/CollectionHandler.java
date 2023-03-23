@@ -100,8 +100,8 @@ public class CollectionHandler {
                     id.length(), ID_LENGTH));
             return false;
         }
-        if (hasElementWithId(Long.parseLong(id))) {
-            FileHandler.writeUserErrors("element with the same id already exists");
+        if (!hasElementWithId(Long.parseLong(id))) {
+            FileHandler.writeUserErrors("No such element with this id");
             return false;
         }
         return true;

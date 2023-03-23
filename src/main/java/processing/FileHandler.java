@@ -52,6 +52,9 @@ public class FileHandler {
         writeToFile(errors, USER_ERRORS_FILE_ABSOLUTE_PATH);
     }
 
+    public static void writeSystemErrors(String errors) {
+        writeToFile(errors, SYSTEM_ERRORS_FILE_ABSOLUTE_PATH);
+    }
     private static void writeToFile(String information, String filePath) {
         try (BufferedWriter writer =
                      new BufferedWriter(new FileWriter(filePath, true))) {
