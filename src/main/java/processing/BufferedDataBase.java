@@ -1,7 +1,6 @@
 package processing;
 
 import data.Vehicle;
-import exceptions.NoSuchIdException;
 import exceptions.WrongAmountOfArgumentsException;
 
 import java.time.LocalDateTime;
@@ -12,14 +11,16 @@ import java.util.*;
 import commands.*;
 
 public class BufferedDataBase {
-    private Hashtable<Long, Vehicle> dataBase;
+    private final Hashtable<Long, Vehicle> dataBase;
     private LocalDateTime lastInitTime;
     private LocalDateTime lastSaveTime;
+    private final IdentifierHandler identifierHandler;
     private static final String datePattern = "dd/MM/yyy - HH:mm:ss";
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
 
     public BufferedDataBase() {
         dataBase = FileHandler.loadDataBase();
+        identifierHandler = new IdentifierHandler(dataBase);
         lastInitTime = dataBase.isEmpty() && lastInitTime == null ? null : LocalDateTime.now();
     }
 
@@ -76,9 +77,7 @@ public class BufferedDataBase {
         }
         TreeMap<Long, Vehicle> treeMapData = new TreeMap<>(dataBase);
         Set<Long> keys = treeMapData.keySet();
-        Iterator<Long> iterator = keys.iterator();
-        while (iterator.hasNext()) {
-            Long key = iterator.next();
+        for (Long key : keys) {
             FileHandler.writeOutputInfo("key:                " + key +
                     "\n" + treeMapData.get(key) + "");
         }
@@ -106,16 +105,16 @@ public class BufferedDataBase {
         long id = 0;
         switch (addMode) {
             case INSERT_MODE -> {
-                if (!collectionHandler.checkKey(arguments[0]))
+                if (!identifierHandler.checkKey(arguments[0]))
                     return false;
                 key = Long.parseLong(arguments[0]);
-                id = collectionHandler.generateId();
+                id = identifierHandler.generateId();
             }
             case UPDATE_MODE -> {
-                if (!collectionHandler.checkId(arguments[0]))
+                if (!identifierHandler.checkId(arguments[0]))
                     return false;
                 id = Long.parseLong(arguments[0]);
-                key = getKeyById(id);
+                key = identifierHandler.getKeyById(id);
             }
             default -> FileHandler.writeSystemErrors("No suitable add mode file");
         }
@@ -126,22 +125,22 @@ public class BufferedDataBase {
         return true;
     }
 
-    private long getKeyById(long id) {
-        long key = -1;
-        Enumeration<Long> keys = dataBase.keys();
-        while (keys.hasMoreElements()) {
-            Long nextKey = keys.nextElement();
-            if (id == dataBase.get(nextKey).getId()) {
-                key = nextKey;
-            }
-        }
-        if (key == -1) {
-            RuntimeException e = new NoSuchIdException(id);
-            FileHandler.writeSystemErrors(e.getMessage());
-            throw e;
-        }
-        return key;
-    }
+//    private long getKeyById(long id) {
+//        long key = -1;
+//        Enumeration<Long> keys = dataBase.keys();
+//        while (keys.hasMoreElements()) {
+//            Long nextKey = keys.nextElement();
+//            if (id == dataBase.get(nextKey).getId()) {
+//                key = nextKey;
+//            }
+//        }
+//        if (key == -1) {
+//            RuntimeException e = new NoSuchIdException(id);
+//            FileHandler.writeSystemErrors(e.getMessage());
+//            throw e;
+//        }
+//        return key;
+//    }
 
     public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
 
