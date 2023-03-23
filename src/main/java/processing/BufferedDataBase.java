@@ -107,6 +107,8 @@ public class BufferedDataBase {
             case INSERT_MODE -> {
                 if (!identifierHandler.checkKey(arguments[0]))
                     return false;
+                if (identifierHandler.hasElementWithKey(arguments[0], true))
+                    return false;
                 key = Long.parseLong(arguments[0]);
                 id = identifierHandler.generateId();
             }
@@ -125,25 +127,21 @@ public class BufferedDataBase {
         return true;
     }
 
-//    private long getKeyById(long id) {
-//        long key = -1;
-//        Enumeration<Long> keys = dataBase.keys();
-//        while (keys.hasMoreElements()) {
-//            Long nextKey = keys.nextElement();
-//            if (id == dataBase.get(nextKey).getId()) {
-//                key = nextKey;
-//            }
-//        }
-//        if (key == -1) {
-//            RuntimeException e = new NoSuchIdException(id);
-//            FileHandler.writeSystemErrors(e.getMessage());
-//            throw e;
-//        }
-//        return key;
-//    }
-
     public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
-
+        if (arguments.length == 0) {
+            FileHandler.writeUserErrors("Key value cannot be null");
+            return false;
+        }
+        if (!checkNumberOfArguments(arguments, 1, RemoveKeyCommand.getName()))
+            return false;
+        if (!identifierHandler.checkKey(arguments[0]))
+            return false;
+        if (!identifierHandler.hasElementWithKey(arguments[0], false))
+            return false;
+        long key = Long.parseLong(arguments[0]);
+        dataBase.remove(key);
+        FileHandler.writeCurrentCommand(RemoveKeyCommand.getName());
+        FileHandler.writeOutputInfo(String.format("Element with key = %s was successfully removed", key));
         return true;
     }
 
@@ -163,8 +161,8 @@ public class BufferedDataBase {
     public boolean save(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName()))
             return false;
-        FileHandler.writeCurrentCommand(SaveCommand.getName());
         FileHandler.saveDataBase(dataBase);
+        FileHandler.writeCurrentCommand(SaveCommand.getName());
         FileHandler.writeOutputInfo("Collection successfully saved");
         lastSaveTime = LocalDateTime.now();
         return true;

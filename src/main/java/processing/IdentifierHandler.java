@@ -55,12 +55,9 @@ public class IdentifierHandler {
             FileHandler.writeUserErrors(String.format("key is too long, max length - %s", MAX_KEY_LENGTH));
             return false;
         }
-        if (dataBase.containsKey(Long.parseLong(key))) {
-            FileHandler.writeUserErrors("element with the same key already exists");
-            return false;
-        }
         return true;
     }
+
 
     public boolean checkId(String id) {
         if (hasNonNumericCharacters(id, "id"))
@@ -92,8 +89,19 @@ public class IdentifierHandler {
         return false;
     }
 
+    public boolean hasElementWithKey(String key, boolean expectedResult) {
+        if (dataBase.containsKey(Long.parseLong(key))) {
+            if (expectedResult)
+                FileHandler.writeUserErrors("Element with such key already exists");
+            return true;
+        }
+        if (!expectedResult)
+            FileHandler.writeUserErrors("Element with such key not found");
+        return false;
+    }
+
     public Long generateId() {
-        StringBuilder newId = new StringBuilder(ID_LENGTH);
+        StringBuilder newId;
         do {
             newId = new StringBuilder(ID_LENGTH);
             newId.append((byte) (Math.random() * 9 + 1)); //skip leading zero
