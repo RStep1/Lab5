@@ -1,4 +1,4 @@
-package processing;
+package mods;
 
 public enum AddMode {
     INSERT_MODE("Key", "inserted"),

@@ -1,7 +1,7 @@
 package commands;
 
 import processing.BufferedDataBase;
-import processing.ExecuteMode;
+import mods.ExecuteMode;
 
 public class ClearCommand implements Command {
     private BufferedDataBase bufferedDataBase;

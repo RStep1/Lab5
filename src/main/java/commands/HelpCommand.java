@@ -1,6 +1,6 @@
 package commands;
 import processing.BufferedDataBase;
-import processing.ExecuteMode;
+import mods.ExecuteMode;
 
 public class HelpCommand implements Command {
     private BufferedDataBase dataBase;

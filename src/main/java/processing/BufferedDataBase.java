@@ -10,6 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import commands.*;
+import mods.AddMode;
+import mods.ExecuteMode;
+import mods.RemoveMode;
 
 public class BufferedDataBase {
     private final Hashtable<Long, Vehicle> dataBase;
@@ -198,12 +201,51 @@ public class BufferedDataBase {
     }
 
     public boolean removeGreater(String[] arguments, ExecuteMode executeMode) {
-
-        return true;
+        return removeAllByDistanceTravelled(arguments, executeMode,
+                RemoveGreaterCommand.getName(), RemoveMode.REMOVE_GREATER);
     }
 
     public boolean removeLower(String[] arguments, ExecuteMode executeMode) {
+        return removeAllByDistanceTravelled(arguments, executeMode,
+                RemoveLowerCommand.getName(), RemoveMode.REMOVE_LOWER);
+    }
 
+    private boolean removeAllByDistanceTravelled(String[] arguments, ExecuteMode executeMode,
+                                                 String commandName, RemoveMode removeMode) {
+        if (!checkNumberOfArguments(arguments, 1, commandName))
+            return false;
+        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
+        if (!collectionHandler.checkDistanceTravelled(arguments[0]))
+            return false;
+        long userDistanceTravelled = Long.parseLong(arguments[0]);
+        Enumeration<Long> keys = dataBase.keys();
+        int countOfRemoved = 0;
+        while (keys.hasMoreElements()) {
+            long nextKey = keys.nextElement();
+            switch (removeMode) {
+                case REMOVE_GREATER -> {
+                    if (dataBase.get(nextKey).getDistanceTravelled() > userDistanceTravelled) {
+                        dataBase.remove(nextKey);
+                        countOfRemoved++;
+                    }
+                }
+                case REMOVE_LOWER -> {
+                    if (dataBase.get(nextKey).getDistanceTravelled() < userDistanceTravelled) {
+                        dataBase.remove(nextKey);
+                        countOfRemoved++;
+                    }
+                }
+            }
+        }
+        FileHandler.writeCurrentCommand(commandName);
+        if (countOfRemoved == 0)
+            FileHandler.writeOutputInfo(String.format(
+                    "No elements found to remove with distance travelled %s %s",
+                    removeMode.getSymbol(), userDistanceTravelled));
+        else
+            FileHandler.writeOutputInfo(String.format(
+                    "%s elements were successfully removed with distance travelled %s %s",
+                    countOfRemoved, removeMode.getSymbol(), userDistanceTravelled));
         return true;
     }
 
@@ -253,7 +295,7 @@ public class BufferedDataBase {
         else
             FileHandler.writeOutputInfo(String.format(
                     "%s elements were successfully removed with engine power = %s",
-                    countOfRemoved, RemoveAllByEnginePowerCommand.getName()));
+                    countOfRemoved, userEnginePower));
         return true;
     }
 
@@ -297,7 +339,8 @@ public class BufferedDataBase {
         }
         if (!hasSuchElements)
             FileHandler.writeOutputInfo(String.format(
-                    "No elements found with fuel type value less than %s (%s)", fuelType.getSerialNumber(), fuelType));
+                    "No elements found with fuel type value less than %s (%s)",
+                    fuelType.getSerialNumber(), fuelType));
         return true;
     }
 

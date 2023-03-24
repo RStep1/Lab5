@@ -1,4 +1,4 @@
-package processing;
+package mods;
 
 public enum ExecuteMode {
     COMMAND_MODE,

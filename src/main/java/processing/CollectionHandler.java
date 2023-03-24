@@ -2,16 +2,13 @@ package processing;
 
 import data.Coordinates;
 import data.FuelType;
-import data.Vehicle;
 import data.VehicleType;
-import org.codehaus.jackson.sym.NameN;
+import mods.ExecuteMode;
+import mods.ValueType;
 
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.NumberFormat;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.regex.Pattern;
 
 

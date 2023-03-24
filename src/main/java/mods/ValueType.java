@@ -1,4 +1,4 @@
-package processing;
+package mods;
 
 public enum ValueType {
     INTEGER("integer"),
