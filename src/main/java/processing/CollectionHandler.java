@@ -16,11 +16,9 @@ import java.util.regex.Pattern;
 
 
 public class CollectionHandler {
-    private final Hashtable<Long, Vehicle> dataBase;
     private final ExecuteMode executeMode;
 
-    public CollectionHandler(Hashtable<Long, Vehicle> dataBase, ExecuteMode executeMode) {
-        this.dataBase = dataBase;
+    public CollectionHandler(ExecuteMode executeMode) {
         this.executeMode = executeMode;
     }
 
@@ -153,5 +151,18 @@ public class CollectionHandler {
             }
         }
         return true;
+    }
+
+    public FuelType fuelTypeSelection(String userFuelType) {
+        FuelType fuelType = FuelType.ALCOHOL;
+        try {
+            int serialNumber = Integer.parseInt(userFuelType);
+            for (FuelType fuelType1 : FuelType.values())
+                if (fuelType1.getSerialNumber() == serialNumber)
+                    fuelType = fuelType1;
+        } catch (NumberFormatException e) {
+            fuelType = FuelType.valueOf(userFuelType);
+        }
+        return fuelType;
     }
 }

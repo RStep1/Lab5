@@ -1,5 +1,6 @@
 package processing;
 
+import data.FuelType;
 import data.Vehicle;
 import exceptions.WrongAmountOfArgumentsException;
 
@@ -111,7 +112,7 @@ public class BufferedDataBase {
         }
         if (!checkNumberOfArguments(arguments, 1, commandName))
             return false;
-        CollectionHandler collectionHandler = new CollectionHandler(dataBase, executeMode);
+        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
         java.time.ZonedDateTime creationDate = ZonedDateTime.now();
         long key = 0;
         long id = 0;
@@ -236,12 +237,46 @@ public class BufferedDataBase {
     }
 
     public boolean countByFuelType(String[] arguments, ExecuteMode executeMode) {
-
+        if (!checkNumberOfArguments(arguments, 1, CountByFuelTypeCommand.getName()))
+            return false;
+        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
+        if (!collectionHandler.checkFuelType(arguments[0]))
+            return false;
+        FuelType fuelType = collectionHandler.fuelTypeSelection(arguments[0]);
+        int count = 0;
+        Enumeration<Long> keys = dataBase.keys();
+        while (keys.hasMoreElements()) {
+            Long key = keys.nextElement();
+            if (fuelType.equals(dataBase.get(key).getFuelType()))
+                count++;
+        }
+        FileHandler.writeCurrentCommand(CountByFuelTypeCommand.getName());
+        FileHandler.writeOutputInfo(String.format(
+                "%s elements with fuel type = %s (%s)", count, fuelType.getSerialNumber(), fuelType));
         return true;
     }
 
     public boolean filterLessThanFuelType(String[] arguments, ExecuteMode executeMode) {
-
+        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
+        if (!checkNumberOfArguments(arguments, 1, FilterLessThanFuelTypeCommand.getName()))
+            return false;
+        if (!collectionHandler.checkFuelType(arguments[0]))
+            return false;
+        FuelType fuelType = collectionHandler.fuelTypeSelection(arguments[0]);
+        boolean hasSuchElements = false;
+        FileHandler.writeCurrentCommand(FilterLessThanFuelTypeCommand.getName());
+        TreeMap<Long, Vehicle> treeMapData = new TreeMap<>(dataBase);
+        Set<Long> keys = treeMapData.keySet();
+        for (Long key : keys) {
+            if (treeMapData.get(key).getFuelType().getSerialNumber() <= fuelType.getSerialNumber()) {
+                hasSuchElements = true;
+                FileHandler.writeOutputInfo("key:                " + key +
+                        "\n" + treeMapData.get(key) + "");
+            }
+        }
+        if (!hasSuchElements)
+            FileHandler.writeOutputInfo(String.format(
+                    "No elements found with fuel type value less than %s (%s)", fuelType.getSerialNumber(), fuelType));
         return true;
     }
 

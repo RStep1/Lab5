@@ -10,7 +10,6 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedDataBase bufferedDataBase = new BufferedDataBase();
-        CollectionHandler collectionHandler = new CollectionHandler(bufferedDataBase.getDataBase(), ExecuteMode.COMMAND_MODE);
         CommandInvoker invoker = new CommandInvoker(new HelpCommand(bufferedDataBase),
                 new InfoCommand(bufferedDataBase), new ShowCommand(bufferedDataBase),
                 new InsertCommand(bufferedDataBase), new UpdateCommand(bufferedDataBase),
