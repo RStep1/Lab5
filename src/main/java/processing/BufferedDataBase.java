@@ -70,7 +70,6 @@ public class BufferedDataBase {
                 "there have been no initializations in this session yet" : lastInitTime.format(dateFormatter));
         String stringLastSaveTime = (lastSaveTime == null ?
                 "there hasn't been a save here yet" : lastSaveTime.format(dateFormatter));
-        System.out.println(stringLastInitTime);
         FileHandler.writeCurrentCommand(InfoCommand.getName());
         FileHandler.writeOutputInfo("Information about collection:");
         FileHandler.writeOutputInfo("Type of collection:  " + getCollectionType() +
@@ -131,7 +130,8 @@ public class BufferedDataBase {
                 id = Long.parseLong(arguments[0]);
                 key = identifierHandler.getKeyById(id);
             }
-            default -> FileHandler.writeSystemErrors("No suitable add mode file");
+            default -> FileHandler.writeSystemErrors(String.format(
+                    "Command %s: No suitable add mode file", commandName));
         }
         Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
         dataBase.put(key, vehicle);
@@ -222,17 +222,38 @@ public class BufferedDataBase {
         }
         FileHandler.writeCurrentCommand(RemoveGreaterKeyCommand.getName());
         String message = "";
-        if (countOfRemovedKeys == 0) {
+        if (countOfRemovedKeys == 0)
             message = "No matching keys to remove element";
-        } else {
+        else
             message = String.format("%s elements was successfully removed", countOfRemovedKeys);
-        }
         FileHandler.writeOutputInfo(message);
         return true;
     }
 
     public boolean removeAllByEnginePower(String[] arguments, ExecuteMode executeMode) {
-
+        if (!checkNumberOfArguments(arguments, 1, RemoveAllByEnginePowerCommand.getName()))
+            return false;
+        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
+        if (!collectionHandler.checkEnginePower(arguments[0]))
+            return false;
+        int userEnginePower = Integer.parseInt(arguments[0]);
+        int countOfRemoved = 0;
+        Enumeration<Long> keys = dataBase.keys();
+        while (keys.hasMoreElements()) {
+            Long key = keys.nextElement();
+            if (userEnginePower == dataBase.get(key).getEnginePower()) {
+                dataBase.remove(key);
+                countOfRemoved++;
+            }
+        }
+        FileHandler.writeCurrentCommand(RemoveAllByEnginePowerCommand.getName());
+        if (countOfRemoved == 0)
+            FileHandler.writeOutputInfo(String.format(
+                    "No elements found to remove with engine power = %s", userEnginePower));
+        else
+            FileHandler.writeOutputInfo(String.format(
+                    "%s elements were successfully removed with engine power = %s",
+                    countOfRemoved, RemoveAllByEnginePowerCommand.getName()));
         return true;
     }
 

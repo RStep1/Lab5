@@ -53,16 +53,17 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return String.format("id:                 %s" +
-                             "\nname:               %s" +
-                             "\ncoodrinates:        %s" +
-                             "\ncreation date:      %s" +
-                             "\nengine power:       %s" +
-                             "\ndistance travelled: %s" +
-                             "\nvehicle type:       %s" +
-                             "\nfuel type:          %s" +
-                             "\n____________________________________________________________",
+        return String.format("""
+                        id:                 %s
+                        name:               %s
+                        coodrinates:        %s
+                        creation date:      %s
+                        engine power:       %s
+                        distance travelled: %s
+                        vehicle type:       %s (%s)
+                        fuel type:          %s (%s)
+                        ____________________________________________________________""",
                 id, name, coordinates, creationDate,
-                enginePower, distanceTravelled, type, fuelType);
+                enginePower, distanceTravelled, type.getSerialNumber(), type, fuelType.getSerialNumber(), fuelType);
     }
 }

@@ -28,7 +28,7 @@ public class CommandParser {
             case "remove_greater" -> exitStatus = invoker.removeGreater(arguments, executeMode);
             case "remove_lower" -> exitStatus = invoker.removeLower(arguments, executeMode);
             case "remove_greater_key" -> exitStatus = invoker.removeGreaterKey(arguments, executeMode);
-            case "remove_all_by_engine_type" -> exitStatus = invoker.removeAllByEnginePower(arguments, executeMode);
+            case "remove_all_by_engine_power" -> exitStatus = invoker.removeAllByEnginePower(arguments, executeMode);
             case "count_by_fuel_type" -> exitStatus = invoker.countByFuelType(arguments, executeMode);
             case "filter_less_than_fuel_type" -> exitStatus = invoker.filterLessThanFuelType(arguments, executeMode);
             default -> {
