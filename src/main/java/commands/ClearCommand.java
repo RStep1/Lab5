@@ -7,6 +7,8 @@ public class ClearCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "clear";
     private static final String DESCRIPTION = "очищает коллекцию";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
+
     public ClearCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -22,6 +24,10 @@ public class ClearCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

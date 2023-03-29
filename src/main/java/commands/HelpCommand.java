@@ -7,6 +7,7 @@ public class HelpCommand implements Command {
     private static final String NAME = "help";
     private static final String DESCRIPTION =
             "выводит справку по доступным командам";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public HelpCommand(BufferedDataBase dataBase) {
         this.dataBase = dataBase;
     }
@@ -22,6 +23,10 @@ public class HelpCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

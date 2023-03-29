@@ -8,6 +8,8 @@ public class RemoveKeyCommand implements Command {
     private static final String NAME = "remove_key";
     private static final String DESCRIPTION =
             "удаляет элемент из коллекции по его ключу";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
+
     public RemoveKeyCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -23,6 +25,10 @@ public class RemoveKeyCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

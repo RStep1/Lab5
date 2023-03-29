@@ -9,6 +9,7 @@ public class RemoveAllByEnginePowerCommand implements Command {
     private static final String DESCRIPTION =
             " удаляет из коллекции все элементы, значение " +
                     "поля enginePower которого эквивалентно заданному";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public RemoveAllByEnginePowerCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -24,6 +25,10 @@ public class RemoveAllByEnginePowerCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

@@ -8,6 +8,8 @@ public class RemoveGreaterCommand implements Command {
     private static final String NAME = "remove_greater";
     private static final String DESCRIPTION =
             "удаляет из коллекции все элементы, превышающие заданный";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
+
     public RemoveGreaterCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -23,6 +25,10 @@ public class RemoveGreaterCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

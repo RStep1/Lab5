@@ -8,6 +8,8 @@ public class SaveCommand implements Command {
     private static final String NAME = "save";
     private static final String DESCRIPTION =
             "сохраняет коллекцию в файл";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
+
     public SaveCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -23,6 +25,10 @@ public class SaveCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

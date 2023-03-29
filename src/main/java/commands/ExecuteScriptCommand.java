@@ -10,6 +10,7 @@ public class ExecuteScriptCommand implements Command {
             "считывает и исполняет скрипт из указанного файла. " +
                     "В скрипте содержатся команды в таком же виде, " +
                     "в котором их вводит пользователь в интерактивном режиме.";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public ExecuteScriptCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -25,6 +26,10 @@ public class ExecuteScriptCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

@@ -9,6 +9,8 @@ public class ShowCommand implements Command {
     private static final String DESCRIPTION =
             "выводит в стандартный поток вывода все элементы" +
                     " коллекции в строковом представлении";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
+
     public ShowCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -24,6 +26,10 @@ public class ShowCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

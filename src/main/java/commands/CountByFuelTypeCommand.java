@@ -9,6 +9,7 @@ public class CountByFuelTypeCommand implements Command {
     private static final String DESCRIPTION =
             "выводит количество элементов, значение поля" +
                     " fuelType которых равно заданному";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public CountByFuelTypeCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -24,6 +25,10 @@ public class CountByFuelTypeCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

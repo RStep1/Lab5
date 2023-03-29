@@ -1,5 +1,6 @@
 package commands;
 
+import data.Vehicle;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
@@ -8,6 +9,7 @@ public class InsertCommand implements Command {
     private static final String NAME = "insert";
     private static final String DESCRIPTION =
             "добавляет новый элемент с заданным ключом";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = Vehicle.getCountOfChangeableFields();
     public InsertCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -23,6 +25,10 @@ public class InsertCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

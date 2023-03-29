@@ -9,6 +9,8 @@ public class RemoveGreaterKeyCommand implements Command {
     private static final String DESCRIPTION =
             "удаляет из коллекции все элементы, " +
                     "ключ которых превышает заданный";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
+
     public RemoveGreaterKeyCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -24,6 +26,10 @@ public class RemoveGreaterKeyCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override

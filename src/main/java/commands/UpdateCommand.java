@@ -1,5 +1,6 @@
 package commands;
 
+import data.Vehicle;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
@@ -9,6 +10,8 @@ public class UpdateCommand implements Command {
     private static final String DESCRIPTION =
             "обновляет значение элемента коллекции, " +
                     "id которого равен заданному";
+    private static final int COUNT_OF_EXTRA_ARGUMENTS = Vehicle.getCountOfChangeableFields();
+
     public UpdateCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -24,6 +27,10 @@ public class UpdateCommand implements Command {
 
     public static String getDescription() {
         return DESCRIPTION;
+    }
+
+    public static int getCountOfExtraArguments() {
+        return COUNT_OF_EXTRA_ARGUMENTS;
     }
 
     @Override
