@@ -1,31 +1,12 @@
 package processing;
 
-import commands.Command;
+import commands.*;
 import mods.ExecuteMode;
 
 import java.util.ArrayList;
 
 public class CommandInvoker {
-    private Command helpCommand;
-    private Command infoCommand;
-    private Command showCommand;
-    private Command insertCommand;
-    private Command updateCommand;
-    private Command removeKeyCommand;
-    private Command clearCommand;
-    private Command saveCommand;
-    private Command executeScriptCommand;
-    private Command exitCommand;
-    private Command removeGreaterCommand;
-    private Command removeLowerCommand;
-    private Command removeGreaterKeyCommand;
-    private Command removeAllByEnginePowerCommand;
-    private Command countByFuelTypeCommand;
-    private Command filterLessThanFuelTypeCommand;
-
     private ArrayList<Command> commandList = new ArrayList<>();
-
-    private Command lastCommand;
 
     public CommandInvoker(Command helpCommand, Command infoCommand, Command showCommand,
                           Command insertCommand, Command updateCommand, Command removeKeyCommand,
@@ -33,23 +14,6 @@ public class CommandInvoker {
                           Command exitCommand, Command removeGreaterCommand, Command removeLowerCommand,
                           Command removeGreaterKeyCommand, Command removeAllByEnginePowerCommand,
                           Command countByFuelTypeCommand, Command filterLessThanFuelTypeCommand) {
-        this.helpCommand = helpCommand;
-        this.infoCommand = infoCommand;
-        this.showCommand = showCommand;
-        this.insertCommand = insertCommand;
-        this.updateCommand = updateCommand;
-        this.removeKeyCommand = removeKeyCommand;
-        this.clearCommand = clearCommand;
-        this.saveCommand = saveCommand;
-        this.executeScriptCommand = executeScriptCommand;
-        this.exitCommand = exitCommand;
-        this.removeGreaterCommand = removeGreaterCommand;
-        this.removeLowerCommand = removeLowerCommand;
-        this.removeGreaterKeyCommand = removeGreaterKeyCommand;
-        this.removeAllByEnginePowerCommand = removeAllByEnginePowerCommand;
-        this.countByFuelTypeCommand = countByFuelTypeCommand;
-        this.filterLessThanFuelTypeCommand = filterLessThanFuelTypeCommand;
-
         commandList.add(helpCommand);
         commandList.add(infoCommand);
         commandList.add(showCommand);
@@ -75,11 +39,11 @@ public class CommandInvoker {
     }
 
     private String getCommandDescription() {
-        String reference = "";
+        StringBuilder reference = new StringBuilder();
         for (Command command : commandList) {
-            reference += command + "\n";
+            reference.append(command).append("\n");
         }
-        return reference;
+        return reference.toString();
     }
 
     private void setReferenceFile() {
@@ -87,66 +51,164 @@ public class CommandInvoker {
     }
 
     public boolean help(String[] arguments, ExecuteMode executeMode) {
-        return helpCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof HelpCommand) {
+                HelpCommand helpCommand = (HelpCommand) command;
+                return helpCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean info(String[] arguments, ExecuteMode executeMode) {
-        return infoCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof InfoCommand) {
+                InfoCommand infoCommand = (InfoCommand) command;
+                return infoCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean show(String[] arguments, ExecuteMode executeMode) {
-        return showCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof ShowCommand) {
+                ShowCommand showCommand = (ShowCommand) command;
+                return showCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean insert(String[] arguments, ExecuteMode executeMode) {
-        return insertCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof InsertCommand) {
+                InsertCommand insertCommand = (InsertCommand) command;
+                return insertCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean update(String[] arguments, ExecuteMode executeMode) {
-        return updateCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof UpdateCommand) {
+                UpdateCommand updateCommand = (UpdateCommand) command;
+                return updateCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
-        return removeKeyCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof RemoveKeyCommand) {
+                RemoveKeyCommand removeKeyCommand = (RemoveKeyCommand) command;
+                return removeKeyCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean clear(String[] arguments, ExecuteMode executeMode) {
-        return clearCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof ClearCommand) {
+                ClearCommand clearCommand = (ClearCommand) command;
+                return clearCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean save(String[] arguments, ExecuteMode executeMode) {
-        return saveCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof SaveCommand) {
+                SaveCommand saveCommand = (SaveCommand) command;
+                return saveCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean executeScript(String[] arguments, ExecuteMode executeMode) {
-        return executeScriptCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof ExecuteScriptCommand) {
+                ExecuteScriptCommand executeScriptCommand = (ExecuteScriptCommand) command;
+                return executeScriptCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean exit(String[] arguments, ExecuteMode executeMode) {
-        return exitCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof ExitCommand) {
+                ExitCommand exitCommand = (ExitCommand) command;
+                return exitCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean removeGreater(String[] arguments, ExecuteMode executeMode) {
-        return removeGreaterCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof RemoveGreaterCommand) {
+                RemoveGreaterCommand removeGreaterCommand = (RemoveGreaterCommand) command;
+                return removeGreaterCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean removeLower(String[] arguments, ExecuteMode executeMode) {
-        return removeLowerCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof RemoveLowerCommand) {
+                RemoveLowerCommand removeLowerCommand = (RemoveLowerCommand) command;
+                return removeLowerCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean removeGreaterKey(String[] arguments, ExecuteMode executeMode) {
-        return removeGreaterKeyCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof RemoveGreaterKeyCommand) {
+                RemoveGreaterKeyCommand removeGreaterKeyCommand = (RemoveGreaterKeyCommand) command;
+                return removeGreaterKeyCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean removeAllByEnginePower(String[] arguments, ExecuteMode executeMode) {
-        return removeAllByEnginePowerCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof RemoveAllByEnginePowerCommand) {
+                RemoveAllByEnginePowerCommand removeAllByEnginePowerCommand =
+                        (RemoveAllByEnginePowerCommand) command;
+                return removeAllByEnginePowerCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean countByFuelType(String[] arguments, ExecuteMode executeMode) {
-        return countByFuelTypeCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof CountByFuelTypeCommand) {
+                CountByFuelTypeCommand countByFuelTypeCommand = (CountByFuelTypeCommand) command;
+                return countByFuelTypeCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 
     public boolean filterLessThanFuelType(String[] arguments, ExecuteMode executeMode) {
-        return filterLessThanFuelTypeCommand.execute(arguments, executeMode);
+        for (Command command : commandList) {
+            if (command instanceof FilterLessThanFuelTypeCommand) {
+                FilterLessThanFuelTypeCommand filterLessThanFuelTypeCommand =
+                        (FilterLessThanFuelTypeCommand) command;
+                return filterLessThanFuelTypeCommand.execute(arguments, executeMode);
+            }
+        }
+        return false;
     }
 }
