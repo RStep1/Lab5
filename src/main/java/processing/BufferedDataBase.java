@@ -4,6 +4,7 @@ import data.FuelType;
 import data.Vehicle;
 import exceptions.WrongAmountOfArgumentsException;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,9 +14,13 @@ import commands.*;
 import mods.AddMode;
 import mods.ExecuteMode;
 import mods.RemoveMode;
+import utility.ValueHandler;
+import utility.ValueTransformer;
 
 public class BufferedDataBase {
     private final Hashtable<Long, Vehicle> dataBase;
+    private Set<String> scriptCounter = new HashSet<>();
+    private CommandInvoker commandInvoker;
     private LocalDateTime lastInitTime;
     private LocalDateTime lastSaveTime;
     private final IdentifierHandler identifierHandler;
@@ -26,6 +31,10 @@ public class BufferedDataBase {
         dataBase = FileHandler.loadDataBase();
         identifierHandler = new IdentifierHandler(dataBase);
         lastInitTime = dataBase.isEmpty() && lastInitTime == null ? null : LocalDateTime.now();
+    }
+
+    public void setCommandInvoker(CommandInvoker commandInvoker) {
+        this.commandInvoker = commandInvoker;
     }
 
     public Hashtable<Long, Vehicle> getDataBase() {
@@ -74,11 +83,14 @@ public class BufferedDataBase {
         String stringLastSaveTime = (lastSaveTime == null ?
                 "there hasn't been a save here yet" : lastSaveTime.format(dateFormatter));
         FileHandler.writeCurrentCommand(InfoCommand.getName());
-        FileHandler.writeOutputInfo("Information about collection:");
-        FileHandler.writeOutputInfo("Type of collection:  " + getCollectionType() +
-                                  "\nInitialization date: " + stringLastInitTime +
-                                  "\nLast save time:      " + stringLastSaveTime +
-                                  "\nNumber of elements:  " + getCollectionSize());
+        FileHandler.writeOutputInfo(String.format("""
+                Information about collection:
+                Type of collection:  %s
+                Initialization date: %s
+                Last save time:      %s
+                Number of elements:  %s
+                """, getCollectionType(), stringLastInitTime,
+                stringLastSaveTime, getCollectionSize()));
         return true;
     }
 
@@ -108,6 +120,10 @@ public class BufferedDataBase {
     }
 
     private boolean addElementBy(String[] arguments, ExecuteMode executeMode, AddMode addMode, String commandName) {
+        if (arguments.length == 8) {
+            System.out.println("выполнение insert или update");
+            return true;
+        }
         if (arguments.length == 0) {
             FileHandler.writeUserErrors(String.format("%s value cannot be null", addMode.getValueName()));
             return false;
@@ -136,7 +152,10 @@ public class BufferedDataBase {
             default -> FileHandler.writeSystemErrors(String.format(
                     "Command %s: No suitable add mode file", commandName));
         }
-        Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
+//        if (executeMode == ExecuteMode.COMMAND_MODE)
+            Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
+//        else
+//            Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
         dataBase.put(key, vehicle);
         FileHandler.writeCurrentCommand(commandName);
         FileHandler.writeOutputInfo("Element was successfully " + addMode.getResultMessage());
@@ -179,6 +198,49 @@ public class BufferedDataBase {
     }
 
     public boolean executeScript(String[] arguments, ExecuteMode executeMode) {
+        if (executeMode == ExecuteMode.COMMAND_MODE)
+            scriptCounter.clear();
+        if (!checkNumberOfArguments(arguments, 1, ExecuteScriptCommand.getName()))
+            return false;
+        File scriptFile = FileHandler.findFile(new File("scripts"), arguments[0]);
+        if (scriptFile == null) {
+            FileHandler.writeUserErrors(String.format("Script '%s' not found", arguments[0]));
+            return false;
+        }
+        if (scriptCounter.contains(scriptFile.getAbsolutePath())) {
+            FileHandler.writeUserErrors(String.format("Recursion on '%s' script noticed", scriptFile.getName()));
+            return false;
+        }
+        scriptCounter.add(scriptFile.getAbsolutePath());
+        if (executeMode == ExecuteMode.COMMAND_MODE)
+            FileHandler.writeCurrentCommand(ExecuteScriptCommand.getName());
+        ArrayList<String> scriptLines = FileHandler.readScriptFile(scriptFile);
+        if (scriptLines.isEmpty()) {
+            FileHandler.writeOutputInfo(String.format("Script '%s' is empty", scriptFile.getName()));
+            return true;
+        }
+        CommandParser commandParser = new CommandParser(commandInvoker, scriptLines);
+//        for (String nextLine : scriptLines) {
+//            boolean exitStatus = commandParser.commandProcessing(nextLine, ExecuteMode.SCRIPT_MODE);
+//            if (!exitStatus)
+//                return false;
+//        }
+
+        if (executeMode == ExecuteMode.COMMAND_MODE) {
+            Console.printOutputFile();
+            if (!FileHandler.readUserErrFile().isEmpty()) {
+                FileHandler.writeUserErrors(Console.getHelpMessage());
+                Console.printUserErrorsFile();
+            }
+            FileHandler.clearOutFile();
+            FileHandler.clearUserErrFile();
+        }
+        boolean exitStatus = commandParser.scriptProcessing(scriptFile.getName());
+        if (!exitStatus)
+            return false;
+        Console.printOutputFile();
+        Console.printUserErrorsFile();
+
 
         return true;
     }
@@ -189,14 +251,6 @@ public class BufferedDataBase {
             return false;
         FileHandler.writeCurrentCommand(ExitCommand.getName());
         FileHandler.writeOutputInfo("Program successfully completed");
-        Console.printOutputFile();
-        if (!FileHandler.readUserErrFile().isEmpty()) { // for scripts
-            FileHandler.writeUserErrors(Console.getHelpMessage());
-            Console.printUserErrorsFile();
-        }
-        FileHandler.clearOutFile();
-        FileHandler.clearUserErrFile();
-        System.exit(0);///////////////////
         return true;
     }
 
@@ -214,8 +268,7 @@ public class BufferedDataBase {
                                                  String commandName, RemoveMode removeMode) {
         if (!checkNumberOfArguments(arguments, 1, commandName))
             return false;
-        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
-        if (!collectionHandler.checkDistanceTravelled(arguments[0]))
+        if (!ValueHandler.DISTANCE_TRAVELLED_CHECKER.check(arguments[0]))
             return false;
         long userDistanceTravelled = Long.parseLong(arguments[0]);
         Enumeration<Long> keys = dataBase.keys();
@@ -275,8 +328,7 @@ public class BufferedDataBase {
     public boolean removeAllByEnginePower(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, RemoveAllByEnginePowerCommand.getName()))
             return false;
-        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
-        if (!collectionHandler.checkEnginePower(arguments[0]))
+        if (!ValueHandler.ENGINE_POWER_CHECKER.check(arguments[0]))
             return false;
         int userEnginePower = Integer.parseInt(arguments[0]);
         int countOfRemoved = 0;
@@ -302,10 +354,9 @@ public class BufferedDataBase {
     public boolean countByFuelType(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, CountByFuelTypeCommand.getName()))
             return false;
-        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
-        if (!collectionHandler.checkFuelType(arguments[0]))
+        if (!ValueHandler.FUEL_TYPE_CHECKER.check(arguments[0]))
             return false;
-        FuelType fuelType = collectionHandler.fuelTypeSelection(arguments[0]);
+        FuelType fuelType = ValueTransformer.SET_FUEL_TYPE.apply(arguments[0]);
         int count = 0;
         Enumeration<Long> keys = dataBase.keys();
         while (keys.hasMoreElements()) {
@@ -320,12 +371,11 @@ public class BufferedDataBase {
     }
 
     public boolean filterLessThanFuelType(String[] arguments, ExecuteMode executeMode) {
-        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
         if (!checkNumberOfArguments(arguments, 1, FilterLessThanFuelTypeCommand.getName()))
             return false;
-        if (!collectionHandler.checkFuelType(arguments[0]))
+        if (!ValueHandler.FUEL_TYPE_CHECKER.check(arguments[0]))
             return false;
-        FuelType fuelType = collectionHandler.fuelTypeSelection(arguments[0]);
+        FuelType fuelType = ValueTransformer.SET_FUEL_TYPE.apply(arguments[0]);
         boolean hasSuchElements = false;
         FileHandler.writeCurrentCommand(FilterLessThanFuelTypeCommand.getName());
         TreeMap<Long, Vehicle> treeMapData = new TreeMap<>(dataBase);

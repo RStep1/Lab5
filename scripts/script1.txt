@@ -1,0 +1,21 @@
+
+execute_script script2.txt
+help
+show
+info
+slgjkkfagj;l
+execute_script script1.txt
+info 56 6
+insert 111
+      NEW_NAME
+                        1
+        1
+                  1
+1
+1
+1
+save
+info
+insert 1
+name
+2

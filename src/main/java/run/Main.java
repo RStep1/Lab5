@@ -4,11 +4,9 @@ import processing.*;
 import commands.*;
 
 
-import java.io.IOException;
-
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         BufferedDataBase bufferedDataBase = new BufferedDataBase();
         CommandInvoker invoker = new CommandInvoker(new HelpCommand(bufferedDataBase),
                 new InfoCommand(bufferedDataBase), new ShowCommand(bufferedDataBase),
@@ -22,6 +20,7 @@ public class Main {
                 new CountByFuelTypeCommand(bufferedDataBase),
                 new FilterLessThanFuelTypeCommand(bufferedDataBase));
         Console console = new Console(invoker);
+        bufferedDataBase.setCommandInvoker(invoker);
         console.interactiveMode();
     }
 }

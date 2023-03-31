@@ -4,6 +4,8 @@ import commands.*;
 import mods.ExecuteMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommandInvoker {
     private ArrayList<Command> commandList = new ArrayList<>();

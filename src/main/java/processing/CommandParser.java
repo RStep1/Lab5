@@ -1,16 +1,29 @@
 package processing;
 
 
+import commands.Command;
+import commands.ExitCommand;
+import commands.InsertCommand;
+import commands.UpdateCommand;
+import data.Vehicle;
 import mods.ExecuteMode;
+
+import java.util.ArrayList;
 
 public class CommandParser {
     private CommandInvoker invoker;
+    private ArrayList<String> scriptLines;
 
     public CommandParser(CommandInvoker invoker) {
         this.invoker = invoker;
     }
 
-    private boolean commandSelection(String nextLine, String nextCommand, String[] arguments, int splitedLineLength, ExecuteMode executeMode) {
+    public CommandParser(CommandInvoker invoker, ArrayList<String> scriptLines) {
+        this.invoker = invoker;
+        this.scriptLines = scriptLines;
+    }
+
+    private boolean commandSelection(String nextLine, String nextCommand, String[] arguments, ExecuteMode executeMode) {
         boolean exitStatus;
         switch (nextCommand) {
             case "help" -> {
@@ -23,7 +36,7 @@ public class CommandParser {
             case "remove_key" -> exitStatus = invoker.removeKey(arguments, executeMode);
             case "clear" -> exitStatus = invoker.clear(arguments, executeMode);
             case "save" -> exitStatus = invoker.save(arguments, executeMode);
-            case "execute_script" -> exitStatus = invoker.executeScript(arguments, ExecuteMode.SCRIPT_MODE);
+            case "execute_script" -> exitStatus = invoker.executeScript(arguments, executeMode);
             case "exit" -> exitStatus = invoker.exit(arguments, executeMode);
             case "remove_greater" -> exitStatus = invoker.removeGreater(arguments, executeMode);
             case "remove_lower" -> exitStatus = invoker.removeLower(arguments, executeMode);
@@ -39,16 +52,32 @@ public class CommandParser {
         return exitStatus;
     }
 
-    public void commandProcessing(String nextLine, ExecuteMode executeMode) {
-        if (nextLine.trim().equals(""))
-            return;
-        String nextSplitedLine[] = nextLine.trim().split("\\s+");
-        String[] arguments = new String[nextSplitedLine.length - 1];
-        for (int i = 1; i < nextSplitedLine.length; i++) {
-            arguments[i - 1] = nextSplitedLine[i];
+    private static class UserLineSeparator {
+        private final String command;
+        private final String[] arguments;
+        public UserLineSeparator(String nextLine) {
+            String[] nextSplitedLine = nextLine.trim().split("\\s+");
+            this.arguments = new String[nextSplitedLine.length - 1];
+            for (int i = 1; i < nextSplitedLine.length; i++) {
+                this.arguments[i - 1] = nextSplitedLine[i];
+            }
+            this.command = nextSplitedLine[0];
         }
-        String nextCommand = nextSplitedLine[0];
-        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, nextSplitedLine.length - 1, executeMode);
+        public String getCommand() {
+            return command;
+        }
+        public String[] getArguments() {
+            return arguments;
+        }
+    }
+
+    public boolean commandProcessing(String nextLine, ExecuteMode executeMode) {
+        if (nextLine.trim().equals(""))
+            return true;
+        UserLineSeparator userLineSeparator = new UserLineSeparator(nextLine);
+        String nextCommand = userLineSeparator.getCommand();
+        String[] arguments = userLineSeparator.getArguments();
+        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, executeMode);
         Console.printOutputFile();
         if (!exitStatus) {
             FileHandler.writeUserErrors(Console.getHelpMessage());
@@ -56,5 +85,65 @@ public class CommandParser {
         }
         FileHandler.clearOutFile();
         FileHandler.clearUserErrFile();
+
+        if (nextCommand.equals(ExitCommand.getName()) && exitStatus)
+            return false;
+        return true;
+    }
+
+//    private String[] addExtraArguments(String[] arguments, int countOfLines,
+//                                       String commandName, ArrayList<String> commandLines, int currentLine) {
+//        int countOfExtraArguments = 0;
+////        for (Command command : invoker.getCommandList()) {
+////            if (command.getName() == "commandName")
+////                countOfExtraArguments = command.getCountOfExtraArguments
+////        }
+//        if (commandName == InsertCommand.getName() || commandName == UpdateCommand.getName())
+//            countOfExtraArguments = 7;
+//        String[] extraArguments = new String[arguments.length + commandLines.size()];
+//        for (int i = 0; i < arguments.length; i++) {
+//            extraArguments[i] = arguments[i];
+//        }
+//        for (int i = arguments.length; i < extraArguments.length; i++) {
+//
+//        }
+//
+//    }
+
+    public boolean scriptProcessing(String scriptName) {
+        int countOfLines = scriptLines.size();
+        for (int lineIndex = 0; lineIndex < countOfLines; lineIndex++) {
+            String nextLine = scriptLines.get(lineIndex);
+            if (nextLine.trim().equals(""))
+                continue;
+            UserLineSeparator userLineSeparator = new UserLineSeparator(nextLine);
+            String nextCommand = userLineSeparator.getCommand();
+            String[] arguments = userLineSeparator.getArguments();
+            int countOfExtraArguments = 0;
+            if (nextCommand.equals(InsertCommand.getName()) || nextCommand.equals(UpdateCommand.getName())) {
+                countOfExtraArguments = Vehicle.getCountOfChangeableFields();
+            }
+            String[] extraArguments = new String[arguments.length + countOfExtraArguments];
+            if (lineIndex + countOfExtraArguments > countOfLines) {
+                FileHandler.writeUserErrors(String.format(
+                        "line %s: There are not enough lines in script '%s' for the '%s' command",
+                        lineIndex + 1, scriptName, nextCommand));
+                return false;
+            }
+            for (int i = 0; i < arguments.length; i++)
+                extraArguments[i] = arguments[i].trim();
+            for (int i = arguments.length, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1; j++, i++)
+                extraArguments[i] = scriptLines.get(j).trim();
+            lineIndex += countOfExtraArguments;
+
+            System.out.println(nextCommand);
+            for (int i = 0; i < extraArguments.length; i++)
+                System.out.print(extraArguments[i] + ", ");
+
+            boolean exitStatus = commandSelection(nextLine, nextCommand, extraArguments, ExecuteMode.SCRIPT_MODE);
+            if (exitStatus && nextCommand.equals(ExitCommand.getName()))
+                return true;
+        }
+        return true;
     }
 }
