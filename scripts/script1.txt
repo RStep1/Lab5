@@ -1,8 +1,9 @@
 insert 1234
 NEW_NAME_FROM_SCRIPT1
-1
-3
-5
-1
-car
-3
+
+
+
+
+
+
+

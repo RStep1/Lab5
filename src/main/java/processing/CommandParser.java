@@ -135,11 +135,6 @@ public class CommandParser {
             for (int i = arguments.length, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1; j++, i++)
                 extraArguments[i] = scriptLines.get(j).trim();
             lineIndex += countOfExtraArguments;
-
-//            System.out.println(nextCommand);
-//            for (int i = 0; i < extraArguments.length; i++)
-//                System.out.print(extraArguments[i] + ", ");
-
             boolean exitStatus = commandSelection(nextLine, nextCommand, extraArguments, ExecuteMode.SCRIPT_MODE);
             if (exitStatus && nextCommand.equals(ExitCommand.getName()))
                 return true;

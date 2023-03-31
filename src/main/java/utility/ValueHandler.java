@@ -33,7 +33,7 @@ public class ValueHandler {
             valuePattern = Pattern.compile("([-+]?\\d*[.,]?\\d*)");
         if (valueType == ValueType.LONG || valueType == ValueType.INTEGER)
             valuePattern = Pattern.compile("[-+]?\\d+");
-        if (valuePattern.matcher(value).matches())
+        if (valuePattern.matcher(value).matches() && !value.equals(""))
             return true;
         FileHandler.writeUserErrors(String.format("%s must be of type %s", valueName, valueType.getName()));
         return false;
