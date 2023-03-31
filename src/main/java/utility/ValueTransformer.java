@@ -59,10 +59,10 @@ public class ValueTransformer {
         return fuelType;
     };
 
-    public static final Vehicle setVehicle(long id, String newName, String newX, String newY,
-                                           java.time.ZonedDateTime creationDate, String newEnginePower,
-                                           String newDistanceTravelled, String newVehicleType,
-                                           String newFuelType) {
+    public static final Vehicle createVehicle(long id, String newName, String newX, String newY,
+                                              java.time.ZonedDateTime creationDate, String newEnginePower,
+                                              String newDistanceTravelled, String newVehicleType,
+                                              String newFuelType) {
         return new Vehicle(id, newName, SET_COORDINATES.apply(newX, newY),
                 SET_CREATION_DATE.apply(creationDate), SET_ENGINE_POWER.apply(newEnginePower),
                 SET_DISTANCE_TRAVELLED.apply(newDistanceTravelled), SET_VEHICLE_TYPE.apply(newVehicleType),

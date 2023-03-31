@@ -122,15 +122,13 @@ public class BufferedDataBase {
     private boolean addElementBy(String[] arguments, ExecuteMode executeMode, AddMode addMode, String commandName) {
         if (arguments.length == 8) {
             System.out.println("выполнение insert или update");
-            return true;
         }
-        if (arguments.length == 0) {
+        if (executeMode == ExecuteMode.COMMAND_MODE && arguments.length == 0) {
             FileHandler.writeUserErrors(String.format("%s value cannot be null", addMode.getValueName()));
             return false;
         }
-        if (!checkNumberOfArguments(arguments, 1, commandName))
+        if (executeMode == ExecuteMode.COMMAND_MODE && !checkNumberOfArguments(arguments, 1, commandName))
             return false;
-        CollectionHandler collectionHandler = new CollectionHandler(executeMode);
         java.time.ZonedDateTime creationDate = ZonedDateTime.now();
         long key = 0;
         long id = 0;
@@ -152,10 +150,15 @@ public class BufferedDataBase {
             default -> FileHandler.writeSystemErrors(String.format(
                     "Command %s: No suitable add mode file", commandName));
         }
-//        if (executeMode == ExecuteMode.COMMAND_MODE)
-            Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
-//        else
-//            Vehicle vehicle = Console.insertMode(id, creationDate, collectionHandler);
+        Vehicle vehicle;
+        if (executeMode == ExecuteMode.COMMAND_MODE)
+            vehicle = Console.insertMode(id, creationDate);
+        else {
+            if (!ValueHandler.checkValues(arguments)) {
+                return false;
+            }
+            vehicle = ValueHandler.getVehicle(id, creationDate, arguments);
+        }
         dataBase.put(key, vehicle);
         FileHandler.writeCurrentCommand(commandName);
         FileHandler.writeOutputInfo("Element was successfully " + addMode.getResultMessage());
@@ -220,21 +223,7 @@ public class BufferedDataBase {
             return true;
         }
         CommandParser commandParser = new CommandParser(commandInvoker, scriptLines);
-//        for (String nextLine : scriptLines) {
-//            boolean exitStatus = commandParser.commandProcessing(nextLine, ExecuteMode.SCRIPT_MODE);
-//            if (!exitStatus)
-//                return false;
-//        }
 
-        if (executeMode == ExecuteMode.COMMAND_MODE) {
-            Console.printOutputFile();
-            if (!FileHandler.readUserErrFile().isEmpty()) {
-                FileHandler.writeUserErrors(Console.getHelpMessage());
-                Console.printUserErrorsFile();
-            }
-            FileHandler.clearOutFile();
-            FileHandler.clearUserErrFile();
-        }
         boolean exitStatus = commandParser.scriptProcessing(scriptFile.getName());
         if (!exitStatus)
             return false;

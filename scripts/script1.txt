@@ -1,21 +1,8 @@
-
-execute_script script2.txt
-help
-show
-info
-slgjkkfagj;l
-execute_script script1.txt
-info 56 6
-insert 111
-      NEW_NAME
-                        1
-        1
-                  1
+insert 1234
+NEW_NAME_FROM_SCRIPT1
 1
+3
+5
 1
-1
-save
-info
-insert 1
-name
-2
+car
+3

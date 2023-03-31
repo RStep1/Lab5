@@ -1,8 +1,6 @@
 package processing;
 
-import data.FuelType;
 import data.Vehicle;
-import data.VehicleType;
 import mods.ExecuteMode;
 import utility.ValueHandler;
 import utility.ValueTransformer;
@@ -41,70 +39,10 @@ public class Console {
     }
 
 
-    public static Vehicle insertMode(long id, java.time.ZonedDateTime creationDate, CollectionHandler collectionHandler) {
+    public static Vehicle insertMode(long id, java.time.ZonedDateTime creationDate) {
         Scanner in = new Scanner(System.in);
         PrintStream printStream = new PrintStream(System.out);
         String newName, newX, newY, newEnginePower, newDistanceTravelled, newType, newFuelType;
-//        do {
-//            Console.printUserErrorsFile();
-//            FileHandler.clearUserErrFile();
-//            printStream.print("Enter name: ");
-//            newName = in.nextLine().trim();
-//        } while (!collectionHandler.checkName(newName));
-//
-//        do {
-//            Console.printUserErrorsFile();
-//            FileHandler.clearUserErrFile();
-//            printStream.print("Enter X coordinate: ");
-//            newX = in.nextLine().trim();
-//            newX = ValueTransformer.VALUE_CORRECTION.apply(newX);
-//        } while (!collectionHandler.checkX(newX));
-//
-//        do {
-//            Console.printUserErrorsFile();
-//            FileHandler.clearUserErrFile();
-//            printStream.print("Enter Y coordinate: ");
-//            newY = in.nextLine().trim();
-//            newY = ValueTransformer.VALUE_CORRECTION.apply(newY);
-//        } while (!collectionHandler.checkY(newY));
-//
-//        do {
-//            Console.printUserErrorsFile();
-//            FileHandler.clearUserErrFile();
-//            printStream.print("Enter engine power: ");
-//            newEnginePower = in.nextLine().trim();
-//            newEnginePower = ValueTransformer.VALUE_CORRECTION.apply(newEnginePower);
-//        } while (!collectionHandler.checkEnginePower(newEnginePower));
-//
-//        do {
-//            Console.printUserErrorsFile();
-//            FileHandler.clearUserErrFile();
-//            printStream.print("Enter distance travelled: ");
-//            newDistanceTravelled = in.nextLine().trim();
-//            newDistanceTravelled = ValueTransformer.VALUE_CORRECTION.apply(newDistanceTravelled);
-//        } while (!collectionHandler.checkDistanceTravelled(newDistanceTravelled));
-//
-//        do {
-//            Console.printUserErrorsFile();
-//            FileHandler.clearUserErrFile();
-//            printStream.println("Vehicle types:");
-//            for (VehicleType vehicleType : VehicleType.values()) {
-//                printStream.println(vehicleType.getSerialNumber() + " - " + vehicleType);
-//            }
-//            printStream.print("Enter vehicle type (numeric value or full name): ");
-//            newType = in.nextLine().trim().toUpperCase();
-//        } while (!collectionHandler.checkVehicleType(newType));
-//
-//        do {
-//            Console.printUserErrorsFile();
-//            FileHandler.clearUserErrFile();
-//            printStream.println("Fuel types:");
-//            for (FuelType fuelType : FuelType.values()) {
-//                printStream.println(fuelType.getSerialNumber() + " - " + fuelType);
-//            }
-//            printStream.print("Enter fuel type (numeric value or full name): ");
-//            newFuelType = in.nextLine().trim().toUpperCase();
-//        } while (!collectionHandler.checkFuelType(newFuelType));
         ArrayList<String> newValues = new ArrayList<>();
         String newValue = "";
         for (Process process : ValueHandler.getValueProcesses()) {
@@ -124,7 +62,7 @@ public class Console {
         newDistanceTravelled = newValues.get(4);
         newType = newValues.get(5);
         newFuelType = newValues.get(6);
-        return ValueTransformer.setVehicle(id, newName, newX, newY, creationDate,
+        return ValueTransformer.createVehicle(id, newName, newX, newY, creationDate,
                 newEnginePower, newDistanceTravelled, newType, newFuelType);
     }
 

@@ -3,6 +3,7 @@ package utility;
 
 import data.Coordinates;
 import data.FuelType;
+import data.Vehicle;
 import data.VehicleType;
 import mods.ValueType;
 import processing.FileHandler;
@@ -38,18 +39,18 @@ public class ValueHandler {
         return false;
     }
 
-    public static final Correction NAME_CORRECTION = String::trim;
-    public static final Correction NUMBER_VALUE_CORRECTION =
+    private static final Correction NAME_CORRECTION = String::trim;
+    private static final Correction NUMBER_VALUE_CORRECTION =
             value -> value.trim().replaceAll(",", ".").replaceAll("\\+", "");
-    public static final Correction TYPE_CORRECTION = value -> value.trim().toUpperCase();
-    public static final Checker NAME_CHECKER = name -> {
+    private static final Correction TYPE_CORRECTION = value -> value.trim().toUpperCase();
+    private static final Checker NAME_CHECKER = name -> {
         if (name == null || name.equals("")) {
             FileHandler.writeUserErrors("Name cannot be null");
             return false;
         }
         return true;
     };
-    public static final Checker X_COORDINATE_CHECKER = newX -> {
+    private static final Checker X_COORDINATE_CHECKER = newX -> {
         if (!checkTypeValue(ValueType.FLOAT, newX, "X coordinate"))
             return false;
         float x = Float.parseFloat(newX);
@@ -66,7 +67,7 @@ public class ValueHandler {
         }
         return true;
     };
-    public static final Checker Y_COORDINATE_CHECKER = newY -> {
+    private static final Checker Y_COORDINATE_CHECKER = newY -> {
         if (!checkTypeValue(ValueType.DOUBLE, newY, "Y coordinate"))
             return false;
         double y = Double.parseDouble(newY);
@@ -113,7 +114,7 @@ public class ValueHandler {
         }
         return true;
     };
-    public static final Checker VEHICLE_TYPE_CHECKER = newVehicleType -> {
+    private static final Checker VEHICLE_TYPE_CHECKER = newVehicleType -> {
         if (newVehicleType.equals("")) {
             FileHandler.writeUserErrors("Vehicle type cannot be null");
             return false;
@@ -277,4 +278,26 @@ public class ValueHandler {
             return FUEL_TYPE_CHECKER;
         }
     };
+
+    public static boolean checkValues(String[] newValues) {
+        ArrayList<Process> processes = ValueHandler.getValueProcesses();
+        for (int i = 0; i < processes.size(); i++) {
+            newValues[i + 1] = processes.get(i).getCorrection().correct(newValues[i + 1]);
+            if (!processes.get(i).getChecker().check(newValues[i + 1]))
+                 return false;
+        }
+        return true;
+    }
+    public static Vehicle getVehicle(long id, java.time.ZonedDateTime creationDate, String[] newValues) {
+        String newName, newX, newY, newEnginePower, newDistanceTravelled, newType, newFuelType;
+        newName = newValues[1];
+        newX = newValues[2];
+        newY = newValues[3];
+        newEnginePower = newValues[4];
+        newDistanceTravelled = newValues[5];
+        newType = newValues[6];
+        newFuelType = newValues[7];
+        return ValueTransformer.createVehicle(id, newName, newX, newY, creationDate,
+                newEnginePower, newDistanceTravelled, newType, newFuelType);
+    }
 }
