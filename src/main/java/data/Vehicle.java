@@ -10,6 +10,8 @@ public class Vehicle {
     private VehicleType type; //Поле не может быть null
     private FuelType fuelType; //Поле не может быть null
 
+    private static final int COUNT_OF_CHANGEABLE_FIELDS = 7;
+
     private Vehicle() {
 
     }
@@ -49,6 +51,10 @@ public class Vehicle {
     }
     public FuelType getFuelType() {
         return fuelType;
+    }
+
+    public static int getCountOfChangeableFields() {
+        return COUNT_OF_CHANGEABLE_FIELDS;
     }
 
     @Override

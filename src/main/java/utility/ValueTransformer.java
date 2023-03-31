@@ -1,4 +1,4 @@
-package util;
+package utility;
 
 import data.Coordinates;
 import data.FuelType;
@@ -11,12 +11,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class ValueOperator {
+public class ValueTransformer {
     private static final String zonedDatePattern = "dd/MM/yyy - HH:mm:ss z";
     private static final DateTimeFormatter zonedDateFormatter = DateTimeFormatter.ofPattern(zonedDatePattern);
 
-    public static final Function<String, String> VALUE_CORRECTION =
-            value -> value.replaceAll(",", ".").replaceAll("\\+", "");
+
     private static final BiFunction<String, String, Coordinates> SET_COORDINATES = (newX, newY) -> {
         float x = Float.parseFloat(newX);
         double y = Double.parseDouble(newY);
@@ -26,10 +25,14 @@ public class ValueOperator {
                 RoundingMode.HALF_UP).doubleValue();
         return new Coordinates(truncatedX, truncatedY);
     };
+
     private static final Function<java.time.ZonedDateTime, String> SET_CREATION_DATE = (creationDateTime) ->
             creationDateTime.format(zonedDateFormatter);
+
     private static final Function<String, Integer> SET_ENGINE_POWER = Integer::parseInt;
+
     private static final Function<String, Long> SET_DISTANCE_TRAVELLED = Long::parseLong;
+
     private static final Function<String, VehicleType> SET_VEHICLE_TYPE = (newType) -> {
         VehicleType type = VehicleType.CAR;
         try {
@@ -42,13 +45,14 @@ public class ValueOperator {
         }
         return type;
     };
-    private static final Function<String, FuelType> SET_FUEL_TYPE = (newFuelType) -> {
+
+    public static final Function<String, FuelType> SET_FUEL_TYPE = (newFuelType) -> {
         FuelType fuelType = FuelType.ALCOHOL;
         try {
             int serialNumber = Integer.parseInt(newFuelType);
-            for (FuelType fuelType1 : FuelType.values())
-                if (fuelType1.getSerialNumber() == serialNumber)
-                    fuelType = fuelType1;
+            for (FuelType type : FuelType.values())
+                if (type.getSerialNumber() == serialNumber)
+                    fuelType = type;
         } catch (NumberFormatException e) {
             fuelType = FuelType.valueOf(newFuelType);
         }
