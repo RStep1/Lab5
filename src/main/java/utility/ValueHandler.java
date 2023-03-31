@@ -281,12 +281,13 @@ public class ValueHandler {
 
     public static boolean checkValues(String[] newValues) {
         ArrayList<Process> processes = ValueHandler.getValueProcesses();
+        boolean exitStatus = true;
         for (int i = 0; i < processes.size(); i++) {
             newValues[i + 1] = processes.get(i).getCorrection().correct(newValues[i + 1]);
             if (!processes.get(i).getChecker().check(newValues[i + 1]))
-                 return false;
+                exitStatus = false;
         }
-        return true;
+        return exitStatus;
     }
     public static Vehicle getVehicle(long id, java.time.ZonedDateTime creationDate, String[] newValues) {
         String newName, newX, newY, newEnginePower, newDistanceTravelled, newType, newFuelType;
