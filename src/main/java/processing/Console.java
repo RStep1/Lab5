@@ -5,12 +5,17 @@ import data.FuelType;
 import data.Vehicle;
 import data.VehicleType;
 import mods.ExecuteMode;
+import util.ValueOperator;
 
+import javax.sound.sampled.Line;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 
 public class Console {
@@ -18,8 +23,7 @@ public class Console {
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String zonedDatePattern = "dd/MM/yyy - HH:mm:ss z";
-    public static final DateTimeFormatter zonedDateFormatter = DateTimeFormatter.ofPattern(zonedDatePattern);
+
 
     public Console(CommandInvoker invoker) {
         this.invoker = invoker;
@@ -34,13 +38,12 @@ public class Console {
             PrintStream printStream = new PrintStream(System.out);
             printStream.print("Type command and press Enter: ");
             String nextLine = in.nextLine();
-            parser.commandProcessing(nextLine, ExecuteMode.COMMAND_MODE);
+            boolean exitStatus = parser.commandProcessing(nextLine, ExecuteMode.COMMAND_MODE);
+            if (!exitStatus)
+                break;
         }
     }
 
-    private static String valueCorrection(String value) {
-        return value.replaceAll(",", ".").replaceAll("\\+", "");
-    }
 
     public static Vehicle insertMode(long id, java.time.ZonedDateTime creationDate, CollectionHandler collectionHandler) {
         Scanner in = new Scanner(System.in);
@@ -62,7 +65,7 @@ public class Console {
             }
             printStream.print("Enter X coordinate: ");
             newX = in.nextLine().trim();
-            newX = valueCorrection(newX);
+            newX = ValueOperator.VALUE_CORRECTION.apply(newX);
         } while (!collectionHandler.checkX(newX));
 
         do {
@@ -72,7 +75,7 @@ public class Console {
             }
             printStream.print("Enter Y coordinate: ");
             newY = in.nextLine().trim();
-            newY = valueCorrection(newY);
+            newY = ValueOperator.VALUE_CORRECTION.apply(newY);
         } while (!collectionHandler.checkY(newY));
 
         do {
@@ -82,7 +85,7 @@ public class Console {
             }
             printStream.print("Enter engine power: ");
             newEnginePower = in.nextLine().trim();
-            newEnginePower = valueCorrection(newEnginePower);
+            newEnginePower = ValueOperator.VALUE_CORRECTION.apply(newEnginePower);
         } while (!collectionHandler.checkEnginePower(newEnginePower));
 
         do {
@@ -92,7 +95,7 @@ public class Console {
             }
             printStream.print("Enter distance travelled: ");
             newDistanceTravelled = in.nextLine().trim();
-            newDistanceTravelled = valueCorrection(newDistanceTravelled);
+            newDistanceTravelled = ValueOperator.VALUE_CORRECTION.apply(newDistanceTravelled);
         } while (!collectionHandler.checkDistanceTravelled(newDistanceTravelled));
 
         do {
@@ -121,39 +124,8 @@ public class Console {
             newFuelType = in.nextLine().trim().toUpperCase();
         } while (!collectionHandler.checkFuelType(newFuelType));
 
-
-        float x = Float.parseFloat(newX);
-        double y = Double.parseDouble(newY);
-        float truncatedX = BigDecimal.valueOf(x).setScale(Coordinates.getAccuracy(),
-                RoundingMode.HALF_UP).floatValue();
-        double truncatedY = BigDecimal.valueOf(y).setScale(Coordinates.getAccuracy(),
-                RoundingMode.HALF_UP).doubleValue();
-        Coordinates coordinates = new Coordinates(truncatedX, truncatedY);
-
-        int enginePower = Integer.parseInt(newEnginePower);
-        long distanceTravelled = Long.parseLong(newDistanceTravelled);
-        VehicleType type = VehicleType.CAR;
-        FuelType fuelType = FuelType.ALCOHOL;
-        try {
-            int serialNumber = Integer.parseInt(newType);
-            for (VehicleType vehicleType : VehicleType.values())
-                if (vehicleType.getSerialNumber() == serialNumber)
-                    type = vehicleType;
-        } catch (NumberFormatException e) {
-            type = VehicleType.valueOf(newType);
-        }
-        try {
-            int serialNumber = Integer.parseInt(newFuelType);
-            for (FuelType fuelType1 : FuelType.values())
-                if (fuelType1.getSerialNumber() == serialNumber)
-                    fuelType = fuelType1;
-        } catch (NumberFormatException e) {
-            fuelType = FuelType.valueOf(newFuelType);
-        }
-        String stringCreationDate = creationDate.format(zonedDateFormatter);
-        Vehicle vehicle = new Vehicle(id, newName, coordinates, stringCreationDate,
-                enginePower, distanceTravelled, type, fuelType);
-        return vehicle;
+        return ValueOperator.setVehicle(id, newName, newX, newY, creationDate,
+                newEnginePower, newDistanceTravelled, newType, newFuelType);
     }
 
     public static void printHelpMessage() {
