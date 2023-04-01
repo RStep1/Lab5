@@ -1,6 +1,8 @@
-
-
-
+help
+execute_script script2.txt
+show
+exit
+save
 
 
 

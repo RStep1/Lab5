@@ -138,8 +138,10 @@ public class CommandParser {
                 extraArguments[i] = scriptLines.get(j).trim();
             lineIndex += countOfExtraArguments;
             boolean exitStatus = commandSelection(nextLine, nextCommand, extraArguments, ExecuteMode.SCRIPT_MODE);
-            if (exitStatus && nextCommand.equals(ExitCommand.getName()))
+            if (exitStatus && nextCommand.equals(ExitCommand.getName())) {
+                FileHandler.writeOutputInfo(String.format("Script '%s' successfully completed", scriptName));
                 return true;
+            }
         }
         if (!hasCommands)
             FileHandler.writeOutputInfo(String.format("Script '%s' is empty", scriptName));

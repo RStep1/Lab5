@@ -214,7 +214,7 @@ public class BufferedDataBase {
             return false;
         }
         scriptCounter.add(scriptFile.getAbsolutePath());
-        if (executeMode == ExecuteMode.COMMAND_MODE)
+//        if (executeMode == ExecuteMode.COMMAND_MODE)
             FileHandler.writeCurrentCommand(ExecuteScriptCommand.getName() + " " + scriptFile.getName());
         ArrayList<String> scriptLines = FileHandler.readScriptFile(scriptFile);
         if (scriptLines.isEmpty()) {
@@ -238,7 +238,8 @@ public class BufferedDataBase {
         if (!checkNumberOfArguments(arguments, 0, ExitCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ExitCommand.getName());
-        FileHandler.writeOutputInfo("Program successfully completed");
+        if (executeMode == ExecuteMode.COMMAND_MODE)
+            FileHandler.writeOutputInfo("Program successfully completed");
         return true;
     }
 
