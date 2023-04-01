@@ -154,6 +154,7 @@ package processing;
 
 
 import data.Vehicle;
+import mods.FileType;
 
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
@@ -283,8 +284,12 @@ public class FileHandler {
         }
     }
 
-    public static void writeCurrentCommand(String commandName) {
-        writeOutputInfo("Command " + commandName + ":");
+    public static void writeCurrentCommand(String commandName, FileType fileType) {
+        String message = String.format("Command '%s':", commandName);
+        if (fileType == FileType.OUTPUT)
+            writeOutputInfo(message);
+        if (fileType == FileType.USER_ERRORS)
+            writeUserErrors(message);
     }
 
     public static Hashtable<Long, Vehicle> loadDataBase() {
