@@ -70,6 +70,7 @@ public class BufferedDataBase {
     public boolean help(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName()))
             return false;
+        FileHandler.writeCurrentCommand(HelpCommand.getName());
         FileHandler.writeOutputInfo(FileHandler.readReferenceFile());
         return true;
     }
@@ -214,22 +215,16 @@ public class BufferedDataBase {
             return false;
         }
         scriptCounter.add(scriptFile.getAbsolutePath());
-//        if (executeMode == ExecuteMode.COMMAND_MODE)
-            FileHandler.writeCurrentCommand(ExecuteScriptCommand.getName() + " " + scriptFile.getName());
+        FileHandler.writeCurrentCommand(ExecuteScriptCommand.getName() + " " + scriptFile.getName());
         ArrayList<String> scriptLines = FileHandler.readScriptFile(scriptFile);
         if (scriptLines.isEmpty()) {
             FileHandler.writeOutputInfo(String.format("Script '%s' is empty", scriptFile.getName()));
             return true;
         }
         CommandParser commandParser = new CommandParser(commandInvoker, scriptLines);
-
         boolean exitStatus = commandParser.scriptProcessing(scriptFile.getName());
         if (!exitStatus)
             return false;
-//        Console.printOutputFile();
-//        Console.printUserErrorsFile();
-
-
         return true;
     }
 

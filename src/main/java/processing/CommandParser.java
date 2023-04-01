@@ -137,6 +137,7 @@ public class CommandParser {
             for (int i = arguments.length, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1; j++, i++)
                 extraArguments[i] = scriptLines.get(j).trim();
             lineIndex += countOfExtraArguments;
+//            FileHandler.writeOutputInfo(String.format("%s line %s: ", scriptName, lineIndex + 1));
             boolean exitStatus = commandSelection(nextLine, nextCommand, extraArguments, ExecuteMode.SCRIPT_MODE);
             if (exitStatus && nextCommand.equals(ExitCommand.getName())) {
                 FileHandler.writeOutputInfo(String.format("Script '%s' successfully completed", scriptName));
