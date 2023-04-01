@@ -44,7 +44,7 @@ public class BufferedDataBase {
     private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
         try {
             if (arguments.length != expectedNumberOfArguments) {
-                FileHandler.writeCurrentCommand(commandName);
+                FileHandler.writeUserErrors("Command " + commandName + ": ");
                 throw new WrongAmountOfArgumentsException("Wrong amount of arguments: ",
                         arguments.length, expectedNumberOfArguments);
             }
@@ -70,7 +70,6 @@ public class BufferedDataBase {
     public boolean help(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName()))
             return false;
-        FileHandler.writeCurrentCommand(HelpCommand.getName());
         FileHandler.writeOutputInfo(FileHandler.readReferenceFile());
         return true;
     }
@@ -121,7 +120,7 @@ public class BufferedDataBase {
 
     private boolean addElementBy(String[] arguments, ExecuteMode executeMode, AddMode addMode, String commandName) {
         if (arguments.length == 8) {
-            System.out.println("выполнение insert или update");
+//            System.out.println("выполнение insert или update");
         }
         if (executeMode == ExecuteMode.COMMAND_MODE && arguments.length == 0) {
             FileHandler.writeUserErrors(String.format("%s value cannot be null", addMode.getValueName()));
@@ -216,7 +215,7 @@ public class BufferedDataBase {
         }
         scriptCounter.add(scriptFile.getAbsolutePath());
         if (executeMode == ExecuteMode.COMMAND_MODE)
-            FileHandler.writeCurrentCommand(ExecuteScriptCommand.getName());
+            FileHandler.writeCurrentCommand(ExecuteScriptCommand.getName() + " " + scriptFile.getName());
         ArrayList<String> scriptLines = FileHandler.readScriptFile(scriptFile);
         if (scriptLines.isEmpty()) {
             FileHandler.writeOutputInfo(String.format("Script '%s' is empty", scriptFile.getName()));
@@ -227,8 +226,8 @@ public class BufferedDataBase {
         boolean exitStatus = commandParser.scriptProcessing(scriptFile.getName());
         if (!exitStatus)
             return false;
-        Console.printOutputFile();
-        Console.printUserErrorsFile();
+//        Console.printOutputFile();
+//        Console.printUserErrorsFile();
 
 
         return true;

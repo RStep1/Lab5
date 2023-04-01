@@ -79,7 +79,7 @@ public class CommandParser {
         String[] arguments = userLineSeparator.getArguments();
         boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, executeMode);
         Console.printOutputFile();
-        if (!exitStatus) {
+        if (!FileHandler.readUserErrFile().isEmpty()) {
             FileHandler.writeUserErrors(Console.getHelpMessage());
             Console.printUserErrorsFile();
         }
@@ -112,10 +112,12 @@ public class CommandParser {
 
     public boolean scriptProcessing(String scriptName) {
         int countOfLines = scriptLines.size();
+        boolean hasCommands = false;
         for (int lineIndex = 0; lineIndex < countOfLines; lineIndex++) {
             String nextLine = scriptLines.get(lineIndex);
             if (nextLine.trim().equals(""))
                 continue;
+            hasCommands = true;
             UserLineSeparator userLineSeparator = new UserLineSeparator(nextLine);
             String nextCommand = userLineSeparator.getCommand();
             String[] arguments = userLineSeparator.getArguments();
@@ -139,6 +141,8 @@ public class CommandParser {
             if (exitStatus && nextCommand.equals(ExitCommand.getName()))
                 return true;
         }
+        if (!hasCommands)
+            FileHandler.writeOutputInfo(String.format("Script '%s' is empty", scriptName));
         return true;
     }
 }
