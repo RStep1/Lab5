@@ -210,7 +210,8 @@ public class BufferedDataBase {
             return false;
         File scriptFile = FileHandler.findFile(new File("scripts"), arguments[0]);
         if (scriptFile == null) {
-            FileHandler.writeToFile(String.format("Script '%s' not found", arguments[0]), FileType.USER_ERRORS);
+            FileHandler.writeToFile(String.format(
+                    "Script '%s' not found in 'scripts' directory", arguments[0]), FileType.USER_ERRORS);
             return false;
         }
         if (scriptCounter.contains(scriptFile.getAbsolutePath())) {
