@@ -15,10 +15,7 @@ import mods.AddMode;
 import mods.ExecuteMode;
 import mods.FileType;
 import mods.RemoveMode;
-import utility.Checker;
-import utility.CheckingResult;
-import utility.ValueHandler;
-import utility.ValueTransformer;
+import utility.*;
 
 public class BufferedDataBase {
     private final Hashtable<Long, Vehicle> dataBase;
@@ -53,7 +50,7 @@ public class BufferedDataBase {
             }
             return true;
         } catch (WrongAmountOfArgumentsException e) {
-            FileHandler.writeUserErrors(e.getMessage());
+            FileHandler.writeToFile(e.getMessage(), FileType.USER_ERRORS);
         }
         return false;
     }
@@ -61,7 +58,7 @@ public class BufferedDataBase {
     private boolean checkCommandWithKey(String[] arguments, String commandName) {
         if (arguments.length == 0) {
             FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-            FileHandler.writeUserErrors("Key value cannot be null");
+            FileHandler.writeToFile("Key value cannot be null", FileType.USER_ERRORS);
             return false;
         }
         if (!checkNumberOfArguments(arguments, 1, commandName + " " + arguments[0]))
@@ -75,7 +72,7 @@ public class BufferedDataBase {
         if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(HelpCommand.getName(), FileType.OUTPUT);
-        FileHandler.writeOutputInfo(FileHandler.readReferenceFile());
+        FileHandler.writeToFile(FileHandler.readFile(FileType.REFERENCE), FileType.OUTPUT);
         return true;
     }
 
@@ -87,14 +84,13 @@ public class BufferedDataBase {
         String stringLastSaveTime = (lastSaveTime == null ?
                 "there hasn't been a save here yet" : lastSaveTime.format(dateFormatter));
         FileHandler.writeCurrentCommand(InfoCommand.getName(), FileType.OUTPUT);
-        FileHandler.writeOutputInfo(String.format("""
+        FileHandler.writeToFile(String.format("""
                 Information about collection:
                 Type of collection:  %s
                 Initialization date: %s
                 Last save time:      %s
-                Number of elements:  %s
-                """, getCollectionType(), stringLastInitTime,
-                stringLastSaveTime, getCollectionSize()));
+                Number of elements:  %s""", getCollectionType(), stringLastInitTime,
+                stringLastSaveTime, getCollectionSize()), FileType.OUTPUT);
         return true;
     }
 
@@ -103,14 +99,14 @@ public class BufferedDataBase {
             return false;
         FileHandler.writeCurrentCommand(ShowCommand.getName(), FileType.OUTPUT);
         if (dataBase.isEmpty()) {
-           FileHandler.writeOutputInfo("Collection is empty");
+           FileHandler.writeToFile("Collection is empty", FileType.OUTPUT);
            return true;
         }
         TreeMap<Long, Vehicle> treeMapData = new TreeMap<>(dataBase);
         Set<Long> keys = treeMapData.keySet();
         for (Long key : keys) {
-            FileHandler.writeOutputInfo("key:                " + key +
-                    "\n" + treeMapData.get(key) + "");
+            FileHandler.writeToFile("key:                " + key +
+                    "\n" + treeMapData.get(key) + "", FileType.OUTPUT);
         }
         return true;
     }
@@ -128,7 +124,8 @@ public class BufferedDataBase {
 //            System.out.println("выполнение insert или update");
         }
         if (executeMode == ExecuteMode.COMMAND_MODE && arguments.length == 0) {
-            FileHandler.writeUserErrors(String.format("%s value cannot be null", addMode.getValueName()));
+            FileHandler.writeToFile(String.format(
+                    "%s value cannot be null", addMode.getValueName()), FileType.USER_ERRORS);
             return false;
         }
         if (executeMode == ExecuteMode.COMMAND_MODE && !checkNumberOfArguments(arguments, 1, commandName))
@@ -152,14 +149,12 @@ public class BufferedDataBase {
                 id = Long.parseLong(arguments[0]);
                 key = identifierHandler.getKeyById(id);
             }
-            default -> FileHandler.writeSystemErrors(String.format(
-                    "Command %s: No suitable add mode file", commandName));
+            default -> FileHandler.writeToFile(String.format(
+                    "Command %s: No suitable add mode file", commandName), FileType.SYSTEM_ERRORS);
         }
         Vehicle vehicle;
-        if (executeMode == ExecuteMode.COMMAND_MODE) {
+        if (executeMode == ExecuteMode.COMMAND_MODE)
             vehicle = Console.insertMode(id, creationDate);
-            System.out.println("Vehicle______");
-        }
         else {
             if (!ValueHandler.checkValues(arguments)) {
                 return false;
@@ -168,7 +163,7 @@ public class BufferedDataBase {
         }
         dataBase.put(key, vehicle);
         FileHandler.writeCurrentCommand(commandName + " " + arguments[0], FileType.OUTPUT);
-        FileHandler.writeOutputInfo("Element was successfully " + addMode.getResultMessage());
+        FileHandler.writeToFile("Element was successfully " + addMode.getResultMessage(), FileType.OUTPUT);
         return true;
     }
 
@@ -181,7 +176,7 @@ public class BufferedDataBase {
         long key = Long.parseLong(arguments[0]);
         dataBase.remove(key);
         FileHandler.writeCurrentCommand(RemoveKeyCommand.getName() + " " + arguments[0], FileType.OUTPUT);
-        FileHandler.writeOutputInfo(String.format("Element with key = %s was successfully removed", key));
+        FileHandler.writeToFile(String.format("Element with key = %s was successfully removed", key), FileType.OUTPUT);
         return true;
     }
 
@@ -190,10 +185,10 @@ public class BufferedDataBase {
             return false;
         FileHandler.writeCurrentCommand(ClearCommand.getName(), FileType.OUTPUT);
         if (dataBase.isEmpty()) {
-            FileHandler.writeOutputInfo("Collection is already empty");
+            FileHandler.writeToFile("Collection is already empty", FileType.OUTPUT);
         } else {
             dataBase.clear();
-            FileHandler.writeOutputInfo("Collection successfully cleared");
+            FileHandler.writeToFile("Collection successfully cleared", FileType.OUTPUT);
         }
         return true;
     }
@@ -203,7 +198,7 @@ public class BufferedDataBase {
             return false;
         FileHandler.saveDataBase(dataBase);
         FileHandler.writeCurrentCommand(SaveCommand.getName(), FileType.OUTPUT);
-        FileHandler.writeOutputInfo("Collection successfully saved");
+        FileHandler.writeToFile("Collection successfully saved", FileType.OUTPUT);
         lastSaveTime = LocalDateTime.now();
         return true;
     }
@@ -215,20 +210,21 @@ public class BufferedDataBase {
             return false;
         File scriptFile = FileHandler.findFile(new File("scripts"), arguments[0]);
         if (scriptFile == null) {
-            FileHandler.writeUserErrors(String.format("Script '%s' not found", arguments[0]));
+            FileHandler.writeToFile(String.format("Script '%s' not found", arguments[0]), FileType.USER_ERRORS);
             return false;
         }
         if (scriptCounter.contains(scriptFile.getAbsolutePath())) {
-            FileHandler.writeUserErrors(String.format("Command '%s %s':",
-                    ExecuteScriptCommand.getName(), scriptFile.getName()));
-            FileHandler.writeUserErrors(String.format("Recursion on '%s' script noticed", scriptFile.getName()));
+            FileHandler.writeToFile(String.format("Command '%s %s':",
+                    ExecuteScriptCommand.getName(), scriptFile.getName()), FileType.USER_ERRORS);
+            FileHandler.writeToFile(String.format(
+                    "Recursion on '%s' script noticed", scriptFile.getName()), FileType.USER_ERRORS);
             return false;
         }
         scriptCounter.add(scriptFile.getAbsolutePath());
         FileHandler.writeCurrentCommand(ExecuteScriptCommand.getName() + " " + scriptFile.getName(), FileType.OUTPUT);
         ArrayList<String> scriptLines = FileHandler.readScriptFile(scriptFile);
         if (scriptLines.isEmpty()) {
-            FileHandler.writeOutputInfo(String.format("Script '%s' is empty", scriptFile.getName()));
+            FileHandler.writeToFile(String.format("Script '%s' is empty", scriptFile.getName()), FileType.OUTPUT);
             return true;
         }
         CommandParser commandParser = new CommandParser(commandInvoker, scriptLines);
@@ -244,7 +240,7 @@ public class BufferedDataBase {
             return false;
         FileHandler.writeCurrentCommand(ExitCommand.getName(), FileType.OUTPUT);
         if (executeMode == ExecuteMode.COMMAND_MODE)
-            FileHandler.writeOutputInfo("Program successfully completed");
+            FileHandler.writeToFile("Program successfully completed", FileType.OUTPUT);
         return true;
     }
 
@@ -265,7 +261,7 @@ public class BufferedDataBase {
         CheckingResult checkingResult = ValueHandler.DISTANCE_TRAVELLED_CHECKER.check(arguments[0]);
         if (!checkingResult.getStatus()) {
             FileHandler.writeCurrentCommand(commandName + " " + arguments[0], FileType.USER_ERRORS);
-            FileHandler.writeUserErrors(checkingResult.getMessage());
+            FileHandler.writeToFile(checkingResult.getMessage(), FileType.USER_ERRORS);
             return false;
         }
         long userDistanceTravelled = Long.parseLong(arguments[0]);
@@ -290,13 +286,13 @@ public class BufferedDataBase {
         }
         FileHandler.writeCurrentCommand(commandName, FileType.OUTPUT);
         if (countOfRemoved == 0)
-            FileHandler.writeOutputInfo(String.format(
+            FileHandler.writeToFile(String.format(
                     "No elements found to remove with distance travelled %s %s",
-                    removeMode.getSymbol(), userDistanceTravelled));
+                    removeMode.getSymbol(), userDistanceTravelled), FileType.OUTPUT);
         else
-            FileHandler.writeOutputInfo(String.format(
+            FileHandler.writeToFile(String.format(
                     "%s elements were successfully removed with distance travelled %s %s",
-                    countOfRemoved, removeMode.getSymbol(), userDistanceTravelled));
+                    countOfRemoved, removeMode.getSymbol(), userDistanceTravelled), FileType.OUTPUT);
         return true;
     }
 
@@ -319,7 +315,7 @@ public class BufferedDataBase {
             message = "No matching keys to remove element";
         else
             message = String.format("%s elements was successfully removed", countOfRemovedKeys);
-        FileHandler.writeOutputInfo(message);
+        FileHandler.writeToFile(message, FileType.OUTPUT);
         return true;
     }
 
@@ -330,7 +326,7 @@ public class BufferedDataBase {
         if (!checkingResult.getStatus()) {
             FileHandler.writeCurrentCommand(RemoveAllByEnginePowerCommand.getName() + " " +
                     arguments[0], FileType.USER_ERRORS);
-            FileHandler.writeUserErrors(checkingResult.getMessage());
+            FileHandler.writeToFile(checkingResult.getMessage(), FileType.USER_ERRORS);
             return false;
         }
         int userEnginePower = Integer.parseInt(arguments[0]);
@@ -345,12 +341,12 @@ public class BufferedDataBase {
         }
         FileHandler.writeCurrentCommand(RemoveAllByEnginePowerCommand.getName(), FileType.OUTPUT);
         if (countOfRemoved == 0)
-            FileHandler.writeOutputInfo(String.format(
-                    "No elements found to remove with engine power = %s", userEnginePower));
+            FileHandler.writeToFile(String.format(
+                    "No elements found to remove with engine power = %s", userEnginePower), FileType.OUTPUT);
         else
-            FileHandler.writeOutputInfo(String.format(
+            FileHandler.writeToFile(String.format(
                     "%s elements were successfully removed with engine power = %s",
-                    countOfRemoved, userEnginePower));
+                    countOfRemoved, userEnginePower), FileType.OUTPUT);
         return true;
     }
 
@@ -361,7 +357,7 @@ public class BufferedDataBase {
         if (!checkingResult.getStatus()) {
             FileHandler.writeCurrentCommand(CountByFuelTypeCommand.getName() + " " +
                     arguments[0], FileType.USER_ERRORS);
-            FileHandler.writeUserErrors(checkingResult.getMessage());
+            FileHandler.writeToFile(checkingResult.getMessage(), FileType.USER_ERRORS);
             return false;
         }
         FuelType fuelType = ValueTransformer.SET_FUEL_TYPE.apply(arguments[0]);
@@ -373,8 +369,8 @@ public class BufferedDataBase {
                 count++;
         }
         FileHandler.writeCurrentCommand(CountByFuelTypeCommand.getName(), FileType.OUTPUT);
-        FileHandler.writeOutputInfo(String.format(
-                "%s elements with fuel type = %s (%s)", count, fuelType.getSerialNumber(), fuelType));
+        FileHandler.writeToFile(String.format(
+                "%s elements with fuel type = %s (%s)", count, fuelType.getSerialNumber(), fuelType), FileType.OUTPUT);
         return true;
     }
 
@@ -395,14 +391,14 @@ public class BufferedDataBase {
         for (Long key : keys) {
             if (treeMapData.get(key).getFuelType().getSerialNumber() <= fuelType.getSerialNumber()) {
                 hasSuchElements = true;
-                FileHandler.writeOutputInfo("key:                " + key +
-                        "\n" + treeMapData.get(key) + "");
+                FileHandler.writeToFile("key:                " + key +
+                        "\n" + treeMapData.get(key) + "", FileType.OUTPUT);
             }
         }
         if (!hasSuchElements)
-            FileHandler.writeOutputInfo(String.format(
+            FileHandler.writeToFile(String.format(
                     "No elements found with fuel type value less than %s (%s)",
-                    fuelType.getSerialNumber(), fuelType));
+                    fuelType.getSerialNumber(), fuelType), FileType.OUTPUT);
         return true;
     }
 

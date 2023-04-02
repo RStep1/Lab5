@@ -1,12 +1,13 @@
 package processing;
 
 
-import commands.Command;
 import commands.ExitCommand;
 import commands.InsertCommand;
 import commands.UpdateCommand;
 import data.Vehicle;
 import mods.ExecuteMode;
+import mods.FileType;
+import utility.FileHandler;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ public class CommandParser {
             case "count_by_fuel_type" -> exitStatus = invoker.countByFuelType(arguments, executeMode);
             case "filter_less_than_fuel_type" -> exitStatus = invoker.filterLessThanFuelType(arguments, executeMode);
             default -> {
-                FileHandler.writeUserErrors(String.format("'%s': No such command", nextLine.trim()));
+                FileHandler.writeToFile(String.format("'%s': No such command", nextLine.trim()), FileType.USER_ERRORS);
                 exitStatus = false;
             }
         }
@@ -79,12 +80,12 @@ public class CommandParser {
         String[] arguments = userLineSeparator.getArguments();
         boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, executeMode);
         Console.printOutputFile();
-        if (!FileHandler.readUserErrFile().isEmpty()) {
-            FileHandler.writeUserErrors(Console.getHelpMessage());
+        if (!FileHandler.readFile(FileType.USER_ERRORS).isEmpty()) {
+            FileHandler.writeToFile(Console.getHelpMessage(), FileType.USER_ERRORS);
             Console.printUserErrorsFile();
         }
-        FileHandler.clearOutFile();
-        FileHandler.clearUserErrFile();
+        FileHandler.clearFile(FileType.OUTPUT);
+        FileHandler.clearFile(FileType.USER_ERRORS);
 
         if (nextCommand.equals(ExitCommand.getName()) && exitStatus)
             return false;
@@ -127,9 +128,9 @@ public class CommandParser {
             }
             String[] extraArguments = new String[arguments.length + countOfExtraArguments];
             if (lineIndex + countOfExtraArguments > countOfLines) {
-                FileHandler.writeUserErrors(String.format(
+                FileHandler.writeToFile(String.format(
                         "line %s: There are not enough lines in script '%s' for the '%s' command",
-                        lineIndex + 1, scriptName, nextCommand));
+                        lineIndex + 1, scriptName, nextCommand), FileType.USER_ERRORS);
                 return false;
             }
             for (int i = 0; i < arguments.length; i++)
@@ -140,12 +141,13 @@ public class CommandParser {
 //            FileHandler.writeOutputInfo(String.format("%s line %s: ", scriptName, lineIndex + 1));
             boolean exitStatus = commandSelection(nextLine, nextCommand, extraArguments, ExecuteMode.SCRIPT_MODE);
             if (exitStatus && nextCommand.equals(ExitCommand.getName())) {
-                FileHandler.writeOutputInfo(String.format("Script '%s' successfully completed", scriptName));
+                FileHandler.writeToFile(String.format(
+                        "Script '%s' successfully completed", scriptName), FileType.USER_ERRORS);
                 return true;
             }
         }
         if (!hasCommands)
-            FileHandler.writeOutputInfo(String.format("Script '%s' is empty", scriptName));
+            FileHandler.writeToFile(String.format("Script '%s' is empty", scriptName), FileType.USER_ERRORS);
         return true;
     }
 }

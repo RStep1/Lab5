@@ -1,10 +1,9 @@
-package processing;
+package utility;
 
 import data.Vehicle;
 import exceptions.NoSuchIdException;
 import mods.FileType;
 
-import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.regex.Pattern;
@@ -25,7 +24,7 @@ public class IdentifierHandler {
             return false;
         }
         FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-        FileHandler.writeUserErrors(String.format("%s must be a number", valueName));
+        FileHandler.writeToFile(String.format("%s must be a number", valueName), FileType.USER_ERRORS);
         return true;
     }
     private boolean isNegativeValue(String value, String valueName, String commandName) {
@@ -33,7 +32,7 @@ public class IdentifierHandler {
         Pattern nonPositiveValuePattern = Pattern.compile(nonPositiveValue);
         if (nonPositiveValuePattern.matcher(value).matches()) {
             FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-            FileHandler.writeUserErrors(String.format("%s cannot be negative", valueName));
+            FileHandler.writeToFile(String.format("%s cannot be negative", valueName), FileType.USER_ERRORS);
             return true;
         }
         return false;
@@ -43,7 +42,7 @@ public class IdentifierHandler {
         Pattern leadingZerosPattern = Pattern.compile(leadingZeros);
         if (leadingZerosPattern.matcher(value).matches()) {
             FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-            FileHandler.writeUserErrors(String.format("%s cannot have leading zeros", valueName));
+            FileHandler.writeToFile(String.format("%s cannot have leading zeros", valueName), FileType.USER_ERRORS);
             return true;
         }
         return false;
@@ -58,7 +57,8 @@ public class IdentifierHandler {
             return false;
         if (key.length() > MAX_KEY_LENGTH) {
             FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-            FileHandler.writeUserErrors(String.format("Key is too long, max length - %s", MAX_KEY_LENGTH));
+            FileHandler.writeToFile(String.format(
+                    "Key is too long, max length - %s", MAX_KEY_LENGTH), FileType.USER_ERRORS);
             return false;
         }
         return true;
@@ -74,13 +74,13 @@ public class IdentifierHandler {
             return false;
         if (id.length() != ID_LENGTH) {
             FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-            FileHandler.writeUserErrors(String.format("Invalid id length: %s, expected %s",
-                    id.length(), ID_LENGTH));
+            FileHandler.writeToFile(String.format("Invalid id length: %s, expected %s",
+                    id.length(), ID_LENGTH), FileType.USER_ERRORS);
             return false;
         }
         if (!hasElementWithId(Long.parseLong(id))) {
             FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-            FileHandler.writeUserErrors("No such element with this id");
+            FileHandler.writeToFile("No such element with this id", FileType.USER_ERRORS);
             return false;
         }
         return true;
@@ -101,13 +101,13 @@ public class IdentifierHandler {
         if (dataBase.containsKey(Long.parseLong(key))) {
             if (expectedResult) {
                 FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-                FileHandler.writeUserErrors("Element with such key already exists");
+                FileHandler.writeToFile("Element with such key already exists", FileType.USER_ERRORS);
             }
             return true;
         }
         if (!expectedResult) {
             FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
-            FileHandler.writeUserErrors("Element with such key not found");
+            FileHandler.writeToFile("Element with such key not found", FileType.USER_ERRORS);
         }
         return false;
     }
@@ -135,7 +135,7 @@ public class IdentifierHandler {
         }
         if (key == -1) {
             RuntimeException e = new NoSuchIdException(id);
-            FileHandler.writeSystemErrors(e.getMessage());
+            FileHandler.writeToFile(e.getMessage(), FileType.SYSTEM_ERRORS);
             throw e;
         }
         return key;

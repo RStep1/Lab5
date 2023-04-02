@@ -2,9 +2,8 @@ package processing;
 
 import data.Vehicle;
 import mods.ExecuteMode;
-import utility.CheckingResult;
-import utility.ValueHandler;
-import utility.ValueTransformer;
+import mods.FileType;
+import utility.*;
 import utility.Process;
 
 import java.io.*;
@@ -25,8 +24,8 @@ public class Console {
     }
 
     public void interactiveMode() {
-        FileHandler.clearOutFile();
-        FileHandler.clearUserErrFile();
+        FileHandler.clearFile(FileType.OUTPUT);
+        FileHandler.clearFile(FileType.USER_ERRORS);
         CommandParser parser = new CommandParser(invoker);
         Scanner in = new Scanner(System.in);
         while (true) {
@@ -51,13 +50,13 @@ public class Console {
         for (Process process : processes) {
             do {
                 Console.printUserErrorsFile();
-                FileHandler.clearUserErrFile();
+                FileHandler.clearFile(FileType.USER_ERRORS);
                 printStream.print(process.getMessage());
                 newValue = in.nextLine().trim();
                 newValue = process.getCorrection().correct(newValue);
                 CheckingResult checkingResult = process.getChecker().check(newValue);
                 if (!checkingResult.getStatus())
-                    FileHandler.writeUserErrors(checkingResult.getMessage());
+                    FileHandler.writeToFile(checkingResult.getMessage(), FileType.USER_ERRORS);
             } while (!process.getChecker().check(newValue).getStatus());
             newValues.add(newValue);
         }
@@ -93,10 +92,10 @@ public class Console {
     }
 
     public static void printOutputFile() {
-        print(ANSI_GREEN + FileHandler.readOutFile() + ANSI_RESET);
+        print(ANSI_GREEN + FileHandler.readFile(FileType.OUTPUT) + ANSI_RESET);
     }
 
     public static void printUserErrorsFile() {
-        print(ANSI_RED + FileHandler.readUserErrFile() + ANSI_RESET);
+        print(ANSI_RED + FileHandler.readFile(FileType.USER_ERRORS) + ANSI_RESET);
     }
 }
