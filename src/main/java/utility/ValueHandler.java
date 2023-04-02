@@ -27,16 +27,16 @@ public class ValueHandler {
         return valueProcesses;
     }
 
-    private static boolean checkTypeValue(ValueType valueType, String value, String valueName) {
+    private static CheckingResult checkTypeValue(ValueType valueType, String value, String valueName) {
         Pattern valuePattern = Pattern.compile("");
         if (valueType == ValueType.DOUBLE || valueType == ValueType.FLOAT)
             valuePattern = Pattern.compile("([-+]?\\d*[.,]?\\d*)");
         if (valueType == ValueType.LONG || valueType == ValueType.INTEGER)
             valuePattern = Pattern.compile("[-+]?\\d+");
         if (valuePattern.matcher(value).matches() && !value.equals(""))
-            return true;
-        FileHandler.writeUserErrors(String.format("%s must be of type %s", valueName, valueType.getName()));
-        return false;
+            return new CheckingResult(true, "");
+//        FileHandler.writeUserErrors(String.format("%s must be of type %s", valueName, valueType.getName()));
+        return new CheckingResult(false, String.format("%s must be of type %s", valueName, valueType.getName()));
     }
 
     private static final Correction NAME_CORRECTION = String::trim;
@@ -45,79 +45,83 @@ public class ValueHandler {
     private static final Correction TYPE_CORRECTION = value -> value.trim().toUpperCase();
     private static final Checker NAME_CHECKER = name -> {
         if (name == null || name.equals("")) {
-            FileHandler.writeUserErrors("Name cannot be null");
-            return false;
+//            FileHandler.writeUserErrors("Name cannot be null");
+            return new CheckingResult(false, "Name cannot be null");
         }
-        return true;
+        return new CheckingResult(true, "");
     };
     private static final Checker X_COORDINATE_CHECKER = newX -> {
-        if (!checkTypeValue(ValueType.FLOAT, newX, "X coordinate"))
-            return false;
+        CheckingResult checkTypeValue = checkTypeValue(ValueType.FLOAT, newX, "X coordinate");
+        if (!checkTypeValue.getStatus())
+            return checkTypeValue;
         float x = Float.parseFloat(newX);
         try {
             float truncatedX = BigDecimal.valueOf(x).setScale(Coordinates.getAccuracy(),
                     RoundingMode.HALF_UP).floatValue();
             if (Float.compare(truncatedX, 341f) == 1) { // truncatedX > 341
-                FileHandler.writeUserErrors("Max X value: 341");
-                return false;
+//                FileHandler.writeUserErrors("Max X value: 341");
+                return new CheckingResult(false, "Max X value: 341");
             }
         } catch (NumberFormatException e) {
-            FileHandler.writeUserErrors("Float value overflowed");
-            return false;
+//            FileHandler.writeUserErrors("Float value overflowed");
+            return new CheckingResult(false, "Float value overflowed");
         }
-        return true;
+        return new CheckingResult(true, "");
     };
     private static final Checker Y_COORDINATE_CHECKER = newY -> {
-        if (!checkTypeValue(ValueType.DOUBLE, newY, "Y coordinate"))
-            return false;
+        CheckingResult checkTypeValue = checkTypeValue(ValueType.DOUBLE, newY, "Y coordinate");
+        if (!checkTypeValue.getStatus())
+            return checkTypeValue;
         double y = Double.parseDouble(newY);
         try {
             double truncatedY = BigDecimal.valueOf(y).setScale(Coordinates.getAccuracy(),
                     RoundingMode.HALF_UP).doubleValue();
             if (Double.compare(truncatedY, -272d) != 1) { // truncatedY <= 272
-                FileHandler.writeUserErrors("Y must be grater than -272");
-                return false;
+//                FileHandler.writeUserErrors("Y must be grater than -272");
+                return new CheckingResult(false, "Y must be grater than -272");
             }
         } catch (NumberFormatException e) {
-            FileHandler.writeUserErrors("Double value overflowed");
-            return false;
+//            FileHandler.writeUserErrors("Double value overflowed");
+            return new CheckingResult(false, "Double value overflowed");
         }
-        return true;
+        return new CheckingResult(true, "");
     };
     public static final Checker ENGINE_POWER_CHECKER = newEnginePower -> {
-        if (!checkTypeValue(ValueType.INTEGER, newEnginePower, "Engine power"))
-            return false;
+        CheckingResult checkTypeValue = checkTypeValue(ValueType.INTEGER, newEnginePower, "Engine power");
+        if (!checkTypeValue.getStatus())
+            return checkTypeValue;
         try {
             int enginePower = Integer.parseInt(newEnginePower);
             if (enginePower <= 0) {
-                FileHandler.writeUserErrors("Engine power must be greater than 0");
-                return false;
+//                FileHandler.writeUserErrors("Engine power must be greater than 0");
+                return new CheckingResult(false, "Engine power must be greater than 0");
             }
         } catch (NumberFormatException e) {
             FileHandler.writeUserErrors("Integer value overflowed");
-            return false;
+            return new CheckingResult(false, "Integer value overflowed");
         }
-        return true;
+        return new CheckingResult(true, "");
     };
     public static final Checker DISTANCE_TRAVELLED_CHECKER = newDistanceTravelled -> {
-        if (!checkTypeValue(ValueType.LONG, newDistanceTravelled, "Distance travelled"))
-            return false;
+        CheckingResult checkTypeValue = checkTypeValue(ValueType.LONG, newDistanceTravelled, "Distance travelled");
+        if (!checkTypeValue.getStatus())
+            return checkTypeValue;
         try {
             long distanceTravelled = Long.parseLong(newDistanceTravelled);
             if (distanceTravelled <= 0) {
-                FileHandler.writeUserErrors("Distance travelled must be greater than 0");
-                return false;
+//                FileHandler.writeUserErrors("Distance travelled must be greater than 0");
+                return new CheckingResult(false, "Distance travelled must be greater than 0");
             }
         } catch (NumberFormatException e) {
-            FileHandler.writeUserErrors("Long value overflowed");
-            return false;
+//            FileHandler.writeUserErrors("Long value overflowed");
+            return new CheckingResult(false, "Long value overflowed");
         }
-        return true;
+        return new CheckingResult(true, "");
     };
     private static final Checker VEHICLE_TYPE_CHECKER = newVehicleType -> {
         if (newVehicleType.equals("")) {
-            FileHandler.writeUserErrors("Vehicle type cannot be null");
-            return false;
+//            FileHandler.writeUserErrors("Vehicle type cannot be null");
+            return new CheckingResult(false, "Vehicle type cannot be null");
         }
         try {
             VehicleType.valueOf(newVehicleType);
@@ -125,20 +129,20 @@ public class ValueHandler {
             try {
                 int serialNumber = Integer.parseInt(newVehicleType);
                 if (serialNumber < 1 || serialNumber > VehicleType.values().length) {
-                    FileHandler.writeUserErrors("No such vehicle type number exits");
-                    return false;
+//                    FileHandler.writeUserErrors("No such vehicle type number exits");
+                    return new CheckingResult(false, "No such vehicle type number exits");
                 }
             } catch (NumberFormatException numberFormatException) {
-                FileHandler.writeUserErrors("This vehicle type does not exist");
-                return false;
+//                FileHandler.writeUserErrors("This vehicle type does not exist");
+                return new CheckingResult(false, "This vehicle type does not exist");
             }
         }
-        return true;
+        return new CheckingResult(true, "");
     };
     public static final Checker FUEL_TYPE_CHECKER = newFuelType -> {
         if (newFuelType.equals("")) {
-            FileHandler.writeUserErrors("Fuel type cannot be null");
-            return false;
+//            FileHandler.writeUserErrors("Fuel type cannot be null");
+            return new CheckingResult(false, "Fuel type cannot be null");
         }
         try {
             FuelType.valueOf(newFuelType);
@@ -146,15 +150,15 @@ public class ValueHandler {
             try {
                 int serialNumber = Integer.parseInt(newFuelType);
                 if (serialNumber < 1 || serialNumber > FuelType.values().length) {
-                    FileHandler.writeUserErrors("No such fuel type number exits");
-                    return false;
+//                    FileHandler.writeUserErrors("No such fuel type number exits");
+                    return new CheckingResult(false, "No such fuel type number exits");
                 }
             } catch (NumberFormatException numberFormatException) {
-                FileHandler.writeUserErrors("This fuel type does not exist");
-                return false;
+//                FileHandler.writeUserErrors("This fuel type does not exist");
+                return new CheckingResult(false, "This fuel type does not exist");
             }
         }
-        return true;
+        return new CheckingResult(true, "");
     };
     public static final Process NAME_PROCESSING = new Process() {
         @Override
@@ -284,7 +288,7 @@ public class ValueHandler {
         boolean exitStatus = true;
         for (int i = 0; i < processes.size(); i++) {
             newValues[i + 1] = processes.get(i).getCorrection().correct(newValues[i + 1]);
-            if (!processes.get(i).getChecker().check(newValues[i + 1]))
+            if (!processes.get(i).getChecker().check(newValues[i + 1]).getStatus())
                 exitStatus = false;
         }
         return exitStatus;

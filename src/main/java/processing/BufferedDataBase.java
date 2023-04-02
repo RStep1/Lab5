@@ -15,6 +15,8 @@ import mods.AddMode;
 import mods.ExecuteMode;
 import mods.FileType;
 import mods.RemoveMode;
+import utility.Checker;
+import utility.CheckingResult;
 import utility.ValueHandler;
 import utility.ValueTransformer;
 
@@ -58,12 +60,13 @@ public class BufferedDataBase {
 
     private boolean checkCommandWithKey(String[] arguments, String commandName) {
         if (arguments.length == 0) {
+            FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
             FileHandler.writeUserErrors("Key value cannot be null");
             return false;
         }
-        if (!checkNumberOfArguments(arguments, 1, commandName))
+        if (!checkNumberOfArguments(arguments, 1, commandName + " " + arguments[0]))
             return false;
-        if (!identifierHandler.checkKey(arguments[0]))
+        if (!identifierHandler.checkKey(arguments[0], commandName + " " + arguments[0]))
             return false;
         return true;
     }
@@ -135,15 +138,16 @@ public class BufferedDataBase {
         long id = 0;
         switch (addMode) {
             case INSERT_MODE -> {
-                if (!identifierHandler.checkKey(arguments[0]))
+                if (!identifierHandler.checkKey(arguments[0], InsertCommand.getName() + " " + arguments[0]))
                     return false;
-                if (identifierHandler.hasElementWithKey(arguments[0], true))
+                if (identifierHandler.hasElementWithKey(arguments[0], true,
+                        InsertCommand.getName() + " " + arguments[0]))
                     return false;
                 key = Long.parseLong(arguments[0]);
                 id = identifierHandler.generateId();
             }
             case UPDATE_MODE -> {
-                if (!identifierHandler.checkId(arguments[0]))
+                if (!identifierHandler.checkId(arguments[0], UpdateCommand.getName() + " " + arguments[0]))
                     return false;
                 id = Long.parseLong(arguments[0]);
                 key = identifierHandler.getKeyById(id);
@@ -152,8 +156,10 @@ public class BufferedDataBase {
                     "Command %s: No suitable add mode file", commandName));
         }
         Vehicle vehicle;
-        if (executeMode == ExecuteMode.COMMAND_MODE)
+        if (executeMode == ExecuteMode.COMMAND_MODE) {
             vehicle = Console.insertMode(id, creationDate);
+            System.out.println("Vehicle______");
+        }
         else {
             if (!ValueHandler.checkValues(arguments)) {
                 return false;
@@ -161,7 +167,7 @@ public class BufferedDataBase {
             vehicle = ValueHandler.getVehicle(id, creationDate, arguments);
         }
         dataBase.put(key, vehicle);
-        FileHandler.writeCurrentCommand(commandName, FileType.OUTPUT);
+        FileHandler.writeCurrentCommand(commandName + " " + arguments[0], FileType.OUTPUT);
         FileHandler.writeOutputInfo("Element was successfully " + addMode.getResultMessage());
         return true;
     }
@@ -169,11 +175,12 @@ public class BufferedDataBase {
     public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
         if (!checkCommandWithKey(arguments, RemoveKeyCommand.getName()))
             return false;
-        if (!identifierHandler.hasElementWithKey(arguments[0], false))
+        if (!identifierHandler.hasElementWithKey(arguments[0], false,
+                RemoveKeyCommand.getName() + " " + arguments[0]))
             return false;
         long key = Long.parseLong(arguments[0]);
         dataBase.remove(key);
-        FileHandler.writeCurrentCommand(RemoveKeyCommand.getName(), FileType.OUTPUT);
+        FileHandler.writeCurrentCommand(RemoveKeyCommand.getName() + " " + arguments[0], FileType.OUTPUT);
         FileHandler.writeOutputInfo(String.format("Element with key = %s was successfully removed", key));
         return true;
     }
@@ -255,8 +262,12 @@ public class BufferedDataBase {
                                                  String commandName, RemoveMode removeMode) {
         if (!checkNumberOfArguments(arguments, 1, commandName))
             return false;
-        if (!ValueHandler.DISTANCE_TRAVELLED_CHECKER.check(arguments[0]))
+        CheckingResult checkingResult = ValueHandler.DISTANCE_TRAVELLED_CHECKER.check(arguments[0]);
+        if (!checkingResult.getStatus()) {
+            FileHandler.writeCurrentCommand(commandName + " " + arguments[0], FileType.USER_ERRORS);
+            FileHandler.writeUserErrors(checkingResult.getMessage());
             return false;
+        }
         long userDistanceTravelled = Long.parseLong(arguments[0]);
         Enumeration<Long> keys = dataBase.keys();
         int countOfRemoved = 0;
@@ -315,8 +326,13 @@ public class BufferedDataBase {
     public boolean removeAllByEnginePower(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, RemoveAllByEnginePowerCommand.getName()))
             return false;
-        if (!ValueHandler.ENGINE_POWER_CHECKER.check(arguments[0]))
+        CheckingResult checkingResult = ValueHandler.ENGINE_POWER_CHECKER.check(arguments[0]);
+        if (!checkingResult.getStatus()) {
+            FileHandler.writeCurrentCommand(RemoveAllByEnginePowerCommand.getName() + " " +
+                    arguments[0], FileType.USER_ERRORS);
+            FileHandler.writeUserErrors(checkingResult.getMessage());
             return false;
+        }
         int userEnginePower = Integer.parseInt(arguments[0]);
         int countOfRemoved = 0;
         Enumeration<Long> keys = dataBase.keys();
@@ -341,8 +357,13 @@ public class BufferedDataBase {
     public boolean countByFuelType(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, CountByFuelTypeCommand.getName()))
             return false;
-        if (!ValueHandler.FUEL_TYPE_CHECKER.check(arguments[0]))
+        CheckingResult checkingResult = ValueHandler.FUEL_TYPE_CHECKER.check(arguments[0]);
+        if (!checkingResult.getStatus()) {
+            FileHandler.writeCurrentCommand(CountByFuelTypeCommand.getName() + " " +
+                    arguments[0], FileType.USER_ERRORS);
+            FileHandler.writeUserErrors(checkingResult.getMessage());
             return false;
+        }
         FuelType fuelType = ValueTransformer.SET_FUEL_TYPE.apply(arguments[0]);
         int count = 0;
         Enumeration<Long> keys = dataBase.keys();
@@ -360,8 +381,12 @@ public class BufferedDataBase {
     public boolean filterLessThanFuelType(String[] arguments, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, FilterLessThanFuelTypeCommand.getName()))
             return false;
-        if (!ValueHandler.FUEL_TYPE_CHECKER.check(arguments[0]))
+        CheckingResult checkingResult = ValueHandler.FUEL_TYPE_CHECKER.check(arguments[0]);
+        if (!checkingResult.getStatus()) {
+            FileHandler.writeCurrentCommand(FilterLessThanFuelTypeCommand.getName() + " " +
+                    arguments[0], FileType.USER_ERRORS);
             return false;
+        }
         FuelType fuelType = ValueTransformer.SET_FUEL_TYPE.apply(arguments[0]);
         boolean hasSuchElements = false;
         FileHandler.writeCurrentCommand(FilterLessThanFuelTypeCommand.getName(), FileType.OUTPUT);

@@ -2,7 +2,9 @@ package processing;
 
 import data.Vehicle;
 import exceptions.NoSuchIdException;
+import mods.FileType;
 
+import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.regex.Pattern;
@@ -16,62 +18,68 @@ public class IdentifierHandler {
         this.dataBase = dataBase;
     }
 
-    private boolean hasNonNumericCharacters(String value, String valueName) {
+    private boolean hasNonNumericCharacters(String value, String valueName, String commandName) {
         String nonDigitValue = "-?\\d+";
         Pattern nonDigitValuePattern = Pattern.compile(nonDigitValue);
         if (nonDigitValuePattern.matcher(value).matches()) {
             return false;
         }
+        FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
         FileHandler.writeUserErrors(String.format("%s must be a number", valueName));
         return true;
     }
-    private boolean isNegativeValue(String value, String valueName) {
+    private boolean isNegativeValue(String value, String valueName, String commandName) {
         String nonPositiveValue = "-\\d+";
         Pattern nonPositiveValuePattern = Pattern.compile(nonPositiveValue);
         if (nonPositiveValuePattern.matcher(value).matches()) {
+            FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
             FileHandler.writeUserErrors(String.format("%s cannot be negative", valueName));
             return true;
         }
         return false;
     }
-    private boolean hasLeadingZeros(String value, String valueName) {
+    private boolean hasLeadingZeros(String value, String valueName, String commandName) {
         String leadingZeros = "^0+\\d+";
         Pattern leadingZerosPattern = Pattern.compile(leadingZeros);
         if (leadingZerosPattern.matcher(value).matches()) {
+            FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
             FileHandler.writeUserErrors(String.format("%s cannot have leading zeros", valueName));
             return true;
         }
         return false;
     }
 
-    public boolean checkKey(String key) {
-        if (hasNonNumericCharacters(key, "Key"))
+    public boolean checkKey(String key, String commandName) {
+        if (hasNonNumericCharacters(key, "Key", commandName))
             return false;
-        if (isNegativeValue(key, "Key"))
+        if (isNegativeValue(key, "Key", commandName))
             return false;
-        if (hasLeadingZeros(key, "key"))
+        if (hasLeadingZeros(key, "key", commandName))
             return false;
         if (key.length() > MAX_KEY_LENGTH) {
-            FileHandler.writeUserErrors(String.format("key is too long, max length - %s", MAX_KEY_LENGTH));
+            FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
+            FileHandler.writeUserErrors(String.format("Key is too long, max length - %s", MAX_KEY_LENGTH));
             return false;
         }
         return true;
     }
 
 
-    public boolean checkId(String id) {
-        if (hasNonNumericCharacters(id, "id"))
+    public boolean checkId(String id, String commandName) {
+        if (hasNonNumericCharacters(id, "Id", commandName))
             return false;
-        if (isNegativeValue(id, "id"))
+        if (isNegativeValue(id, "Id", commandName))
             return false;
-        if (hasLeadingZeros(id, "id"))
+        if (hasLeadingZeros(id, "Id", commandName))
             return false;
         if (id.length() != ID_LENGTH) {
-            FileHandler.writeUserErrors(String.format("invalid id length: %s, expected %s",
+            FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
+            FileHandler.writeUserErrors(String.format("Invalid id length: %s, expected %s",
                     id.length(), ID_LENGTH));
             return false;
         }
         if (!hasElementWithId(Long.parseLong(id))) {
+            FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
             FileHandler.writeUserErrors("No such element with this id");
             return false;
         }
@@ -89,14 +97,18 @@ public class IdentifierHandler {
         return false;
     }
 
-    public boolean hasElementWithKey(String key, boolean expectedResult) {
+    public boolean hasElementWithKey(String key, boolean expectedResult, String commandName) {
         if (dataBase.containsKey(Long.parseLong(key))) {
-            if (expectedResult)
+            if (expectedResult) {
+                FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
                 FileHandler.writeUserErrors("Element with such key already exists");
+            }
             return true;
         }
-        if (!expectedResult)
+        if (!expectedResult) {
+            FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
             FileHandler.writeUserErrors("Element with such key not found");
+        }
         return false;
     }
 

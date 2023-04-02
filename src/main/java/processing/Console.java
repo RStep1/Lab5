@@ -2,6 +2,7 @@ package processing;
 
 import data.Vehicle;
 import mods.ExecuteMode;
+import utility.CheckingResult;
 import utility.ValueHandler;
 import utility.ValueTransformer;
 import utility.Process;
@@ -36,6 +37,7 @@ public class Console {
             if (!exitStatus)
                 break;
         }
+        in.close();
     }
 
 
@@ -45,14 +47,18 @@ public class Console {
         String newName, newX, newY, newEnginePower, newDistanceTravelled, newType, newFuelType;
         ArrayList<String> newValues = new ArrayList<>();
         String newValue = "";
-        for (Process process : ValueHandler.getValueProcesses()) {
+        ArrayList<Process> processes = ValueHandler.getValueProcesses();
+        for (Process process : processes) {
             do {
                 Console.printUserErrorsFile();
                 FileHandler.clearUserErrFile();
                 printStream.print(process.getMessage());
                 newValue = in.nextLine().trim();
                 newValue = process.getCorrection().correct(newValue);
-            } while (!process.getChecker().check(newValue));
+                CheckingResult checkingResult = process.getChecker().check(newValue);
+                if (!checkingResult.getStatus())
+                    FileHandler.writeUserErrors(checkingResult.getMessage());
+            } while (!process.getChecker().check(newValue).getStatus());
             newValues.add(newValue);
         }
         newName = newValues.get(0);
