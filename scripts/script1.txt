@@ -1,9 +1,6 @@
-help
-info
+
 execute_script script2.txt
-clear
-remove_key rt
-remove_greater 2356
+exit
 
 
 

@@ -156,7 +156,7 @@ public class BufferedDataBase {
         if (executeMode == ExecuteMode.COMMAND_MODE)
             vehicle = Console.insertMode(id, creationDate);
         else {
-            if (!ValueHandler.checkValues(arguments)) {
+            if (!ValueHandler.checkValues(arguments, commandName + " " + arguments[0])) {
                 return false;
             }
             vehicle = ValueHandler.getVehicle(id, creationDate, arguments);
@@ -229,10 +229,7 @@ public class BufferedDataBase {
             return true;
         }
         CommandParser commandParser = new CommandParser(commandInvoker, scriptLines);
-        boolean exitStatus = commandParser.scriptProcessing(scriptFile.getName());
-        if (!exitStatus)
-            return false;
-        return true;
+        return commandParser.scriptProcessing(scriptFile.getName());
     }
 
 

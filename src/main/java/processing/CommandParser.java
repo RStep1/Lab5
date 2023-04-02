@@ -7,6 +7,7 @@ import commands.UpdateCommand;
 import data.Vehicle;
 import mods.ExecuteMode;
 import mods.FileType;
+import org.codehaus.jackson.JsonToken;
 import utility.FileHandler;
 
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class CommandParser {
             boolean exitStatus = commandSelection(nextLine, nextCommand, extraArguments, ExecuteMode.SCRIPT_MODE);
             if (exitStatus && nextCommand.equals(ExitCommand.getName())) {
                 FileHandler.writeToFile(String.format(
-                        "Script '%s' successfully completed", scriptName), FileType.USER_ERRORS);
+                        "Script '%s' successfully completed", scriptName), FileType.OUTPUT);
                 return true;
             }
         }

@@ -1,0 +1,12 @@
+execute_script script1.txt
+help
+info
+show
+insert 68
+new_name_from_script3
+r
+-3498672378
+gji
++23846765
+0
+ljgoi;jer

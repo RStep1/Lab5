@@ -5,6 +5,8 @@ import data.Coordinates;
 import data.FuelType;
 import data.Vehicle;
 import data.VehicleType;
+import mods.ExecuteMode;
+import mods.FileType;
 import mods.ValueType;
 
 import java.math.BigDecimal;
@@ -269,13 +271,18 @@ public class ValueHandler {
         }
     };
 
-    public static boolean checkValues(String[] newValues) {
+    public static boolean checkValues(String[] newValues, String commandName) {
         ArrayList<Process> processes = ValueHandler.getValueProcesses();
         boolean exitStatus = true;
         for (int i = 0; i < processes.size(); i++) {
             newValues[i + 1] = processes.get(i).getCorrection().correct(newValues[i + 1]);
-            if (!processes.get(i).getChecker().check(newValues[i + 1]).getStatus())
+            CheckingResult valueCheck = processes.get(i).getChecker().check(newValues[i + 1]);
+            if (!valueCheck.getStatus()) {
+                if (exitStatus)
+                    FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
+                FileHandler.writeToFile(valueCheck.getMessage(), FileType.USER_ERRORS);
                 exitStatus = false;
+            }
         }
         return exitStatus;
     }
