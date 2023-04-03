@@ -41,7 +41,7 @@ public class BufferedDataBase {
         return dataBase;
     }
 
-    private boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
+    public static boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
         try {
             if (arguments.length != expectedNumberOfArguments) {
                 FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
@@ -121,15 +121,13 @@ public class BufferedDataBase {
 
     private boolean addElementBy(String[] arguments, String[] vehicleValues,
                                  ExecuteMode executeMode, AddMode addMode, String commandName) {
-        if (arguments.length == 8) {
-//            System.out.println("выполнение insert или update");
-        }
-        if (executeMode == ExecuteMode.COMMAND_MODE && arguments.length == 0) {
+        if (arguments.length == 0) {
+            FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
             FileHandler.writeToFile(String.format(
                     "%s value cannot be null", addMode.getValueName()), FileType.USER_ERRORS);
             return false;
         }
-        if (executeMode == ExecuteMode.COMMAND_MODE && !checkNumberOfArguments(arguments, 1, commandName))
+        if (!checkNumberOfArguments(arguments, 1, commandName))
             return false;
         java.time.ZonedDateTime creationDate = ZonedDateTime.now();
         long key = 0;
@@ -157,10 +155,16 @@ public class BufferedDataBase {
         if (executeMode == ExecuteMode.COMMAND_MODE)
             vehicle = Console.insertMode(id, creationDate);
         else {
-            if (!ValueHandler.checkValues(arguments, commandName + " " + arguments[0])) {
+            if (vehicleValues.length != Vehicle.getCountOfChangeableFields()) {
+                FileHandler.writeCurrentCommand(commandName + " " + arguments[0], FileType.USER_ERRORS);
+                FileHandler.writeToFile(String.format(
+                        "There are not enough lines in script for the '%s %s' command",
+                        commandName, arguments[0]), FileType.USER_ERRORS);
                 return false;
             }
-            vehicle = ValueHandler.getVehicle(id, creationDate, arguments);
+            if (!ValueHandler.checkValues(vehicleValues, commandName + " " + arguments[0]))
+                return false;
+            vehicle = ValueHandler.getVehicle(id, creationDate, vehicleValues);
         }
         dataBase.put(key, vehicle);
         FileHandler.writeCurrentCommand(commandName + " " + arguments[0], FileType.OUTPUT);

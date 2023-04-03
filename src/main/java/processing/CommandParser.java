@@ -5,12 +5,14 @@ import commands.ExitCommand;
 import commands.InsertCommand;
 import commands.UpdateCommand;
 import data.Vehicle;
+import mods.AddMode;
 import mods.ExecuteMode;
 import mods.FileType;
 import org.codehaus.jackson.JsonToken;
 import utility.FileHandler;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CommandParser {
     private CommandInvoker invoker;
@@ -107,24 +109,14 @@ public class CommandParser {
             String nextCommand = userLineSeparator.getCommand();
             String[] arguments = userLineSeparator.getArguments();
             int countOfExtraArguments = 0;
-            if (nextCommand.equals(InsertCommand.getName()) || nextCommand.equals(UpdateCommand.getName())) {
+            if (nextCommand.equals(InsertCommand.getName()) || nextCommand.equals(UpdateCommand.getName()))
                 countOfExtraArguments = Vehicle.getCountOfChangeableFields();
-            }
-
-            String[] extraArguments = new String[countOfExtraArguments];
-            if (lineIndex + countOfExtraArguments > countOfLines) {
-                FileHandler.writeToFile(String.format(
-                        "line %s: There are not enough lines in script '%s' for the '%s %s' command",
-                        lineIndex + 1, scriptName, nextCommand, arguments[0]), FileType.USER_ERRORS);
-                return false;
-            }
-            for (int i = 0, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1 && j < countOfLines; j++, i++)
-                extraArguments[i] = scriptLines.get(j).trim();
-            lineIndex += countOfExtraArguments;
-
-//            FileHandler.writeOutputInfo(String.format("%s line %s: ", scriptName, lineIndex + 1));
-            boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, extraArguments, ExecuteMode.SCRIPT_MODE);
+            String[] extraArguments = setExtraArguments(countOfExtraArguments, lineIndex, countOfLines);
+            boolean exitStatus = commandSelection(nextLine, nextCommand, arguments,
+                    extraArguments, ExecuteMode.SCRIPT_MODE);
+            lineIndex += extraArguments.length;
             if (exitStatus && nextCommand.equals(ExitCommand.getName())) {
+                FileHandler.writeCurrentCommand(ExitCommand.getName(), FileType.OUTPUT);
                 FileHandler.writeToFile(String.format(
                         "Script '%s' successfully completed", scriptName), FileType.OUTPUT);
                 return true;
@@ -134,19 +126,11 @@ public class CommandParser {
             FileHandler.writeToFile(String.format("Script '%s' is empty", scriptName), FileType.USER_ERRORS);
         return true;
     }
-//    private String[] setExtraArguments(String nextCommand, String[] arguments, int countOfExtraArguments, int lineIndex,
-//                                       String scriptName, int countOfLines) {
-//        String[] extraArguments = new String[arguments.length + countOfExtraArguments];
-//        if (lineIndex + countOfExtraArguments > countOfLines) {
-//            FileHandler.writeToFile(String.format(
-//                    "line %s: There are not enough lines in script '%s' for the '%s %s' command",
-//                    lineIndex + 1, scriptName, nextCommand, arguments[0]), FileType.USER_ERRORS);
-//            return false;
-//        } // делать эту проверку в BufferedDataBase
-//        for (int i = 0; i < arguments.length; i++)
-//            extraArguments[i] = arguments[i].trim();
-//        for (int i = arguments.length, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1 && i < ; j++, i++)
-//            extraArguments[i] = scriptLines.get(j).trim();
-//        lineIndex += countOfExtraArguments;
-//    }
+
+    private String[] setExtraArguments(int countOfExtraArguments, int lineIndex, int countOfLines) {
+        String[] extraArguments = new String[Math.min(countOfExtraArguments, countOfLines - lineIndex - 1)];
+        for (int i = 0, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1 && j < countOfLines; j++, i++)
+            extraArguments[i] = scriptLines.get(j).trim();
+        return extraArguments;
+    }
 }

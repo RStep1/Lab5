@@ -1,7 +1,99 @@
+insert
 
-execute_script script2.txt
-exit
 
+
+
+
+
+
+update
+
+
+
+
+
+
+
+insert r
+
+
+
+
+
+
+
+update 2087354768727385682708956792
+
+
+
+
+
+
+
+update -5452346
+
+
+
+
+
+
+
+update 4 4
+
+
+
+
+
+
+
+update 35696
+
+
+
+
+
+
+
+update 6868268549
+
+
+
+
+
+
+
+insert 1
+
+
+
+
+
+
+
+insert -6
+
+
+
+
+
+
+
+insertr
+
+
+
+
+
+
+
+insert 867
+NEW_NAME_FROM_SCRIPT1
+4
+3
+3
+3
+3
+3
 
 
 

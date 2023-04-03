@@ -275,8 +275,8 @@ public class ValueHandler {
         ArrayList<Process> processes = ValueHandler.getValueProcesses();
         boolean exitStatus = true;
         for (int i = 0; i < processes.size(); i++) {
-            newValues[i + 1] = processes.get(i).getCorrection().correct(newValues[i + 1]);
-            CheckingResult valueCheck = processes.get(i).getChecker().check(newValues[i + 1]);
+            newValues[i] = processes.get(i).getCorrection().correct(newValues[i]);
+            CheckingResult valueCheck = processes.get(i).getChecker().check(newValues[i]);
             if (!valueCheck.getStatus()) {
                 if (exitStatus)
                     FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
@@ -288,13 +288,13 @@ public class ValueHandler {
     }
     public static Vehicle getVehicle(long id, java.time.ZonedDateTime creationDate, String[] newValues) {
         String newName, newX, newY, newEnginePower, newDistanceTravelled, newType, newFuelType;
-        newName = newValues[1];
-        newX = newValues[2];
-        newY = newValues[3];
-        newEnginePower = newValues[4];
-        newDistanceTravelled = newValues[5];
-        newType = newValues[6];
-        newFuelType = newValues[7];
+        newName = newValues[0];
+        newX = newValues[1];
+        newY = newValues[2];
+        newEnginePower = newValues[3];
+        newDistanceTravelled = newValues[4];
+        newType = newValues[5];
+        newFuelType = newValues[6];
         return ValueTransformer.createVehicle(id, newName, newX, newY, creationDate,
                 newEnginePower, newDistanceTravelled, newType, newFuelType);
     }
