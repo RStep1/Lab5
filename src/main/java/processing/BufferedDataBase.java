@@ -68,7 +68,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean help(String[] arguments, ExecuteMode executeMode) {
+    public boolean help(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(HelpCommand.getName(), FileType.OUTPUT);
@@ -76,7 +76,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean info(String[] arguments, ExecuteMode executeMode) {
+    public boolean info(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, InfoCommand.getName()))
             return false;
         String stringLastInitTime = (lastInitTime == null ?
@@ -94,7 +94,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean show(String[] arguments, ExecuteMode executeMode) {
+    public boolean show(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ShowCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ShowCommand.getName(), FileType.OUTPUT);
@@ -111,15 +111,16 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean insert(String[] arguments, ExecuteMode executeMode) {
-        return addElementBy(arguments, executeMode, AddMode.INSERT_MODE, InsertCommand.getName());
+    public boolean insert(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return addElementBy(arguments, vehicleValues, executeMode, AddMode.INSERT_MODE, InsertCommand.getName());
     }
 
-    public boolean update(String[] arguments, ExecuteMode executeMode) {
-        return addElementBy(arguments, executeMode, AddMode.UPDATE_MODE, UpdateCommand.getName());
+    public boolean update(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return addElementBy(arguments, vehicleValues, executeMode, AddMode.UPDATE_MODE, UpdateCommand.getName());
     }
 
-    private boolean addElementBy(String[] arguments, ExecuteMode executeMode, AddMode addMode, String commandName) {
+    private boolean addElementBy(String[] arguments, String[] vehicleValues,
+                                 ExecuteMode executeMode, AddMode addMode, String commandName) {
         if (arguments.length == 8) {
 //            System.out.println("выполнение insert или update");
         }
@@ -167,7 +168,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean removeKey(String[] arguments, ExecuteMode executeMode) {
+    public boolean removeKey(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkCommandWithKey(arguments, RemoveKeyCommand.getName()))
             return false;
         if (!identifierHandler.hasElementWithKey(arguments[0], false,
@@ -180,7 +181,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean clear(String[] arguments, ExecuteMode executeMode) {
+    public boolean clear(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ClearCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ClearCommand.getName(), FileType.OUTPUT);
@@ -193,7 +194,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean save(String[] arguments, ExecuteMode executeMode) {
+    public boolean save(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName()))
             return false;
         FileHandler.saveDataBase(dataBase);
@@ -203,7 +204,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean executeScript(String[] arguments, ExecuteMode executeMode) {
+    public boolean executeScript(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (executeMode == ExecuteMode.COMMAND_MODE)
             scriptCounter.clear();
         if (!checkNumberOfArguments(arguments, 1, ExecuteScriptCommand.getName()))
@@ -233,7 +234,7 @@ public class BufferedDataBase {
     }
 
 
-    public boolean exit(String[] arguments, ExecuteMode executeMode) {
+    public boolean exit(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ExitCommand.getName()))
             return false;
         FileHandler.writeCurrentCommand(ExitCommand.getName(), FileType.OUTPUT);
@@ -242,17 +243,17 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean removeGreater(String[] arguments, ExecuteMode executeMode) {
-        return removeAllByDistanceTravelled(arguments, executeMode,
+    public boolean removeGreater(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return removeAllByDistanceTravelled(arguments, vehicleValues, executeMode,
                 RemoveGreaterCommand.getName(), RemoveMode.REMOVE_GREATER);
     }
 
-    public boolean removeLower(String[] arguments, ExecuteMode executeMode) {
-        return removeAllByDistanceTravelled(arguments, executeMode,
+    public boolean removeLower(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return removeAllByDistanceTravelled(arguments, vehicleValues, executeMode,
                 RemoveLowerCommand.getName(), RemoveMode.REMOVE_LOWER);
     }
 
-    private boolean removeAllByDistanceTravelled(String[] arguments, ExecuteMode executeMode,
+    private boolean removeAllByDistanceTravelled(String[] arguments, String[] vehicleValues, ExecuteMode executeMode,
                                                  String commandName, RemoveMode removeMode) {
         if (!checkNumberOfArguments(arguments, 1, commandName))
             return false;
@@ -294,7 +295,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean removeGreaterKey(String[] arguments, ExecuteMode executeMode) {
+    public boolean removeGreaterKey(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkCommandWithKey(arguments, RemoveGreaterKeyCommand.getName()))
             return false;
         long userKey = Long.parseLong(arguments[0]);
@@ -317,7 +318,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean removeAllByEnginePower(String[] arguments, ExecuteMode executeMode) {
+    public boolean removeAllByEnginePower(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, RemoveAllByEnginePowerCommand.getName()))
             return false;
         CheckingResult checkingResult = ValueHandler.ENGINE_POWER_CHECKER.check(arguments[0]);
@@ -348,7 +349,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean countByFuelType(String[] arguments, ExecuteMode executeMode) {
+    public boolean countByFuelType(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, CountByFuelTypeCommand.getName()))
             return false;
         CheckingResult checkingResult = ValueHandler.FUEL_TYPE_CHECKER.check(arguments[0]);
@@ -372,7 +373,7 @@ public class BufferedDataBase {
         return true;
     }
 
-    public boolean filterLessThanFuelType(String[] arguments, ExecuteMode executeMode) {
+    public boolean filterLessThanFuelType(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, FilterLessThanFuelTypeCommand.getName()))
             return false;
         CheckingResult checkingResult = ValueHandler.FUEL_TYPE_CHECKER.check(arguments[0]);

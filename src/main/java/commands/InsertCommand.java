@@ -15,8 +15,8 @@ public class InsertCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.insert(arguments, executeMode);
+    public boolean execute(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return bufferedDataBase.insert(arguments, vehicleValues, executeMode);
     }
 
     public static String getName() {

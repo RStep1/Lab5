@@ -16,8 +16,8 @@ public class RemoveGreaterKeyCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.removeGreaterKey(arguments, executeMode);
+    public boolean execute(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return bufferedDataBase.removeGreaterKey(arguments, vehicleValues, executeMode);
     }
 
     public static String getName() {

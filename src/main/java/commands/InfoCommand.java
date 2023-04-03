@@ -14,8 +14,8 @@ public class InfoCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.info(arguments, executeMode);
+    public boolean execute(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return bufferedDataBase.info(arguments, vehicleValues, executeMode);
     }
 
     public static String getName() {

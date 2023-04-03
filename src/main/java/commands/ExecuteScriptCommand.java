@@ -16,8 +16,8 @@ public class ExecuteScriptCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return bufferedDataBase.executeScript(arguments, executeMode);
+    public boolean execute(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return bufferedDataBase.executeScript(arguments, vehicleValues, executeMode);
     }
 
     public static String getName() {

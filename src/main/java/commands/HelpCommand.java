@@ -13,8 +13,8 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public boolean execute(String[] arguments, ExecuteMode executeMode) {
-        return dataBase.help(arguments, executeMode);
+    public boolean execute(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
+        return dataBase.help(arguments, vehicleValues, executeMode);
     }
 
     public static String getName() {

@@ -25,27 +25,28 @@ public class CommandParser {
         this.scriptLines = scriptLines;
     }
 
-    private boolean commandSelection(String nextLine, String nextCommand, String[] arguments, ExecuteMode executeMode) {
+    private boolean commandSelection(String nextLine, String nextCommand, String[] arguments,
+                                     String[] vehicleValues, ExecuteMode executeMode) {
         boolean exitStatus;
         switch (nextCommand) {
-            case "help" -> {
-                exitStatus = invoker.help(arguments, executeMode);
-            }
-            case "info" -> exitStatus = invoker.info(arguments, executeMode);
-            case "show" -> exitStatus = invoker.show(arguments, executeMode);
-            case "insert" -> exitStatus = invoker.insert(arguments, executeMode);
-            case "update" -> exitStatus = invoker.update(arguments, executeMode);
-            case "remove_key" -> exitStatus = invoker.removeKey(arguments, executeMode);
-            case "clear" -> exitStatus = invoker.clear(arguments, executeMode);
-            case "save" -> exitStatus = invoker.save(arguments, executeMode);
-            case "execute_script" -> exitStatus = invoker.executeScript(arguments, executeMode);
-            case "exit" -> exitStatus = invoker.exit(arguments, executeMode);
-            case "remove_greater" -> exitStatus = invoker.removeGreater(arguments, executeMode);
-            case "remove_lower" -> exitStatus = invoker.removeLower(arguments, executeMode);
-            case "remove_greater_key" -> exitStatus = invoker.removeGreaterKey(arguments, executeMode);
-            case "remove_all_by_engine_power" -> exitStatus = invoker.removeAllByEnginePower(arguments, executeMode);
-            case "count_by_fuel_type" -> exitStatus = invoker.countByFuelType(arguments, executeMode);
-            case "filter_less_than_fuel_type" -> exitStatus = invoker.filterLessThanFuelType(arguments, executeMode);
+            case "help" -> exitStatus = invoker.help(arguments, vehicleValues, executeMode);
+            case "info" -> exitStatus = invoker.info(arguments, vehicleValues, executeMode);
+            case "show" -> exitStatus = invoker.show(arguments, vehicleValues, executeMode);
+            case "insert" -> exitStatus = invoker.insert(arguments, vehicleValues, executeMode);
+            case "update" -> exitStatus = invoker.update(arguments, vehicleValues, executeMode);
+            case "remove_key" -> exitStatus = invoker.removeKey(arguments, vehicleValues, executeMode);
+            case "clear" -> exitStatus = invoker.clear(arguments, vehicleValues, executeMode);
+            case "save" -> exitStatus = invoker.save(arguments, vehicleValues, executeMode);
+            case "execute_script" -> exitStatus = invoker.executeScript(arguments, vehicleValues, executeMode);
+            case "exit" -> exitStatus = invoker.exit(arguments, vehicleValues, executeMode);
+            case "remove_greater" -> exitStatus = invoker.removeGreater(arguments, vehicleValues, executeMode);
+            case "remove_lower" -> exitStatus = invoker.removeLower(arguments, vehicleValues, executeMode);
+            case "remove_greater_key" -> exitStatus = invoker.removeGreaterKey(arguments, vehicleValues, executeMode);
+            case "remove_all_by_engine_power" -> exitStatus =
+                    invoker.removeAllByEnginePower(arguments, vehicleValues, executeMode);
+            case "count_by_fuel_type" -> exitStatus = invoker.countByFuelType(arguments, vehicleValues, executeMode);
+            case "filter_less_than_fuel_type" -> exitStatus =
+                    invoker.filterLessThanFuelType(arguments, vehicleValues, executeMode);
             default -> {
                 FileHandler.writeToFile(String.format("'%s': No such command", nextLine.trim()), FileType.USER_ERRORS);
                 exitStatus = false;
@@ -79,7 +80,8 @@ public class CommandParser {
         UserLineSeparator userLineSeparator = new UserLineSeparator(nextLine);
         String nextCommand = userLineSeparator.getCommand();
         String[] arguments = userLineSeparator.getArguments();
-        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, executeMode);
+        String[] extraArguments = new String[0];
+        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, extraArguments, executeMode);
         Console.printOutputFile();
         if (!FileHandler.readFile(FileType.USER_ERRORS).isEmpty()) {
             FileHandler.writeToFile(Console.getHelpMessage(), FileType.USER_ERRORS);
@@ -92,25 +94,6 @@ public class CommandParser {
             return false;
         return true;
     }
-
-//    private String[] addExtraArguments(String[] arguments, int countOfLines,
-//                                       String commandName, ArrayList<String> commandLines, int currentLine) {
-//        int countOfExtraArguments = 0;
-////        for (Command command : invoker.getCommandList()) {
-////            if (command.getName() == "commandName")
-////                countOfExtraArguments = command.getCountOfExtraArguments
-////        }
-//        if (commandName == InsertCommand.getName() || commandName == UpdateCommand.getName())
-//            countOfExtraArguments = 7;
-//        String[] extraArguments = new String[arguments.length + commandLines.size()];
-//        for (int i = 0; i < arguments.length; i++) {
-//            extraArguments[i] = arguments[i];
-//        }
-//        for (int i = arguments.length; i < extraArguments.length; i++) {
-//
-//        }
-//
-//    }
 
     public boolean scriptProcessing(String scriptName) {
         int countOfLines = scriptLines.size();
@@ -127,20 +110,20 @@ public class CommandParser {
             if (nextCommand.equals(InsertCommand.getName()) || nextCommand.equals(UpdateCommand.getName())) {
                 countOfExtraArguments = Vehicle.getCountOfChangeableFields();
             }
-            String[] extraArguments = new String[arguments.length + countOfExtraArguments];
+
+            String[] extraArguments = new String[countOfExtraArguments];
             if (lineIndex + countOfExtraArguments > countOfLines) {
                 FileHandler.writeToFile(String.format(
-                        "line %s: There are not enough lines in script '%s' for the '%s' command",
-                        lineIndex + 1, scriptName, nextCommand), FileType.USER_ERRORS);
+                        "line %s: There are not enough lines in script '%s' for the '%s %s' command",
+                        lineIndex + 1, scriptName, nextCommand, arguments[0]), FileType.USER_ERRORS);
                 return false;
             }
-            for (int i = 0; i < arguments.length; i++)
-                extraArguments[i] = arguments[i].trim();
-            for (int i = arguments.length, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1; j++, i++)
+            for (int i = 0, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1 && j < countOfLines; j++, i++)
                 extraArguments[i] = scriptLines.get(j).trim();
             lineIndex += countOfExtraArguments;
+
 //            FileHandler.writeOutputInfo(String.format("%s line %s: ", scriptName, lineIndex + 1));
-            boolean exitStatus = commandSelection(nextLine, nextCommand, extraArguments, ExecuteMode.SCRIPT_MODE);
+            boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, extraArguments, ExecuteMode.SCRIPT_MODE);
             if (exitStatus && nextCommand.equals(ExitCommand.getName())) {
                 FileHandler.writeToFile(String.format(
                         "Script '%s' successfully completed", scriptName), FileType.OUTPUT);
@@ -151,4 +134,19 @@ public class CommandParser {
             FileHandler.writeToFile(String.format("Script '%s' is empty", scriptName), FileType.USER_ERRORS);
         return true;
     }
+//    private String[] setExtraArguments(String nextCommand, String[] arguments, int countOfExtraArguments, int lineIndex,
+//                                       String scriptName, int countOfLines) {
+//        String[] extraArguments = new String[arguments.length + countOfExtraArguments];
+//        if (lineIndex + countOfExtraArguments > countOfLines) {
+//            FileHandler.writeToFile(String.format(
+//                    "line %s: There are not enough lines in script '%s' for the '%s %s' command",
+//                    lineIndex + 1, scriptName, nextCommand, arguments[0]), FileType.USER_ERRORS);
+//            return false;
+//        } // делать эту проверку в BufferedDataBase
+//        for (int i = 0; i < arguments.length; i++)
+//            extraArguments[i] = arguments[i].trim();
+//        for (int i = arguments.length, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1 && i < ; j++, i++)
+//            extraArguments[i] = scriptLines.get(j).trim();
+//        lineIndex += countOfExtraArguments;
+//    }
 }
