@@ -8,7 +8,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+
+/**
+ * Operates on all project files.
+ */
 public class FileHandler {
+    private static final String envVariable = "SAVE_PATH";
     private static final String OUTPUT_FILE_PATH = "files/output.txt";
     private static final String USER_ERRORS_FILE_PATH = "files/user_errors.txt";
     private static final String SYSTEM_ERRORS_FILE_PATH = "files/system_errors.txt";
@@ -29,14 +34,31 @@ public class FileHandler {
 
     }
 
-    public static String filePathSelection(FileType fileType) {
+    /**
+     * Checks if the environment variable is valid.
+     */
+    public static boolean checkEnvVariable() {
+        if (System.getenv().get(envVariable) == null) {
+            FileHandler.writeToFile(String.format("System variable with file to load and save is not set\n" +
+                    "Please set the '%s' environment variable", envVariable), FileType.USER_ERRORS);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Selects path to the file by file type.
+     * @param fileType Takes an enumeration of file types.
+     * @return returns path to the file.
+     */
+    private static String filePathSelection(FileType fileType) {
         String filePath = "";
         switch (fileType) {
             case OUTPUT -> filePath = OUTPUT_FILE_ABSOLUTE_PATH;
             case USER_ERRORS -> filePath = USER_ERRORS_FILE_ABSOLUTE_PATH;
             case REFERENCE -> filePath = REFERENCE_FILE_ABSOLUTE_PATH;
             case SYSTEM_ERRORS -> filePath = SYSTEM_ERRORS_FILE_ABSOLUTE_PATH;
-            case JSON -> filePath = JSON_FILE_ABSOLUTE_PATH;
+            case JSON -> filePath = System.getenv().get(envVariable);
 //            default ->
         }
         return filePath;
@@ -47,6 +69,11 @@ public class FileHandler {
         writeToFile(info, FileType.REFERENCE);
     }
 
+    /**
+     * Writes some information to the file.
+     * @param information Takes some text to write.
+     * @param fileType Determines which file to write to.
+     */
     public static void writeToFile(String information, FileType fileType) {
         String filePath = filePathSelection(fileType);
         try (BufferedWriter writer =
@@ -58,6 +85,11 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Reads script file line by line.
+     * @param script Takes user script file.
+     * @return All lines from the script file.
+     */
     public static ArrayList<String> readScriptFile(File script) {
         ArrayList<String> scriptLines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(script.getAbsolutePath()))) {
@@ -71,6 +103,11 @@ public class FileHandler {
         return scriptLines;
     }
 
+    /**
+     * Reads whole file.
+     * @param fileType
+     * @return Contents of the file in string format.
+     */
     public static String readFile(FileType fileType) {
         String absolutePath = filePathSelection(fileType);
         StringBuilder result = new StringBuilder();
@@ -94,11 +131,20 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Writes the name of the executable program command to the desired file.
+     * @param commandName
+     * @param fileType
+     */
     public static void writeCurrentCommand(String commandName, FileType fileType) {
         String message = String.format("Command '%s':", commandName);
         writeToFile(message, fileType);
     }
 
+    /**
+     * Reads Json file and converts it to Hashtable.
+     * @return Returns null, if file was empty, otherwise returns Hashtable with data.
+     */
     public static Hashtable<Long, Vehicle> loadDataBase() {
         String json = readFile(FileType.JSON);
         JsonReader jsonReader = new JsonReader(json);
@@ -109,6 +155,11 @@ public class FileHandler {
         return vehicleHashtable;
     }
 
+    /**
+     * Converts Hashtable data to Json format and writes it to Json file.
+     * @param dataBase
+     * @return
+     */
     public static boolean saveDataBase(Hashtable<Long, Vehicle> dataBase) {
         JsonWriter jsonWriter = new JsonWriter(dataBase);
         String json = jsonWriter.writeDataBase();
@@ -117,10 +168,15 @@ public class FileHandler {
         return true;
     }
 
+    /**
+     * Recursively iterates over the entire contents of the given directory.
+     * @param dir Directory with script files.
+     * @param name Name of the script file.
+     * @return Returns null, if file is not found, otherwise returns script file.
+     */
     public static File findFile(File dir, String name) {
         File result = null; // no need to store result as String, you're returning File anyway
         File[] dirlist  = dir.listFiles();
-
         for(int i = 0; i < dirlist.length; i++) {
             if(dirlist[i].isDirectory()) {
                 result = findFile(dirlist[i], name);

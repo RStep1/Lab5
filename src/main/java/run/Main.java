@@ -1,12 +1,24 @@
 package run;
 
+import mods.FileType;
 import processing.*;
 import commands.*;
+import utility.FileHandler;
+
+import java.io.File;
 
 
-
+/**
+ * The entry point to the program, declares all the necessary classes.
+ * Starts interactive mode for the user.
+ */
 public class Main {
     public static void main(String[] args) {
+        if (!FileHandler.checkEnvVariable()) {
+            Console.printUserErrorsFile();
+            FileHandler.clearFile(FileType.USER_ERRORS);
+            return;
+        }
         BufferedDataBase bufferedDataBase = new BufferedDataBase();
         CommandInvoker invoker = new CommandInvoker(new HelpCommand(bufferedDataBase),
                 new InfoCommand(bufferedDataBase), new ShowCommand(bufferedDataBase),

@@ -3,6 +3,10 @@ package commands;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
+/**
+ * Acts as a wrapper for the clear command.
+ * Calls the method containing the implementation of this command.
+ */
 public class ClearCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "clear";

@@ -87,13 +87,14 @@ insertr
 
 
 insert 867
-NEW_NAME_FROM_SCRIPT1
+NAME_FROM_SCRIPT1
 4
 3
 3
 3
 3
 3
+show
 
 
 

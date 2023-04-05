@@ -3,6 +3,11 @@ package commands;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
+
+/**
+ * Acts as a wrapper for the count by fuel type command.
+ * Calls the method containing the implementation of this command.
+ */
 public class CountByFuelTypeCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "count_by_fuel_type";

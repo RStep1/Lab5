@@ -8,6 +8,7 @@ import utility.Process;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -17,7 +18,6 @@ public class Console {
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RESET = "\u001B[0m";
-
 
     public Console(CommandInvoker invoker) {
         this.invoker = invoker;
@@ -38,7 +38,6 @@ public class Console {
         }
         in.close();
     }
-
 
     public static Vehicle insertMode(long id, java.time.ZonedDateTime creationDate) {
         Scanner in = new Scanner(System.in);
@@ -71,19 +70,8 @@ public class Console {
                 newEnginePower, newDistanceTravelled, newType, newFuelType);
     }
 
-    public static void printHelpMessage() {
-        PrintStream printStream = new PrintStream(System.out);
-        printStream.println("Type 'help' and press Enter to " +
-                "see a list of commands");
-    }
-
     public static String getHelpMessage() {
         return "Type 'help' and press Enter to see a list of commands";
-    }
-
-    public static void println(String message) {
-        PrintStream printStream = new PrintStream(System.out);
-        printStream.println(message);
     }
 
     public static void print(String message) {
