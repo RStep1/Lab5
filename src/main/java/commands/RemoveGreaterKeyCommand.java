@@ -11,8 +11,7 @@ public class RemoveGreaterKeyCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_greater_key";
     private static final String DESCRIPTION =
-            "удаляет из коллекции все элементы, " +
-                    "ключ которых превышает заданный";
+            "removes from the collection all elements whose key is greater than the specified";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
     public RemoveGreaterKeyCommand(BufferedDataBase bufferedDataBase) {

@@ -13,8 +13,7 @@ public class FilterLessThanFuelTypeCommand implements Command {
     private static final String NAME =
             "filter_less_than_fuel_type";
     private static final String DESCRIPTION =
-            "выводит элементы, значение поля " +
-                    "fuelType которых меньше заданного";
+            "displays elements whose fuelType field value is less than the given one";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public FilterLessThanFuelTypeCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;

@@ -12,9 +12,8 @@ public class ExecuteScriptCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "execute_script";
     private static final String DESCRIPTION =
-            "считывает и исполняет скрипт из указанного файла. " +
-                    "В скрипте содержатся команды в таком же виде, " +
-                    "в котором их вводит пользователь в интерактивном режиме.";
+            "reads and executes a script from the specified file. The script contains commands" +
+                    " in the same form in which they are entered by the user in interactive mode.";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public ExecuteScriptCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;

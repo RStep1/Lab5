@@ -10,8 +10,8 @@ import mods.ExecuteMode;
 public class InfoCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "info";
-    private static final String DESCRIPTION = "выводит информацию о коллекции " +
-            "(тип, дата инициализации, количество элементов и т.д.)";
+    private static final String DESCRIPTION = "displays information about the collection " +
+            "(type, initialization date, number of elements, last saved date))";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public InfoCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;

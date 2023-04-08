@@ -10,8 +10,7 @@ import mods.ExecuteMode;
 public class RemoveKeyCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_key";
-    private static final String DESCRIPTION =
-            "удаляет элемент из коллекции по его ключу";
+    private static final String DESCRIPTION = "removes an element from the collection by its key";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
     public RemoveKeyCommand(BufferedDataBase bufferedDataBase) {

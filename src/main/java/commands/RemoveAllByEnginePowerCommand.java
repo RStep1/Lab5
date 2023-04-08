@@ -11,8 +11,7 @@ public class RemoveAllByEnginePowerCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_all_by_engine_power";
     private static final String DESCRIPTION =
-            " удаляет из коллекции все элементы, значение " +
-                    "поля enginePower которого эквивалентно заданному";
+            "removes from the collection all elements whose enginePower field value is equivalent to the given one";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public RemoveAllByEnginePowerCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;

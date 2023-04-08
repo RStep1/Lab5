@@ -12,8 +12,7 @@ public class UpdateCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "update";
     private static final String DESCRIPTION =
-            "обновляет значение элемента коллекции, " +
-                    "id которого равен заданному";
+            "updates the value of the collection element whose id is equal to the given one";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = Vehicle.getCountOfChangeableFields();
 
     public UpdateCommand(BufferedDataBase bufferedDataBase) {

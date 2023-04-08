@@ -11,7 +11,8 @@ public class RemoveLowerCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_lower";
     private static final String DESCRIPTION =
-            "удаляет из коллекции все элементы, меньшие, чем заданный";
+            "removes from the collection all elements whose " +
+                    "distanceTraveled field value is less than the specified value";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
     public RemoveLowerCommand(BufferedDataBase bufferedDataBase) {

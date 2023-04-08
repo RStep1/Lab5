@@ -10,8 +10,7 @@ import mods.ExecuteMode;
 public class SaveCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "save";
-    private static final String DESCRIPTION =
-            "сохраняет коллекцию в файл";
+    private static final String DESCRIPTION = "save the collection to file";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
     public SaveCommand(BufferedDataBase bufferedDataBase) {

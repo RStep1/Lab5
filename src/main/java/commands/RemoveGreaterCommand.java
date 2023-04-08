@@ -10,8 +10,8 @@ import mods.ExecuteMode;
 public class RemoveGreaterCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_greater";
-    private static final String DESCRIPTION =
-            "удаляет из коллекции все элементы, превышающие заданный";
+    private static final String DESCRIPTION = "removes from the collection all elements whose distanceTraveled" +
+            " field value is greater than the specified value";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
     public RemoveGreaterCommand(BufferedDataBase bufferedDataBase) {

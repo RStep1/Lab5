@@ -11,8 +11,7 @@ public class ShowCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "show";
     private static final String DESCRIPTION =
-            "выводит в стандартный поток вывода все элементы" +
-                    " коллекции в строковом представлении";
+            "prints to standard output all elements of the collection in string representation";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
     public ShowCommand(BufferedDataBase bufferedDataBase) {

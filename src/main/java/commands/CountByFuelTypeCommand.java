@@ -12,8 +12,7 @@ public class CountByFuelTypeCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "count_by_fuel_type";
     private static final String DESCRIPTION =
-            "выводит количество элементов, значение поля" +
-                    " fuelType которых равно заданному";
+            "displays the number of elements whose fuelType field value is equal to the given one";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
     public CountByFuelTypeCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
