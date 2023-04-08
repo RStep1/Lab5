@@ -10,6 +10,7 @@ import mods.ExecuteMode;
 public class ShowCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "show";
+    private static final String ARGUMENTS = "";
     private static final String DESCRIPTION =
             "prints to standard output all elements of the collection in string representation";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
@@ -37,6 +38,6 @@ public class ShowCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
     }
 }

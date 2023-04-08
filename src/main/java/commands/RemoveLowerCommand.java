@@ -10,6 +10,7 @@ import mods.ExecuteMode;
 public class RemoveLowerCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_lower";
+    private static final String ARGUMENTS = " <distanceTravelled>";
     private static final String DESCRIPTION =
             "removes from the collection all elements whose " +
                     "distanceTraveled field value is less than the specified value";
@@ -38,6 +39,6 @@ public class RemoveLowerCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
     }
 }

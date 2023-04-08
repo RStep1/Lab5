@@ -9,6 +9,7 @@ import mods.ExecuteMode;
 public class ExitCommand implements Command {
     private BufferedDataBase dataBase;
     private static final String NAME = "exit";
+    private static final String ARGUMENTS = "";
     private static final String DESCRIPTION =
             "terminates the program without saving to a file";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
@@ -35,6 +36,5 @@ public class ExitCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
-    }
-}
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
+    }}

@@ -11,6 +11,7 @@ import mods.ExecuteMode;
 public class ExecuteScriptCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "execute_script";
+    private static final String ARGUMENTS = " <file_name>";
     private static final String DESCRIPTION =
             "reads and executes a script from the specified file. The script contains commands" +
                     " in the same form in which they are entered by the user in interactive mode.";
@@ -38,6 +39,5 @@ public class ExecuteScriptCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
-    }
-}
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
+    }}

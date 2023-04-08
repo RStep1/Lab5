@@ -10,11 +10,11 @@ import mods.ExecuteMode;
  */
 public class FilterLessThanFuelTypeCommand implements Command {
     private BufferedDataBase bufferedDataBase;
-    private static final String NAME =
-            "filter_less_than_fuel_type";
-    private static final String DESCRIPTION =
-            "displays elements whose fuelType field value is less than the given one";
+    private static final String NAME = "filter_less_than_fuel_type";
+    private static final String ARGUMENTS = " <fuelType>";
+    private static final String DESCRIPTION = "displays elements whose fuelType field value is less than the given one";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
+
     public FilterLessThanFuelTypeCommand(BufferedDataBase bufferedDataBase) {
         this.bufferedDataBase = bufferedDataBase;
     }
@@ -38,6 +38,6 @@ public class FilterLessThanFuelTypeCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
     }
 }

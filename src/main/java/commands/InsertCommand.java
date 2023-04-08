@@ -11,6 +11,7 @@ import mods.ExecuteMode;
 public class InsertCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "insert";
+    private static final String ARGUMENTS = " <key> <element>";
     private static final String DESCRIPTION = "adds a new element with the given key";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = Vehicle.getCountOfChangeableFields();
     public InsertCommand(BufferedDataBase bufferedDataBase) {
@@ -36,6 +37,6 @@ public class InsertCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
     }
 }

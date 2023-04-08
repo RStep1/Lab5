@@ -11,6 +11,7 @@ import mods.ExecuteMode;
 public class CountByFuelTypeCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "count_by_fuel_type";
+    private static final String ARGUMENTS = " <fuelType>";
     private static final String DESCRIPTION =
             "displays the number of elements whose fuelType field value is equal to the given one";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
@@ -37,6 +38,5 @@ public class CountByFuelTypeCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
-    }
-}
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
+    }}

@@ -10,6 +10,7 @@ import mods.ExecuteMode;
 public class RemoveKeyCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_key";
+    private static final String ARGUMENTS = " <key>";
     private static final String DESCRIPTION = "removes an element from the collection by its key";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
@@ -36,6 +37,6 @@ public class RemoveKeyCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
     }
 }

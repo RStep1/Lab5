@@ -10,6 +10,7 @@ import mods.ExecuteMode;
 public class ClearCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "clear";
+    private static final String ARGUMENTS = "";
     private static final String DESCRIPTION = "clears the collection";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
@@ -36,6 +37,6 @@ public class ClearCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
     }
 }

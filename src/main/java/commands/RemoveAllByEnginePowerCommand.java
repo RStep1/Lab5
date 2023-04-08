@@ -10,6 +10,7 @@ import mods.ExecuteMode;
 public class RemoveAllByEnginePowerCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_all_by_engine_power";
+    private static final String ARGUMENTS = " <enginePower>";
     private static final String DESCRIPTION =
             "removes from the collection all elements whose enginePower field value is equivalent to the given one";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
@@ -36,6 +37,6 @@ public class RemoveAllByEnginePowerCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
     }
 }

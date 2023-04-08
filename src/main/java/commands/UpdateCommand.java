@@ -11,6 +11,7 @@ import mods.ExecuteMode;
 public class UpdateCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "update";
+    private static final String ARGUMENTS = " <id> <element>";
     private static final String DESCRIPTION =
             "updates the value of the collection element whose id is equal to the given one";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = Vehicle.getCountOfChangeableFields();
@@ -38,6 +39,6 @@ public class UpdateCommand implements Command {
 
     @Override
     public String toString() {
-        return NAME + ": " + DESCRIPTION;
+        return NAME + ARGUMENTS + ": " + DESCRIPTION;
     }
 }
