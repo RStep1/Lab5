@@ -95,7 +95,8 @@ NAME_FROM_SCRIPT1
 3
 3
 show
-
+execute_script script2.txt
+exit
 
 
 

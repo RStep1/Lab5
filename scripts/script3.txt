@@ -1,4 +1,7 @@
 execute_script script1.txt
+execute_script script2.txt
+execute_script script3.txt
+execute_script script4.txt
 help
 info
 show

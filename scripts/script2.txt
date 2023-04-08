@@ -6,3 +6,6 @@ NEW_NAME_FROM_SCRIPT2
 4
 car
 3
+execute_script script3.txt
+insert 735
+

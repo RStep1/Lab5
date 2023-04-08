@@ -1,17 +1,17 @@
-help: выводит справку по доступным командам
-info: выводит информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)
-show: выводит в стандартный поток вывода все элементы коллекции в строковом представлении
-insert: добавляет новый элемент с заданным ключом
-update: обновляет значение элемента коллекции, id которого равен заданному
-remove_key: удаляет элемент из коллекции по его ключу
-clear: очищает коллекцию
-save: сохраняет коллекцию в файл
-execute_script: считывает и исполняет скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.
-exit: завершает программу без сохранения в файл
-remove_greater: удаляет из коллекции все элементы, превышающие заданный
-remove_lower: удаляет из коллекции все элементы, меньшие, чем заданный
-remove_greater_key: удаляет из коллекции все элементы, ключ которых превышает заданный
-remove_all_by_engine_power:  удаляет из коллекции все элементы, значение поля enginePower которого эквивалентно заданному
-count_by_fuel_type: выводит количество элементов, значение поля fuelType которых равно заданному
-filter_less_than_fuel_type: выводит элементы, значение поля fuelType которых меньше заданного
+help: displays help for available commands
+info: displays information about the collection (type, initialization date, number of elements, last saved date))
+show: prints to standard output all elements of the collection in string representation
+insert <key> <element>: adds a new element with the given key
+update <id> <element>: updates the value of the collection element whose id is equal to the given one
+remove_key <key>: removes an element from the collection by its key
+clear: clears the collection
+save: save the collection to file
+execute_script <file_name>: reads and executes a script from the specified file. The script contains commands in the same form in which they are entered by the user in interactive mode.
+exit: terminates the program without saving to a file
+remove_greater <distanceTravelled>: removes from the collection all elements whose distanceTraveled field value is greater than the specified value
+remove_lower <distanceTravelled>: removes from the collection all elements whose distanceTraveled field value is less than the specified value
+remove_greater_key <key>: removes from the collection all elements whose key is greater than the specified
+remove_all_by_engine_power <enginePower>: removes from the collection all elements whose enginePower field value is equivalent to the given one
+count_by_fuel_type <fuelType>: displays the number of elements whose fuelType field value is equal to the given one
+filter_less_than_fuel_type <fuelType>: displays elements whose fuelType field value is less than the given one
 
