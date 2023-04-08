@@ -3,6 +3,10 @@ package commands;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
+/**
+ * Acts as a wrapper for the 'remove key' command.
+ * Calls the method containing the implementation of this command.
+ */
 public class RemoveKeyCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_key";

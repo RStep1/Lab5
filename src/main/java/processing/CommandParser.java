@@ -1,31 +1,45 @@
 package processing;
 
-
 import commands.ExitCommand;
 import commands.InsertCommand;
 import commands.UpdateCommand;
 import data.Vehicle;
-import mods.AddMode;
 import mods.ExecuteMode;
 import mods.FileType;
 import utility.FileHandler;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
+/**
+ * Processes the lines entered by the user.
+ * Divides them into commands and arguments and calls them.
+ */
 public class CommandParser {
     private CommandInvoker invoker;
     private ArrayList<String> scriptLines;
 
+    /**
+     * Used in command mode.
+     */
     public CommandParser(CommandInvoker invoker) {
         this.invoker = invoker;
     }
 
+    /**
+     * Used in script mode.
+     * @param scriptLines Lines from a user-run script.
+     */
     public CommandParser(CommandInvoker invoker, ArrayList<String> scriptLines) {
         this.invoker = invoker;
         this.scriptLines = scriptLines;
     }
 
+    /**
+     * Defines and runs a specific command.
+     * @param nextLine Current processed line.
+     * @param nextCommand Current processed command.
+     * @return Command exit status.
+     */
     private boolean commandSelection(String nextLine, String nextCommand, String[] arguments,
                                      String[] vehicleValues, ExecuteMode executeMode) {
         boolean exitStatus;
@@ -56,6 +70,9 @@ public class CommandParser {
         return exitStatus;
     }
 
+    /**
+     * Separates a command from its arguments.
+     */
     private static class UserLineSeparator {
         private final String command;
         private final String[] arguments;
@@ -75,14 +92,20 @@ public class CommandParser {
         }
     }
 
-    public boolean commandProcessing(String nextLine, ExecuteMode executeMode) {
+    /**
+     * Processes user input strings and starts command fetching.
+     * @param nextLine Another line entered by the user.
+     * @return Command processing exit status.
+     */
+    public boolean commandProcessing(String nextLine) {
         if (nextLine.trim().equals(""))
             return true;
         UserLineSeparator userLineSeparator = new UserLineSeparator(nextLine);
         String nextCommand = userLineSeparator.getCommand();
         String[] arguments = userLineSeparator.getArguments();
         String[] extraArguments = new String[0];
-        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments, extraArguments, executeMode);
+        boolean exitStatus = commandSelection(nextLine, nextCommand, arguments,
+                extraArguments, ExecuteMode.COMMAND_MODE);
         Console.printOutputFile();
         if (!FileHandler.readFile(FileType.USER_ERRORS).isEmpty()) {
             FileHandler.writeToFile(Console.getHelpMessage(), FileType.USER_ERRORS);
@@ -90,12 +113,15 @@ public class CommandParser {
         }
         FileHandler.clearFile(FileType.OUTPUT);
         FileHandler.clearFile(FileType.USER_ERRORS);
-
         if (nextCommand.equals(ExitCommand.getName()) && exitStatus)
             return false;
         return true;
     }
 
+    /**
+     * Processes each line of user script.
+     * @return Script execution status.
+     */
     public boolean scriptProcessing(String scriptName) {
         int countOfLines = scriptLines.size();
         boolean hasCommands = false;
@@ -126,9 +152,14 @@ public class CommandParser {
         return true;
     }
 
-    private String[] setExtraArguments(int countOfExtraArguments, int lineIndex, int countOfLines) {
-        String[] extraArguments = new String[Math.min(countOfExtraArguments, countOfLines - lineIndex - 1)];
-        for (int i = 0, j = lineIndex + 1; j < lineIndex + countOfExtraArguments + 1 && j < countOfLines; j++, i++)
+    /**
+     * Adds extra lines from script that are used as arguments to change the collection element.
+     */
+    private String[] setExtraArguments(int countOfExtraArguments, int currentLineIndex, int countOfScriptLines) {
+        String[] extraArguments =
+                new String[Math.min(countOfExtraArguments, countOfScriptLines - currentLineIndex - 1)];
+        for (int i = 0, j = currentLineIndex + 1;
+             j < currentLineIndex + countOfExtraArguments + 1 && j < countOfScriptLines; j++, i++)
             extraArguments[i] = scriptLines.get(j).trim();
         return extraArguments;
     }

@@ -3,6 +3,10 @@ package commands;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
+/**
+ * Acts as a wrapper for the 'info' command.
+ * Calls the method containing the implementation of this command.
+ */
 public class InfoCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "info";

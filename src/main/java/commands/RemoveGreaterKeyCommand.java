@@ -3,6 +3,10 @@ package commands;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
+/**
+ * Acts as a wrapper for the 'remove greater key' command.
+ * Calls the method containing the implementation of this command.
+ */
 public class RemoveGreaterKeyCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_greater_key";

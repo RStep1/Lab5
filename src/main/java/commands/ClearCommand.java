@@ -4,13 +4,13 @@ import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
 /**
- * Acts as a wrapper for the clear command.
+ * Acts as a wrapper for the 'clear' command.
  * Calls the method containing the implementation of this command.
  */
 public class ClearCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "clear";
-    private static final String DESCRIPTION = "очищает коллекцию";
+    private static final String DESCRIPTION = "clears the collection";
     private static final int COUNT_OF_EXTRA_ARGUMENTS = 0;
 
     public ClearCommand(BufferedDataBase bufferedDataBase) {

@@ -11,10 +11,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/**
+ * Contains functions for converting each string value to Vehicle class values.
+ */
 public class ValueTransformer {
     private static final String zonedDatePattern = "dd/MM/yyy - HH:mm:ss z";
     private static final DateTimeFormatter zonedDateFormatter = DateTimeFormatter.ofPattern(zonedDatePattern);
-
 
     private static final BiFunction<String, String, Coordinates> SET_COORDINATES = (newX, newY) -> {
         float x = Float.parseFloat(newX);
@@ -59,6 +61,10 @@ public class ValueTransformer {
         return fuelType;
     };
 
+    /**
+     * Applies all the functions of a class to inline a new class.
+     * @return New vehicle class.
+     */
     public static Vehicle createVehicle(long id, String newName, String newX, String newY,
                                         java.time.ZonedDateTime creationDate, String newEnginePower,
                                         String newDistanceTravelled, String newVehicleType,
@@ -68,5 +74,4 @@ public class ValueTransformer {
                 SET_DISTANCE_TRAVELLED.apply(newDistanceTravelled), SET_VEHICLE_TYPE.apply(newVehicleType),
                 SET_FUEL_TYPE.apply(newFuelType));
     }
-
 }

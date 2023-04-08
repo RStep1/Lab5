@@ -4,6 +4,10 @@ import data.Vehicle;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
+/**
+ * Acts as a wrapper for the 'update' command.
+ * Calls the method containing the implementation of this command.
+ */
 public class UpdateCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "update";

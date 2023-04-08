@@ -3,6 +3,10 @@ package commands;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
+/**
+ * Acts as a wrapper for the 'remove all by engine power' command.
+ * Calls the method containing the implementation of this command.
+ */
 public class RemoveAllByEnginePowerCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME = "remove_all_by_engine_power";

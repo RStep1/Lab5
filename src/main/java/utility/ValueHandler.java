@@ -5,20 +5,23 @@ import data.Coordinates;
 import data.FuelType;
 import data.Vehicle;
 import data.VehicleType;
-import mods.ExecuteMode;
 import mods.FileType;
 import mods.ValueType;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * Contains correction and checking of all values of the collection class.
+ */
 public class ValueHandler {
     private static ArrayList<Process> valueProcesses = new ArrayList<>();
 
+    /**
+     * Populates and returns the list with processing of each value of collection class.
+     */
     public static ArrayList<Process> getValueProcesses() {
         if (valueProcesses.isEmpty()) {
             valueProcesses.add(NAME_PROCESSING);
@@ -31,6 +34,11 @@ public class ValueHandler {
         }
         return valueProcesses;
     }
+
+    /**
+     * Checks a numeric value by its type
+     * @return Boolean result and error message.
+     */
     private static CheckingResult checkTypeValue(ValueType valueType, String value, String valueName) {
         Pattern valuePattern = Pattern.compile("");
         if (valueType == ValueType.DOUBLE || valueType == ValueType.FLOAT)
@@ -271,6 +279,11 @@ public class ValueHandler {
         }
     };
 
+    /**
+     * Sequentially performs correction and verification of each newly entered value.
+     * @param newValues Mutable values in collection class.commandName
+     * @return Exit status of all corrections and verifications.
+     */
     public static boolean checkValues(String[] newValues, String commandName) {
         ArrayList<Process> processes = ValueHandler.getValueProcesses();
         boolean exitStatus = true;
@@ -286,6 +299,11 @@ public class ValueHandler {
         }
         return exitStatus;
     }
+
+    /**
+     * Converts string values to Vehicle class values.
+     * @return New assembled collection class.
+     */
     public static Vehicle getVehicle(long id, java.time.ZonedDateTime creationDate, String[] newValues) {
         String newName, newX, newY, newEnginePower, newDistanceTravelled, newType, newFuelType;
         newName = newValues[0];

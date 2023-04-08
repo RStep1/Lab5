@@ -1,5 +1,8 @@
 package mods;
 
+/**
+ * Used to determine the type of value in checkers.
+ */
 public enum ValueType {
     INTEGER("integer"),
     DOUBLE("double"),

@@ -5,7 +5,7 @@ import mods.ExecuteMode;
 
 
 /**
- * Acts as a wrapper for the execute script command.
+ * Acts as a wrapper for the 'execute script' command.
  * Calls the method containing the implementation of this command.
  */
 public class ExecuteScriptCommand implements Command {

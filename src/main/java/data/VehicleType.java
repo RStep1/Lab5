@@ -1,5 +1,9 @@
 package data;
 
+/**
+ * Enumeration of vehicle types.
+ * Serial number is used to simplify user input.
+ */
 public enum VehicleType {
     CAR(1),
     BOAT(2),

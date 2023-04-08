@@ -1,28 +1,31 @@
 package processing;
 
 import data.Vehicle;
-import mods.ExecuteMode;
 import mods.FileType;
 import utility.*;
 import utility.Process;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-
-
+/**
+ * Designed for input-output information.
+ */
 public class Console {
     private CommandInvoker invoker;
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_RESET = "\u001B[0m";
+    private static final String helpMessage = "Type 'help' and press Enter to see a list of commands";
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_RESET = "\u001B[0m";
 
     public Console(CommandInvoker invoker) {
         this.invoker = invoker;
     }
 
+    /**
+     * Reads user lines one by one and starts processing.
+     */
     public void interactiveMode() {
         FileHandler.clearFile(FileType.OUTPUT);
         FileHandler.clearFile(FileType.USER_ERRORS);
@@ -32,13 +35,19 @@ public class Console {
             PrintStream printStream = new PrintStream(System.out);
             printStream.print("Type command and press Enter: ");
             String nextLine = in.nextLine();
-            boolean exitStatus = parser.commandProcessing(nextLine, ExecuteMode.COMMAND_MODE);
+            boolean exitStatus = parser.commandProcessing(nextLine);
             if (!exitStatus)
                 break;
         }
         in.close();
     }
 
+    /**
+     * Reads the parameters of the collection element.
+     * @param id Automatically generated parameter.
+     * @param creationDate Automatically generated parameter.
+     * @return New formed collection element.
+     */
     public static Vehicle insertMode(long id, java.time.ZonedDateTime creationDate) {
         Scanner in = new Scanner(System.in);
         PrintStream printStream = new PrintStream(System.out);
@@ -71,7 +80,7 @@ public class Console {
     }
 
     public static String getHelpMessage() {
-        return "Type 'help' and press Enter to see a list of commands";
+        return helpMessage;
     }
 
     public static void print(String message) {

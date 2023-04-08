@@ -1,10 +1,11 @@
 package data;
 
-import java.util.Comparator;
-
-public class Coordinates implements Comparator<Coordinates> {
-    private float x; //Максимальное значение поля: 341
-    private double y; //Значение поля должно быть больше -272
+/**
+ * Contains two coordinate variables for Vehicle class.
+ */
+public class Coordinates {
+    private float x;
+    private double y;
     private static final int accuracy = 5;
 
     public Coordinates(float x, double y) {
@@ -28,10 +29,4 @@ public class Coordinates implements Comparator<Coordinates> {
         return String.format("(%." + accuracy + "f; %." + accuracy + "f)", x, y);
     }
 
-    @Override
-    public int compare(Coordinates o1, Coordinates o2) {
-        Comparator<Coordinates> xComparator = (o11, o21) -> Float.compare(o11.getX(), o21.getX());
-        Comparator<Coordinates> yComparator = Comparator.comparingDouble(Coordinates::getY);
-        return xComparator.thenComparing(yComparator).compare(o1, o2);
-    }
 }

@@ -5,7 +5,7 @@ import mods.ExecuteMode;
 
 
 /**
- * Acts as a wrapper for the count by fuel type command.
+ * Acts as a wrapper for the 'count by fuel' type command.
  * Calls the method containing the implementation of this command.
  */
 public class CountByFuelTypeCommand implements Command {

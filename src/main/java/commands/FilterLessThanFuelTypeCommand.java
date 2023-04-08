@@ -3,6 +3,11 @@ package commands;
 import processing.BufferedDataBase;
 import mods.ExecuteMode;
 
+
+/**
+ * Acts as a wrapper for the 'filter less than fuel type' command.
+ * Calls the method containing the implementation of this command.
+ */
 public class FilterLessThanFuelTypeCommand implements Command {
     private BufferedDataBase bufferedDataBase;
     private static final String NAME =

@@ -3,11 +3,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import data.Vehicle;
 
-
 import java.util.Hashtable;
 
-
-
+/**
+ * Converts database from json to hashtable collection.
+ */
 public class JsonReader {
     private final String json;
     public JsonReader(String json) {
@@ -16,8 +16,6 @@ public class JsonReader {
 
     public Hashtable<Long, Vehicle> readDataBase() {
         Gson gson = new Gson();
-        Hashtable<Long, Vehicle> vehicleHashtable
-                = gson.fromJson(json, new TypeToken<Hashtable<Long, Vehicle>>(){}.getType());
-        return vehicleHashtable;
+        return gson.fromJson(json, new TypeToken<Hashtable<Long, Vehicle>>(){}.getType());
     }
 }

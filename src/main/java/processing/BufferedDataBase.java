@@ -17,6 +17,10 @@ import mods.FileType;
 import mods.RemoveMode;
 import utility.*;
 
+/**
+ * Stores a database that can be manipulated in real time using a commands.
+ * All commands implemented here.
+ */
 public class BufferedDataBase {
     private final Hashtable<Long, Vehicle> dataBase;
     private Set<String> scriptCounter = new HashSet<>();
@@ -37,11 +41,14 @@ public class BufferedDataBase {
         this.commandInvoker = commandInvoker;
     }
 
-    public Hashtable<Long, Vehicle> getDataBase() {
-        return dataBase;
-    }
-
-    public static boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments, String commandName) {
+    /**
+     * Checks each command for the correct number of arguments entered by the user.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param expectedNumberOfArguments Correct number of command arguments.
+     * @return Check status.
+     */
+    public static boolean checkNumberOfArguments(String[] arguments, int expectedNumberOfArguments,
+                                                 String commandName) {
         try {
             if (arguments.length != expectedNumberOfArguments) {
                 FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
@@ -55,6 +62,11 @@ public class BufferedDataBase {
         return false;
     }
 
+    /**
+     * Checks the arguments of commands that use the key as an argument.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @return Check status.
+     */
     private boolean checkCommandWithKey(String[] arguments, String commandName) {
         if (arguments.length == 0) {
             FileHandler.writeCurrentCommand(commandName, FileType.USER_ERRORS);
@@ -68,6 +80,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Displays information about all commands.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean help(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, HelpCommand.getName()))
             return false;
@@ -76,6 +94,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Displays information about collection.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean info(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, InfoCommand.getName()))
             return false;
@@ -94,6 +118,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Displays all elements of the collection.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean show(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ShowCommand.getName()))
             return false;
@@ -111,14 +141,33 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Adds a new element to the collection by key.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean insert(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         return addElementBy(arguments, vehicleValues, executeMode, AddMode.INSERT_MODE, InsertCommand.getName());
     }
 
+    /**
+     * Updates the collection element by id.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean update(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         return addElementBy(arguments, vehicleValues, executeMode, AddMode.UPDATE_MODE, UpdateCommand.getName());
     }
 
+    /**
+     * Executes 'insert' or 'update' command.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @param addMode Defines command.
+     * @return Command exit status.
+     */
     private boolean addElementBy(String[] arguments, String[] vehicleValues,
                                  ExecuteMode executeMode, AddMode addMode, String commandName) {
         if (arguments.length == 0) {
@@ -172,6 +221,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Removes element by key.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean removeKey(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkCommandWithKey(arguments, RemoveKeyCommand.getName()))
             return false;
@@ -185,6 +240,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Clears the collection.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean clear(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ClearCommand.getName()))
             return false;
@@ -198,6 +259,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Saves the collection to a Json file.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean save(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, SaveCommand.getName()))
             return false;
@@ -208,6 +275,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Executes user script.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean executeScript(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (executeMode == ExecuteMode.COMMAND_MODE)
             scriptCounter.clear();
@@ -238,6 +311,12 @@ public class BufferedDataBase {
     }
 
 
+    /**
+     * Terminates a program or exits an executing script.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean exit(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 0, ExitCommand.getName()))
             return false;
@@ -247,16 +326,35 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Removes all elements of the collection whose distance travelled value exceeds the given value.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean removeGreater(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         return removeAllByDistanceTravelled(arguments, vehicleValues, executeMode,
                 RemoveGreaterCommand.getName(), RemoveMode.REMOVE_GREATER);
     }
 
+    /**
+     * Removes all elements of the collection whose distance travelled value is less than the given value.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean removeLower(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         return removeAllByDistanceTravelled(arguments, vehicleValues, executeMode,
                 RemoveLowerCommand.getName(), RemoveMode.REMOVE_LOWER);
     }
 
+    /**
+     * Executes 'remove greater' or 'remove_lower' command.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @param removeMode Defines command.
+     * @return Command exit status.
+     */
     private boolean removeAllByDistanceTravelled(String[] arguments, String[] vehicleValues, ExecuteMode executeMode,
                                                  String commandName, RemoveMode removeMode) {
         if (!checkNumberOfArguments(arguments, 1, commandName))
@@ -299,6 +397,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Removes all elements of the collection whose key is greater than the given value.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean removeGreaterKey(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkCommandWithKey(arguments, RemoveGreaterKeyCommand.getName()))
             return false;
@@ -322,6 +426,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Removes all elements in the collection whose engine power is equal to the given value.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean removeAllByEnginePower(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, RemoveAllByEnginePowerCommand.getName()))
             return false;
@@ -353,6 +463,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Prints the number of elements in the collection whose fuel type is equal to the given value.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean countByFuelType(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, CountByFuelTypeCommand.getName()))
             return false;
@@ -377,6 +493,12 @@ public class BufferedDataBase {
         return true;
     }
 
+    /**
+     * Prints all elements of the collection whose fuel type is less than or equal to the given value.
+     * @param arguments Arguments which entered on the same line as the command.
+     * @param vehicleValues Arguments for commands that make changes to database elements.
+     * @return Command exit status.
+     */
     public boolean filterLessThanFuelType(String[] arguments, String[] vehicleValues, ExecuteMode executeMode) {
         if (!checkNumberOfArguments(arguments, 1, FilterLessThanFuelTypeCommand.getName()))
             return false;

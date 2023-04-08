@@ -5,11 +5,8 @@ import processing.*;
 import commands.*;
 import utility.FileHandler;
 
-import java.io.File;
-
-
 /**
- * The entry point to the program, declares all the necessary classes.
+ * The entry point to the program, declares and initializes all the necessary classes.
  * Starts interactive mode for the user.
  */
 public class Main {

@@ -13,7 +13,7 @@ import java.util.Hashtable;
  * Operates on all project files.
  */
 public class FileHandler {
-    private static final String envVariable = "SAVE_PATH";
+    private static final String ENV_VARIABLE = "SAVE_PATH";
     private static final String OUTPUT_FILE_PATH = "files/output.txt";
     private static final String USER_ERRORS_FILE_PATH = "files/user_errors.txt";
     private static final String SYSTEM_ERRORS_FILE_PATH = "files/system_errors.txt";
@@ -30,17 +30,15 @@ public class FileHandler {
     private static final String REFERENCE_FILE_ABSOLUTE_PATH =
             new File(REFERENCE_FILE_PATH).getAbsolutePath();
 
-    public FileHandler() {
-
-    }
+    public FileHandler() {}
 
     /**
      * Checks if the environment variable is valid.
      */
     public static boolean checkEnvVariable() {
-        if (System.getenv().get(envVariable) == null) {
+        if (System.getenv().get(ENV_VARIABLE) == null) {
             FileHandler.writeToFile(String.format("System variable with file to load and save is not set\n" +
-                    "Please set the '%s' environment variable", envVariable), FileType.USER_ERRORS);
+                    "Please set the '%s' environment variable", ENV_VARIABLE), FileType.USER_ERRORS);
             return false;
         }
         return true;
@@ -58,7 +56,7 @@ public class FileHandler {
             case USER_ERRORS -> filePath = USER_ERRORS_FILE_ABSOLUTE_PATH;
             case REFERENCE -> filePath = REFERENCE_FILE_ABSOLUTE_PATH;
             case SYSTEM_ERRORS -> filePath = SYSTEM_ERRORS_FILE_ABSOLUTE_PATH;
-            case JSON -> filePath = System.getenv().get(envVariable);
+            case JSON -> filePath = System.getenv().get(ENV_VARIABLE);
 //            default ->
         }
         return filePath;
@@ -157,15 +155,13 @@ public class FileHandler {
 
     /**
      * Converts Hashtable data to Json format and writes it to Json file.
-     * @param dataBase
-     * @return
+     * @param dataBase User modified database.
      */
-    public static boolean saveDataBase(Hashtable<Long, Vehicle> dataBase) {
+    public static void saveDataBase(Hashtable<Long, Vehicle> dataBase) {
         JsonWriter jsonWriter = new JsonWriter(dataBase);
         String json = jsonWriter.writeDataBase();
         clearFile(FileType.JSON);
         writeToFile(json, FileType.JSON);
-        return true;
     }
 
     /**
@@ -176,13 +172,15 @@ public class FileHandler {
      */
     public static File findFile(File dir, String name) {
         File result = null; // no need to store result as String, you're returning File anyway
-        File[] dirlist  = dir.listFiles();
-        for(int i = 0; i < dirlist.length; i++) {
-            if(dirlist[i].isDirectory()) {
-                result = findFile(dirlist[i], name);
+        File[] dirList  = dir.listFiles();
+        if (dirList == null)
+            return null;
+        for (File file : dirList) {
+            if (file.isDirectory()) {
+                result = findFile(file, name);
                 if (result != null) break; // recursive call found the file; terminate the loop
-            } else if(dirlist[i].getName().matches(name)) {
-                return dirlist[i]; // found the file; return it
+            } else if (file.getName().matches(name)) {
+                return file; // found the file; return it
             }
         }
         return result; // will return null if we didn't find anything

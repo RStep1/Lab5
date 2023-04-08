@@ -8,6 +8,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.regex.Pattern;
 
+/**
+ * Performs identifiers validation or generation.
+ */
 public class IdentifierHandler {
     Hashtable<Long, Vehicle> dataBase;
     private static final int ID_LENGTH = 10;
@@ -27,6 +30,7 @@ public class IdentifierHandler {
         FileHandler.writeToFile(String.format("%s must be a number", valueName), FileType.USER_ERRORS);
         return true;
     }
+
     private boolean isNegativeValue(String value, String valueName, String commandName) {
         String nonPositiveValue = "-\\d+";
         Pattern nonPositiveValuePattern = Pattern.compile(nonPositiveValue);
@@ -37,6 +41,7 @@ public class IdentifierHandler {
         }
         return false;
     }
+
     private boolean hasLeadingZeros(String value, String valueName, String commandName) {
         String leadingZeros = "^0+\\d+";
         Pattern leadingZerosPattern = Pattern.compile(leadingZeros);
@@ -64,7 +69,6 @@ public class IdentifierHandler {
         return true;
     }
 
-
     public boolean checkId(String id, String commandName) {
         if (hasNonNumericCharacters(id, "Id", commandName))
             return false;
@@ -86,6 +90,9 @@ public class IdentifierHandler {
         return true;
     }
 
+    /**
+     * Checks if the collection contains an element with the given id.
+     */
     private boolean hasElementWithId(long id) {
         Enumeration<Long> keys = dataBase.keys();
         while (keys.hasMoreElements()) {
@@ -97,6 +104,9 @@ public class IdentifierHandler {
         return false;
     }
 
+    /**
+     * Checks if the collection contains an element with the given key.
+     */
     public boolean hasElementWithKey(String key, boolean expectedResult, String commandName) {
         if (dataBase.containsKey(Long.parseLong(key))) {
             if (expectedResult) {
@@ -112,6 +122,10 @@ public class IdentifierHandler {
         return false;
     }
 
+    /**
+     * Randomly fills in each digit of id until it becomes unique.
+     * @return New unique id.
+     */
     public Long generateId() {
         StringBuilder newId;
         do {
@@ -124,6 +138,10 @@ public class IdentifierHandler {
         return Long.parseLong(newId.toString());
     }
 
+    /**
+     * Finds the element with the given id.
+     * @return Corresponding key.
+     */
     public long getKeyById(long id) {
         long key = -1;
         Enumeration<Long> keys = dataBase.keys();

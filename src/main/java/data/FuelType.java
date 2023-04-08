@@ -1,5 +1,9 @@
 package data;
 
+/**
+ * Enumeration of types of vehicle fuel.
+ * Serial number is used to simplify user input.
+ */
 public enum FuelType {
     ALCOHOL(1),
     MANPOWER(2),
