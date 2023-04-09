@@ -27,6 +27,9 @@ public class Console {
      * Reads user lines one by one and starts processing.
      */
     public void interactiveMode() {
+        FileHandler.writeToFile("Available commands:", FileType.OUTPUT);
+        FileHandler.writeToFile(FileHandler.readFile(FileType.REFERENCE), FileType.OUTPUT);
+        printOutputFile();
         FileHandler.clearFile(FileType.OUTPUT);
         FileHandler.clearFile(FileType.USER_ERRORS);
         CommandParser parser = new CommandParser(invoker);
