@@ -70,11 +70,10 @@ public class Console {
                 FileHandler.clearFile(FileType.USER_ERRORS);
                 printStream.print(process.getMessage());
                 try {
-                    newValue = in.nextLine();
+                    newValue = in.nextLine().trim();
                 } catch (NoSuchElementException e) {
                     System.exit(0);
                 }
-                newValue = in.nextLine().trim();
                 newValue = process.getCorrection().correct(newValue);
                 CheckingResult checkingResult = process.getChecker().check(newValue);
                 if (!checkingResult.getStatus())

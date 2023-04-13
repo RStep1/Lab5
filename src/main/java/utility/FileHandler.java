@@ -112,7 +112,6 @@ public class FileHandler {
 
     /**
      * Reads whole file.
-     * @param fileType
      * @return Contents of the file in string format.
      */
     public static String readFile(FileType fileType) {
