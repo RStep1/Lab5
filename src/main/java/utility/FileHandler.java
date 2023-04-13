@@ -41,6 +41,15 @@ public class FileHandler {
                     "Please set the '%s' environment variable", ENV_VARIABLE), FileType.USER_ERRORS);
             return false;
         }
+        try {
+            FileReader fileReader = new FileReader(System.getenv().get(ENV_VARIABLE));
+            fileReader.close();
+        } catch (IOException e) {
+            FileHandler.writeToFile(String.format(
+                    "Invalid path to environment variable '%s': %s", ENV_VARIABLE, System.getenv().get(ENV_VARIABLE)),
+                    FileType.USER_ERRORS);
+            return false;
+        }
         return true;
     }
 

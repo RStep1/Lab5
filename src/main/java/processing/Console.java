@@ -7,6 +7,7 @@ import utility.Process;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -37,7 +38,12 @@ public class Console {
         while (true) {
             PrintStream printStream = new PrintStream(System.out);
             printStream.print("Type command and press Enter: ");
-            String nextLine = in.nextLine();
+            String nextLine = "";
+            try {
+                nextLine = in.nextLine();
+            } catch (NoSuchElementException e) {
+                System.exit(0);
+            }
             boolean exitStatus = parser.commandProcessing(nextLine);
             if (!exitStatus)
                 break;
@@ -63,6 +69,11 @@ public class Console {
                 Console.printUserErrorsFile();
                 FileHandler.clearFile(FileType.USER_ERRORS);
                 printStream.print(process.getMessage());
+                try {
+                    newValue = in.nextLine();
+                } catch (NoSuchElementException e) {
+                    System.exit(0);
+                }
                 newValue = in.nextLine().trim();
                 newValue = process.getCorrection().correct(newValue);
                 CheckingResult checkingResult = process.getChecker().check(newValue);
